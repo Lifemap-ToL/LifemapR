@@ -21,3 +21,36 @@ display_map <- function(df=NULL,map="ncbi") {
     leaflet::addTiles(display)
 }
 
+#' Get coordinates from SolR database
+#' 
+#' @description This function return a dataframe with the coordinates on the lifemap for each ID 
+#'
+#' @param list_IDs a vector of TaxIDs you want to represent
+#'
+#' @return a dataframe
+#' @export
+#'
+#' @examples get_coordinates(c(2,9443,2087))
+get_coordinates <- function(list_IDs){
+  list_IDs<-as.character(list_IDs) #change to characters.
+  DATA<-NULL
+  i<-1
+  while(i<=length(list_IDs)) {
+    taxids<-list_IDs[i:(i+9)]
+    taxids<-taxids[!is.na(taxids)]
+    taxids<-paste(taxids, collapse="%0Ataxid%3A") #accepted space separator in url
+    url<-paste("https://lifemap-ncbi.univ-lyon1.fr/solr/taxo/select?q=taxid%3A",taxids, sep="")
+    data_sub<-fromJSON(url)
+    if (data_sub$response$numFound > 0){
+      DATA<-rbind(DATA,data_sub$response$docs[,c("taxid","lon","lat", "sci_name","zoom")])
+    }
+    i<-i+10
+  }
+  if (is.null(DATA) == FALSE){
+    for (j in 1:ncol(DATA)) DATA[,j]<-unlist(DATA[,j])
+    class(DATA$taxid)<-"character"
+    return(DATA)
+  } else {
+    return("empty dataframe")
+  }
+}
