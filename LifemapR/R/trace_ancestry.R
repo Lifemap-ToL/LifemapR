@@ -13,8 +13,13 @@ GetCooFromTaxID <- function(taxids){
     DATA<-rbind(DATA,data_sub$response$docs[,c("taxid","lon","lat", "sci_name","zoom", "nbdesc")])
     i<-i+100
   }
+  if ("0" %in% taxids){
+    DATA <- rbind(DATA,c(0,0,-4.2265,"LUCA",0,1))
+  }
   for (j in 1:ncol(DATA)) {DATA[,j]<-unlist(DATA[,j])}
   class(DATA$taxid)<-"character"
+  class(DATA$lon)<-"numeric"
+  class(DATA$lat)<-"numeric"
   return(DATA)
 }
 
@@ -90,6 +95,8 @@ get_ancestry_infos <- function(ancestry_info){
 
 add_ancestry <- function(list_of_df, map){
   for (element in list_of_df){
+    print("probleme")
+    print(element)
     for (i in element){
       map <- map %>% addPolylines(i$lon, i$lat, color="red") %>%
         addCircleMarkers(i$lon, i$lat, label=i$sci_name, fillColor = "red")
@@ -101,6 +108,7 @@ add_ancestry <- function(list_of_df, map){
 trace_ancestry <- function(ids){
   ancestry <- get_ancestry(ids)
   ancestry_infos <- get_ancestry_infos(ancestry)
+  #print(ancestry_infos)
   m <- display_map()
   add_ancestry(ancestry_infos,m)
 }
