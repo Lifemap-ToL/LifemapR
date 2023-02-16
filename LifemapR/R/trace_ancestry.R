@@ -6,7 +6,7 @@ GetCooFromTaxID <- function(taxids){
   while(i<=length(taxids)) {
     taxids_sub<-taxids[i:(i+99)]
     taxids_sub<-taxids_sub[!is.na(taxids_sub)]
-    taxids_sub<-paste(taxids_sub, collapse="%0Ataxid%3A") 
+    taxids_sub<-paste(taxids_sub, collapse="%0Ataxid%3A")
     url<-paste("https://lifemap-ncbi.univ-lyon1.fr/solr/taxo/select?q=taxid%3A",taxids_sub,"&wt=json&rows=1000",sep="", collapse="")
     #do the request :
     data_sub<-fromJSON(url)
@@ -31,7 +31,7 @@ GetLinFromTaxID <- function(taxids){
   while(i<=length(taxids)) {
     taxids_sub<-taxids[i:(i+99)]
     taxids_sub<-taxids_sub[!is.na(taxids_sub)]
-    taxids_sub<-paste(taxids_sub, collapse="%0Ataxid%3A") 
+    taxids_sub<-paste(taxids_sub, collapse="%0Ataxid%3A")
     url<-paste("https://lifemap-ncbi.univ-lyon1.fr/solr/addi/select?q=taxid%3A",taxids_sub,"&wt=json&rows=1000",sep="", collapse="")
     #do the request :
     data_sub<-fromJSON(url)
@@ -48,10 +48,8 @@ get_ancestry <- function(ids){
   data <- GetCooFromTaxID(ids)
   data_lineage <- GetLinFromTaxID(ids)
   data_final <- left_join(data, data_lineage, by = "taxid")
-  
+
   global_ancestry <- apply(data_final[2:nrow(data_final),], function(x){
-    # x$ascend
-    # x$taxid
     ancestry <- c(as.numeric(x$taxid))
     for (element in x$ascend){
       ancestry <- append(ancestry,element)
@@ -67,7 +65,7 @@ get_ancestry <- function(ids){
   for (element in global_ancestry){
     lca <- append(lca,element[[2]])
   }
-  
+
   ancestry <- c(as.numeric(data_final[1,"taxid"]))
   for (element in data_final[1,"ascend"][[1]]){
     ancestry <- append(ancestry,element)
@@ -86,24 +84,27 @@ get_ancestry_infos <- function(ancestry_info){
   ancestry_trace <- lapply(ancestry_info, function(x){
     trace <- list()
     for (i in 2:length(x[[1]])-1){
-      print(c(x[[1]][i], x[[1]][i+1]))
       trace[[as.character(i)]] <- GetCooFromTaxID(c(x[[1]][i],as.character(x[[1]][i+1])))
     }
     return(trace)
   })
 }
 
-add_ancestry <- function(list_of_df, map){
+add_ancestry <- function(list_of_df, map, ids){
   for (element in list_of_df){
-    print("probleme")
-    print(element)
     for (i in element){
       map <- map %>% addPolylines(i$lon, i$lat, color="red") %>%
-        addCircleMarkers(i$lon, i$lat, label=i$sci_name, fillColor = "red")
+        addCircleMarkers(i$lon, i$lat, label=i$taxid, fillColor = "grey", stroke=FALSE)
+      for (tax in 1:2){
+        if (i[tax,"taxid"] %in% ids){
+          map <- map %>% addMarkers(i[tax,"lon"], i[tax,"lat"], label=sprintf("%s,%s",i[tax,"sci_name"],i[tax,"taxid"]))
+        }
+      }
     }
-  }  
+  }
   return(map)
 }
+
 
 #' Trace the ancestry of multiple taxa
 #'
@@ -117,5 +118,5 @@ trace_ancestry <- function(ids){
   ancestry <- get_ancestry(ids)
   ancestry_infos <- get_ancestry_infos(ancestry)
   m <- display_map()
-  add_ancestry(ancestry_infos,m)
+  add_ancestry(ancestry_infos,m, ids)
 }
