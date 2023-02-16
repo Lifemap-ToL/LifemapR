@@ -105,10 +105,17 @@ add_ancestry <- function(list_of_df, map){
   return(map)
 }
 
+#' Trace the ancestry of multiple taxa
+#'
+#' @param ids a list of TaxID to visualise
+#'
+#' @return a Leaflet map
+#' @export
+#'
+#' @examples trace_ancestry(c(3641,3649,403667,3394,2))
 trace_ancestry <- function(ids){
   ancestry <- get_ancestry(ids)
   ancestry_infos <- get_ancestry_infos(ancestry)
-  #print(ancestry_infos)
   m <- display_map()
   add_ancestry(ancestry_infos,m)
 }
