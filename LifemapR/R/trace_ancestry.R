@@ -92,6 +92,29 @@ get_ancestry <- function(ids){
   return(list(global_ancestry,ancestors))
 }
 
+# get_shared_ancestors <- function(l){
+#   #print(l)
+#   test <- lapply(l, function(x){
+#     return(x[[1]])
+#   })
+#   print(test)
+#   for (i in 1:length(test)){
+#     #print(test[[i]])
+#     for (j in 2:length(test[[i]])){
+#       #print(j)
+#       if (test[[i]][j] %in% test[[i]]){
+#         print(test[[i]][j])
+#       }
+#       #print(test[[i]][j])
+#     }
+#   }
+#   # test <- unlist(test)
+#   # ancestors <- as.data.frame(table(test))
+#   # print(ancestors)
+#   # ancestors <- ancestors[ancestors$Freq >1,]
+#   # ancestors <- as.vector(ancestors$test)
+# }
+
 ## setting the color for special nodes
 ### the ids requested
 ### ancestors common to several of the ids
@@ -116,7 +139,7 @@ add_ancestry <- function(df, map, ids, ancestors){
         library = 'ion',
         markerColor = getColor(df[row,"tax1"], ids, ancestors)
       )
-      map <- map %>% addAwesomeMarkers(lng=df[row,"lon.x"], lat=df[row,"lat.x"], icon=icons, label=df[row,"sci_name.x"])
+      map <- map %>% addAwesomeMarkers(lng=df[row,"lon.x"], lat=df[row,"lat.x"], icon=icons, label=df[row,"tax1"])
     }
     if (df[row,"tax2"] %in% ids | df[row,"tax2"] %in% ancestors){
       icons <- awesomeIcons(
@@ -125,26 +148,35 @@ add_ancestry <- function(df, map, ids, ancestors){
         library = 'ion',
         markerColor = getColor(df[row,"tax2"], ids, ancestors)
       )
-      map <- map %>% addAwesomeMarkers(lng=df[row,"lon.y"], lat=df[row,"lat.y"], icon=icons, label=df[row,"sci_name.y"])
+      map <- map %>% addAwesomeMarkers(lng=df[row,"lon.y"], lat=df[row,"lat.y"], icon=icons, label=df[row,"tax2"])
     }
   }
   return(map)
 }
 
+## get the closest ancestors shared by multiple taxa
+get_shared_ancestors <- function(df){
+  ancestors <- append(as.vector(df$tax1),as.vector(df$tax2))
+  ancestors <- as.data.frame(table(ancestors))
+  ancestors <- as.vector(ancestors[ancestors$Freq > 2 | ancestors$ancestors == 0,]$ancestors)
+  return(ancestors)
+}
 
 
 #' Trace the ancestry of multiple taxa
 #'
 #' @param ids a list of TaxID to visualise
+#' @param map the base map wanted
 #'
 #' @return a Leaflet map
 #' @export
 #'
-#' @examples trace_ancestry(c(3641,3649,403667,3394,2))
-trace_ancestry <- function(ids, map){
+#' @examples trace_ancestry(c(3641,3649,403667,3394,54308,1902823), "fr")
+trace_ancestry <- function(ids, map="ncbi"){
   ancestry <- get_ancestry(ids)
   ancestors <- ancestry[[2]]  # all the taxa's ancestors
   ancestry <- ancestry[[1]]   # a list of taxids representing the paths from leaf to ancestor for each taxa
+  #get_shared_ancestors(ancestry)
 
   # couple of father-son nodes (to get the correct order when drawing lines)
   ancestry_couples <- lapply(ancestry, function(x){
@@ -165,6 +197,8 @@ trace_ancestry <- function(ids, map){
 
   df_ancestry <- merge(df_ancestry,tax_coo, by.x="tax1", by.y="taxid")
   df_ancestry <- merge(df_ancestry,tax_coo, by.x="tax2", by.y="taxid")
+
+  ancestors <- get_shared_ancestors(df_ancestry)
 
   m <- display_map(map=map)
   add_ancestry(df_ancestry,m, ids, ancestors)
