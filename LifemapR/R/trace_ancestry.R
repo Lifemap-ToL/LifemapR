@@ -1,4 +1,8 @@
-### Get the coordinates
+library(dplyr)
+library(leaflet)
+library(jsonlite)
+
+### Get the coordinates by requesting the taxo core of the solr database
 GetCooFromTaxID <- function(taxids){
   taxids<-as.character(taxids) #change to characters.
   DATA<-NULL
@@ -137,7 +141,7 @@ add_ancestry <- function(df, map, ids, ancestors){
 #' @export
 #'
 #' @examples trace_ancestry(c(3641,3649,403667,3394,2))
-trace_ancestry <- function(ids){
+trace_ancestry <- function(ids, map){
   ancestry <- get_ancestry(ids)
   ancestors <- ancestry[[2]]  # all the taxa's ancestors
   ancestry <- ancestry[[1]]   # a list of taxids representing the paths from leaf to ancestor for each taxa
@@ -162,7 +166,7 @@ trace_ancestry <- function(ids){
   df_ancestry <- merge(df_ancestry,tax_coo, by.x="tax1", by.y="taxid")
   df_ancestry <- merge(df_ancestry,tax_coo, by.x="tax2", by.y="taxid")
 
-  m <- display_map()
+  m <- display_map(map=map)
   add_ancestry(df_ancestry,m, ids, ancestors)
 
 }
