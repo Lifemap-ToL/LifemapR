@@ -141,7 +141,8 @@ add_ancestry <- function(df, map, ids, ancestors, linecolor, taxidscol,ancestors
         library = 'ion',
         markerColor = getColor(df[row,"tax1"], ids, ancestors, taxidscol,ancestorscol)
       )
-      map <- map %>% addAwesomeMarkers(lng=df[row,"lon.x"], lat=df[row,"lat.x"], icon=icons, label=df[row,"tax1"])
+      map <- map %>%
+        addAwesomeMarkers(lng=df[row,"lon.x"], lat=df[row,"lat.x"], icon=icons, label=df[row,"tax1"])
     }
     if (df[row,"tax2"] %in% ids | df[row,"tax2"] %in% ancestors){
       icons <- awesomeIcons(
@@ -150,7 +151,8 @@ add_ancestry <- function(df, map, ids, ancestors, linecolor, taxidscol,ancestors
         library = 'ion',
         markerColor = getColor(df[row,"tax2"], ids, ancestors, taxidscol,ancestorscol)
       )
-      map <- map %>% addAwesomeMarkers(lng=df[row,"lon.y"], lat=df[row,"lat.y"], icon=icons, label=df[row,"tax2"])
+      map <- map %>%
+        addAwesomeMarkers(lng=df[row,"lon.y"], lat=df[row,"lat.y"], icon=icons, label=df[row,"tax2"])
     }
   }
   return(map)
