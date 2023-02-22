@@ -17,6 +17,7 @@ display_map <- function(df=NULL,map="ncbi") {
   } else if (map == "ncbi"){
     display="http://lifemap-ncbi.univ-lyon1.fr/osm_tiles/{z}/{x}/{y}.png"
     }
-  leaflet::leaflet(df) %>%
+  m <- leaflet::leaflet(df) %>%
     leaflet::addTiles(display)
+  return(m)
 }

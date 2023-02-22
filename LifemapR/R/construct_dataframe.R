@@ -26,7 +26,7 @@ request_database <- function(taxids,basemap, core){
                 taxids_sub,"&wt=json&rows=1000",
                 sep="", collapse="")
 
-    #do the request :
+    #doing the request :
     data_sub<-fromJSON(url)
     if (data_sub$response$numFound > 0){
       if (core == "taxo"){
@@ -37,6 +37,7 @@ request_database <- function(taxids,basemap, core){
     }
     i<-i+100
   }
+  #formating the dataframe
   if (!(is.null(DATA))){
     class(DATA$taxid) <- "character"
     if (core == "taxo"){
