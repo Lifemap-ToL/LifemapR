@@ -72,6 +72,9 @@ request_database <- function(taxids,basemap, core){
 #'
 #' Lifemap_df <- construct_dataframe(df,"ncbi")
 construct_dataframe <- function(df,basemap="ncbi"){
+  if (is.null(df$taxid)){
+    stop('The dataframe must at least contain a "taxid" column')
+  }
   #get the coordinates of the taxids given
   COO <- request_database(taxids=df$taxid, basemap, "taxo")
 
@@ -107,8 +110,8 @@ construct_dataframe <- function(df,basemap="ncbi"){
   class(FINAL_DATA$taxid) <- "character"
 
   # a type is given for each taxid :
-  # - an "a" for the taxids given
-  # - a "r" for the ancestors
+  # - an "r" for the requested taxids
+  # - a "a" for the ancestors
   ANCESTORS$type <- "a"
   FINAL_DATA$type <- "r"
 
