@@ -41,3 +41,14 @@ Functions :
 - [ ] Passing information along the branches
 - [x] Display the trace between TaxIDs 
     - \+ [ ] generate a Newick subtree
+
+
+### How to use during development
+
+Go to the package's folder
+
+```r
+library(devtools)
+devtools::load_all()
+```
+then simply uses the package's functions
