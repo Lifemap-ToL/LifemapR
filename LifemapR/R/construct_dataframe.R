@@ -1,5 +1,4 @@
 library(dplyr)
-library(leaflet)
 library(jsonlite)
 
 
