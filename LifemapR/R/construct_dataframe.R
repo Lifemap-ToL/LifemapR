@@ -83,6 +83,7 @@ construct_dataframe <- function(df,basemap="ncbi"){
     stop ("None of the TaxIDs given were found in the database")
   }
 
+  not_found <- c()
   # get all the taxids that were not found in the database
   if(nrow(df) != nrow(COO)){
     not_found <- c()
