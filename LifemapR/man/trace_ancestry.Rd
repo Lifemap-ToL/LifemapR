@@ -4,12 +4,20 @@
 \alias{trace_ancestry}
 \title{Trace the ancestry of multiple taxa}
 \usage{
-trace_ancestry(ids, map)
+trace_ancestry(
+  ids,
+  map = "ncbi",
+  linecolor = "red",
+  taxidscol = "green",
+  ancestorscol = "red"
+)
 }
 \arguments{
 \item{ids}{a list of TaxID to visualise}
 
 \item{map}{the base map wanted}
+
+\item{linecolor}{the color of the line tracing the ancestry}
 }
 \value{
 a Leaflet map
@@ -18,5 +26,5 @@ a Leaflet map
 Trace the ancestry of multiple taxa
 }
 \examples{
-trace_ancestry(c(3641,3649,403667,3394,2), "fr")
+trace_ancestry(c(3641,3649,403667,3394,54308,1902823), "fr")
 }
