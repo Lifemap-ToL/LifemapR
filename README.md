@@ -1,4 +1,4 @@
-# Lifemap_R
+# LifemapR
 
 ## Overview
 
