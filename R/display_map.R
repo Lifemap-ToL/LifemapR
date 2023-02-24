@@ -18,6 +18,6 @@ display_map <- function(df=NULL,map="ncbi") {
     display="http://lifemap-ncbi.univ-lyon1.fr/osm_tiles/{z}/{x}/{y}.png"
     }
   m <- leaflet::leaflet(df) %>%
-    leaflet::addTiles(display)
+    leaflet::addTiles(display,options = providerTileOptions(minZoom = 5, maxZoom = 50))
   return(m)
 }
