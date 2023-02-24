@@ -1,7 +1,14 @@
 library(dplyr)
 library(leaflet)
 
-# create a df with informations about ancestry (father and son nodes)
+#' Create a df with informations about ancestry (father and son nodes)
+#'
+#' @param df a dataframe
+#'
+#' @return a dataframe
+#' @export
+#'
+#' @examples
 get_full_ancestry <- function(df){
   ancestors <- c()
   df_ancestry <- data.frame("son"=numeric(0), "father"=numeric(0))
@@ -24,11 +31,3 @@ get_full_ancestry <- function(df){
   }
   return(df_ancestry)
 }
-
-
-# create_subtree <- function(df, ancestry){
-#   DATA <- merge(ancestry, df, by.x="son", by.y="taxid")
-#   DATA <- DATA[,!names(DATA) %in% c("ascend")]
-#   DATA <- merge(DATA, df, by.x="father", by.y="taxid")
-#   print(DATA)
-# }

@@ -34,13 +34,14 @@ request_database <- function(taxids,basemap, core){
   }
   #formating the dataframe
   if (!(is.null(DATA))){
-    class(DATA$taxid) <- "character"
     if (core == "taxo"){
+      for (j in 1:ncol(DATA)) DATA[,j]<-unlist(DATA[,j])
       class(DATA$lon) <- "numeric"
       class(DATA$lat) <- "numeric"
     } else if (core == "addi"){
       class(DATA$genomes) <- "numeric"
     }
+    class(DATA$taxid) <- "character"
   }
 
   return(DATA)
