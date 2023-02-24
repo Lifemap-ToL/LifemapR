@@ -1,7 +1,3 @@
-library(dplyr)
-library(jsonlite)
-
-
 ## taxids = list of taxids to be requested
 ## basemap = the name of the basemap wanted to represent our data on (ncbi, fr)
 ## core = the core to be requested (taxo or addi)
@@ -26,7 +22,7 @@ request_database <- function(taxids,basemap, core){
                 sep="", collapse="")
 
     #doing the request :
-    data_sub<-fromJSON(url)
+    data_sub<-jsonlite::fromJSON(url)
     if (data_sub$response$numFound > 0){
       if (core == "taxo"){
         DATA <- rbind(DATA,data_sub$response$docs[,c("taxid","lon","lat", "sci_name","zoom")])
@@ -64,6 +60,10 @@ request_database <- function(taxids,basemap, core){
 #'  - the zoom at which the taxa can be seen (zoom)
 #'  - the ascendants of requested taxids (ascend)
 #'  - the type of each taxid ("r" for requested, "a" for ancestors)
+#'
+#' @importFrom jsonlite fromJSON
+#' @importFrom dplyr bind_rows
+#'
 #' @export
 #'
 #' @examples
@@ -89,7 +89,7 @@ construct_dataframe <- function(df,basemap="ncbi"){
     not_found <- c()
     for (id in df$taxid){
       if (!(id %in% COO$taxid)){
-        not_found <- append( not_found, id)
+        not_found <- append(not_found, id)
       }
     }
   }

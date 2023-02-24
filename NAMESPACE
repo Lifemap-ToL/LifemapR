@@ -3,3 +3,5 @@
 export(construct_dataframe)
 export(display_map)
 export(trace_ancestry)
+importFrom(dplyr,bind_rows)
+importFrom(jsonlite,fromJSON)
