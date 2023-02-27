@@ -29,5 +29,6 @@ get_full_ancestry <- function(df){
       }
     }
   }
-  return(df_ancestry)
+  final_df <- merge(df, df_ancestry, by.x="taxid", by.y="son")
+  return(final_df)
 }
