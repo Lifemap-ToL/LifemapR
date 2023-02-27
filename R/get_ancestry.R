@@ -1,5 +1,4 @@
 library(dplyr)
-library(leaflet)
 
 #' Create a df with informations about ancestry (father and son nodes)
 #'
@@ -7,6 +6,8 @@ library(leaflet)
 #'
 #' @return a dataframe
 #' @export
+#'
+#' @importFrom dplyr bind_rows
 #'
 #' @examples
 get_full_ancestry <- function(df){

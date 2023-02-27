@@ -34,9 +34,9 @@ addMarkers(~lon, ~lat, label=~sci_name)
 ## Development
 
 Functions : 
-- [x] Display The Lifemap base (choice between 'fr' and 'ncbi')
-- [ ] Transform the given dataframe to a format usable by future functions
-- [ ] Represent continuous datas (like GC-content)
+- [x] Display The Lifemap base (choice between 'fr' and 'ncbi') -> display_map()
+- [x] Transform the given dataframe to a format usable by future functions -> construct_dataframe() and get_full_ancestry()  
+- [ ] Represent continuous datas (like GC-content) with Shiny -> continuous_datas()
 - [ ] Represent discret datas (like Status in the NCBI data format)
 - [ ] Passing information along the branches
 - [x] Display the trace between TaxIDs 
