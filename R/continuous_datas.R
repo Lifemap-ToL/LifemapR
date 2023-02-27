@@ -1,10 +1,7 @@
 library(shiny)
 library(leaflet)
 
-continuous_datas <- function(df,basemap){
-
-  r_colors <- rgb(t(col2rgb(colors()) / 255))
-  names(r_colors) <- colors()
+continuous_datas <- function(df,basemap="ncbi",by_col=NULL,param="size"){
 
   ui <- fluidPage(
     tags$style(type = "text/css", "html, body {width:100%;height:100%}"),
@@ -13,34 +10,44 @@ continuous_datas <- function(df,basemap){
     absolutePanel(top = 10, right = 20,
                   textOutput("zoom"),
                   textOutput("boundaries"),
-                  tags$head(tags$style("#zoom{color: red;
+                  tags$head(tags$style("#param{color: red;
                                  font-size: 20px;
                                  font-style: italic;
                                  }"
                   )
                   )
     ),
-    actionButton("button", "Clear Markers"),
-    dataTableOutput("new_df")
 
+    dataTableOutput("param"),
+    dataTableOutput("new_df")
   )
 
   server <- function(input, output, session) {
 
-    points <- eventReactive(input$recalc, {
-      cbind(rnorm(40) * 2 + 13, rnorm(40) + 48)
-    }, ignoreNULL = FALSE)
-
+    # define the zone visible by the users
     df_zoom_bounds <- reactive(
-      df[df$zoom <= input$mymap_zoom & df$lat > input$mymap_bounds$south & df$lat < input$mymap_bounds$north & df$lon > input$mymap_bounds$west & df$lon < input$mymap_bounds$east,]
+      df[df$zoom <= input$mymap_zoom &
+           df$lat > input$mymap_bounds$south &
+           df$lat < input$mymap_bounds$north &
+           df$lon > input$mymap_bounds$west &
+           df$lon < input$mymap_bounds$east,]
     )
 
+    # calcul_param <- reactive({
+    #   ids_zoom <- df_zoom_bounds()$taxid
+    #   for (taxa in 1:nrow(df)){
+    #     if ()
+    #   }
+    #   df[ids_zoom %in% df$ascend,]
+    # })
+
+    # output of the map
     output$mymap <- renderLeaflet({
       display_map(df,basemap) %>% fitBounds(~min(lon), ~min(lat), ~max(lon), ~max(lat))
     })
 
-    observeEvent(
-      eventExpr = input$mymap_zoom,{
+    #modification of the map to display the rights markers
+    observe({
       leafletProxy("mymap", session=session) %>%
         clearMarkers() %>%
         addMarkers(lng=df_zoom_bounds()$lon, lat=df_zoom_bounds()$lat,
@@ -50,14 +57,9 @@ continuous_datas <- function(df,basemap){
     output$zoom <- renderText(input$mymap_zoom)
     output$boundaries <- renderText(input$mymap_bounds$north)
     output$new_df <- renderDataTable(df_zoom_bounds())
+    output$param <- renderDataTable(calcul_param())
 
-    observeEvent(input$button,{
-      leafletProxy("mymap") %>%
-        clearMarkers()
-    })
   }
 
   shinyApp(ui, server)
 }
-
-adding_markers(df,"ncbi")
