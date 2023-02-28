@@ -1,4 +1,5 @@
 library(dplyr)
+library()
 
 #' Create a df with informations about ancestry (father and son nodes)
 #'
@@ -14,8 +15,9 @@ get_full_ancestry <- function(df){
   ancestors <- c()
   df_ancestry <- data.frame("son"=numeric(0), "father"=numeric(0))
 
-  for (id in 1:nrow(df[df$type == "r",])){
+  for (id in 1:nrow(df[df$type == "requested",])){
     ancestry <- unlist(df[id,"ascend"])
+    print(ancestry)
     # print(class(df[id,"taxid"]))
     # print(class(ancestry[1]))
     son_father <- data.frame("son"=as.integer(df[id,"taxid"]),"father"=ancestry[1])
@@ -23,6 +25,7 @@ get_full_ancestry <- function(df){
     for (x in 2:length(ancestry)){
       son_father <- data.frame("son"=ancestry[x-1],"father"=ancestry[x])
       df_ancestry <- dplyr::bind_rows(df_ancestry, son_father)
+      print(x)
       if (!(ancestry[x] %in% ancestors)){
         ancestors <- append(ancestors, ancestry[x])
       } else {
