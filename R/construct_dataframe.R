@@ -40,20 +40,56 @@ request_database <- function(taxids, basemap, core) {
     }
     i <- i + 100
   }
+
   # formating the dataframe
   if (!(is.null(DATA))) {
     if (core == "taxo") {
       for (j in 1:ncol(DATA)) DATA[, j] <- unlist(DATA[, j])
       class(DATA$lon) <- "numeric"
       class(DATA$lat) <- "numeric"
+      class(DATA$zoom) <- "numeric"
     } else if (core == "addi") {
       class(DATA$genomes) <- "numeric"
     }
     class(DATA$taxid) <- "character"
   }
-
   return(DATA)
 }
+
+
+#' Create a df with informations about ancestry (father and son nodes)
+#'
+#' @param df a dataframe
+#'
+#' @return a dataframe
+#'
+#' @importFrom dplyr bind_rows
+#'
+#' @examples
+get_direct_ancestry <- function(df){
+  ancestors <- c()
+  df_ancestry <- data.frame("son"=numeric(0), "father"=numeric(0))
+
+  for (id in 1:nrow(df[df$type == "requested",])){
+    ancestry <- unlist(df[id,"ascend"])
+    son_father <- data.frame("son"=as.integer(df[id,"taxid"]),"father"=ancestry[1])
+    df_ancestry <- dplyr::bind_rows(df_ancestry, son_father)
+    for (x in 2:length(ancestry)){
+      son_father <- data.frame("son"=ancestry[x-1],"father"=ancestry[x])
+      df_ancestry <- dplyr::bind_rows(df_ancestry, son_father)
+      if (!(ancestry[x] %in% ancestors)){
+        ancestors <- append(ancestors, ancestry[x])
+      } else {
+        break
+      }
+    }
+  }
+  final_df <- merge(df, df_ancestry, by.x="taxid", by.y="son")
+  return(final_df)
+}
+
+
+
 
 #' A function to construct a dataframe usable by LifemapR functions
 #'
@@ -117,13 +153,24 @@ construct_dataframe <- function(df, basemap = "ncbi") {
   unique_ancestors <- unique(unlist(DATA$ascend))
   ANCESTORS <- request_database(taxids = unique_ancestors, basemap, "taxo")
 
-  FINAL_DATA <- merge(df, DATA, by.x = "taxid", by.y = "taxid")
-  class(FINAL_DATA$taxid) <- "character"
+  INFOS_DATA <- merge(df, DATA, by.x = "taxid", by.y = "taxid")
+  class(INFOS_DATA$taxid) <- "character"
 
   ANCESTORS$type <- "ancestor"
-  FINAL_DATA$type <- "requested"
+  INFOS_DATA$type <- "requested"
 
-  FINAL_DATA <- dplyr::bind_rows(FINAL_DATA, ANCESTORS)
+  INFOS_DATA <- dplyr::bind_rows(INFOS_DATA, ANCESTORS)
 
+  FINAL_DATA <- get_direct_ancestry(INFOS_DATA)
+  print(class(FINAL_DATA$taxid))
+
+  LUCA <- data.frame(taxid="0",lon=0, lat=-4.226497,sci_name="Luca", type="ancestor")
+
+  FINAL_DATA <- dplyr::bind_rows(FINAL_DATA, LUCA)
+
+
+  # if ("0" %in% taxids){
+  #   DATA <- rbind(DATA,c("0",0,-4.226497,"LUCA",0))
+  # }
   return(FINAL_DATA)
 }
