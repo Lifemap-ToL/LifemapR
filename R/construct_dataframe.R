@@ -66,7 +66,7 @@ request_database <- function(taxids, basemap, core) {
 #' @importFrom dplyr bind_rows
 #'
 #' @examples
-get_direct_ancestry <- function(df){
+get_direct_ancestor <- function(df){
   ancestors <- c()
   df_ancestry <- data.frame("son"=numeric(0), "father"=numeric(0))
 
@@ -168,9 +168,5 @@ construct_dataframe <- function(df, basemap = "ncbi") {
 
   FINAL_DATA <- dplyr::bind_rows(FINAL_DATA, LUCA)
 
-
-  # if ("0" %in% taxids){
-  #   DATA <- rbind(DATA,c("0",0,-4.226497,"LUCA",0))
-  # }
   return(FINAL_DATA)
 }
