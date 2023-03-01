@@ -9,25 +9,32 @@ An R package to visualise datas on a Lifemap base (https://lifemap-ncbi.univ-lyo
 
 ## Usage
 
-Start with ```construct_dataframe(df)``` with a dataset containing at least a ```"taxid"``` column to create a dataframe you will then be able to use with the package's functions.
+Here is a brief introduction on how to use LifemapR.
 
-Then, you can create the first layer of the map with ```display_map(df)```.
+1. With ```construct_dataframe``` function transform your already existing datas intos a format usable by LifemapR functions
 
 ```r
-df <- data.frame("taxid"=c(3641,3649,403667,3394,54308,1902823),
-                "info1"=c(3,3,4,3,5,1))
+df <- data.frame("taxid"=c(3641,3649,403667,3394,54308,1902823),"info1"=c(3,3,4,3,5,1))
 
-Lifemap_df <- construct_dataframe(df,"ncbi")
-
-display_map(Lifemap_df)
+# Construction of a LifemapR usable dataframe
+LM_df <- LifemapR::construct_dataframe(df)
 ```
-
-After that, you can add layers (with %>%) by calling either leaflet functions for simple representations or LifemapR functions for more complicated operations
+2. Then you can display a map with wanted informations either by calling one of ```LifemapR``` functions or by calling ```leaflet``` functions \
+Note that with the ```LifemapR``` functions, a ```shiny``` application will be launched
 
 ```r
-# add markers to the coordinates of requested taxids
-display_map(Lifemap_df[Lifemap_df$type == "r",]) %>% 
-addMarkers(~lon, ~lat, label=~sci_name)
+# A LifemapR function
+LifemapR::draw_subtree(LM_df)
+
+
+# a leaflet function
+# Note that even when using leaflet functions, you need to use the LifemapR display_map function
+LifemapR::display_map(LM_df[LM_df$type == "requested",]) %>% 
+    addMarkers(~lon,~lat,label=~sci_name)
+
+map <- LifemapR::display_map(LM_df[LM_df$type == "requested",]) 
+addMarkers(map, ~lon,~lat,label=~sci_name)
+# Two ways of writing the same operation 
 ```
 
 
@@ -51,4 +58,4 @@ Go to the package's folder
 library(devtools)
 devtools::load_all()
 ```
-then simply uses the package's functions
+then you can simply use the package's functions
