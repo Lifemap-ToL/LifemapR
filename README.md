@@ -33,7 +33,7 @@ LifemapR::display_map(LM_df[LM_df$type == "requested",]) %>%
     addMarkers(~lon,~lat,label=~sci_name)
 
 map <- LifemapR::display_map(LM_df[LM_df$type == "requested",]) 
-addMarkers(map, ~lon,~lat,label=~sci_name)
+leaflet::addMarkers(map, ~lon,~lat,label=~sci_name)
 # Two ways of writing the same operation 
 ```
 
