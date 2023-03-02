@@ -1,7 +1,3 @@
-## taxids = list of taxids to be requested
-## basemap = the name of the basemap wanted to represent our data on (ncbi, fr)
-## core = the core to be requested (taxo or addi)
-### Request a core of a solr database with taxids
 #' Request one of the core of the solr database corresponding to the basemap choosen with TaxIDs
 #'
 #' @param taxids a vector of TaxIDs to be requested
@@ -57,6 +53,8 @@ request_database <- function(taxids, basemap, core) {
 }
 
 
+
+
 #' Create a df with informations about ancestry (father and son nodes)
 #'
 #' @param df a dataframe
@@ -66,26 +64,38 @@ request_database <- function(taxids, basemap, core) {
 #' @importFrom dplyr bind_rows
 #'
 #' @examples
-get_direct_ancestor <- function(df){
+get_direct_ancestor <- function(df) {
   ancestors <- c()
-  df_ancestry <- data.frame("son"=numeric(0), "father"=numeric(0))
+  descendants <- c()
+  df_ancestry <- data.frame("descendant"=numeric(0), "ancestor"=numeric(0))
 
-  for (id in 1:nrow(df[df$type == "requested",])){
-    ancestry <- unlist(df[id,"ascend"])
-    son_father <- data.frame("son"=as.integer(df[id,"taxid"]),"father"=ancestry[1])
-    df_ancestry <- dplyr::bind_rows(df_ancestry, son_father)
-    for (x in 2:length(ancestry)){
-      son_father <- data.frame("son"=ancestry[x-1],"father"=ancestry[x])
-      df_ancestry <- dplyr::bind_rows(df_ancestry, son_father)
-      if (!(ancestry[x] %in% ancestors)){
-        ancestors <- append(ancestors, ancestry[x])
+  for (taxid in 1:nrow(df[df$type=="requested",])) {
+    ancestry <- unlist(df[taxid, "ascend"])
+    df_ancestry <- rbind(df_ancestry,c(as.numeric(df[taxid, "taxid"]), as.numeric(ancestry[1])))
+    ancestors <- append(ancestors,ancestry[1])
+
+    for (id in 1:(length(ancestry)-1)) {
+      descendant <- ancestry[id]
+      ancestor <- ancestry[id+1]
+
+      if (!(ancestor %in% ancestors)) {
+        df_ancestry <- rbind(df_ancestry,c(descendant, ancestor))
+        ancestors <- append(ancestors,ancestor)
+        descendants <- append(descendants, descendant)
       } else {
-        break
+        if (!(descendant %in% descendants)) {
+          df_ancestry <- rbind(df_ancestry,c(descendant, ancestor))
+          descendants <- append(descendants, descendant)
+        } else {
+          break
+        }
       }
     }
   }
-  final_df <- merge(df, df_ancestry, by.x="taxid", by.y="son")
-  return(final_df)
+  colnames(df_ancestry) <- c("descendant", "ancestor")
+  print(c(nrow(df_ancestry), nrow(df)))
+  df_tot <- merge(df, df_ancestry, by.x = "taxid", by.y = "descendant")
+  return(df_tot)
 }
 
 
@@ -123,6 +133,7 @@ construct_dataframe <- function(df, basemap = "ncbi") {
   }
 
   # get coordinates
+  print("getting the coordinates ...")
   COO <- request_database(taxids = df$taxid, basemap, "taxo")
 
   if (is.null(COO)) {
@@ -146,10 +157,12 @@ construct_dataframe <- function(df, basemap = "ncbi") {
   }
 
   # get lineage informations
+  print("getting the lineage ...")
   LIN <- request_database(taxids = df$taxid, basemap, "addi")
   DATA <- merge(COO, LIN, by.x = "taxid", by.y = "taxid")
 
   # get the coordinates of the ancestors of the taxids
+  print("constructing the ancestry ...")
   unique_ancestors <- unique(unlist(DATA$ascend))
   ANCESTORS <- request_database(taxids = unique_ancestors, basemap, "taxo")
 
@@ -161,8 +174,8 @@ construct_dataframe <- function(df, basemap = "ncbi") {
 
   INFOS_DATA <- dplyr::bind_rows(INFOS_DATA, ANCESTORS)
 
-  FINAL_DATA <- get_direct_ancestry(INFOS_DATA)
-  print(class(FINAL_DATA$taxid))
+  print("getting the direct ancestor ...")
+  FINAL_DATA <- get_direct_ancestor(INFOS_DATA)
 
   LUCA <- data.frame(taxid="0",lon=0, lat=-4.226497,sci_name="Luca", type="ancestor")
 
