@@ -1,7 +1,10 @@
 library(shiny)
 library(leaflet)
 
-draw_subtree <- function(df,basemap="ncbi"){
+draw_subtree <- function(lm){
+
+  df <- lm[[1]]
+  basemap <- lm[[2]]
 
   map <- display_map(df,basemap) %>%
     fitBounds(~min(lon), ~min(lat), ~max(lon), ~max(lat))

@@ -63,7 +63,6 @@ request_database <- function(taxids, basemap, core) {
 #'
 #' @importFrom dplyr bind_rows
 #'
-#' @examples
 get_direct_ancestor <- function(df) {
   ancestors <- c()
   descendants <- c()
@@ -93,7 +92,6 @@ get_direct_ancestor <- function(df) {
     }
   }
   colnames(df_ancestry) <- c("descendant", "ancestor")
-  print(c(nrow(df_ancestry), nrow(df)))
   df_tot <- merge(df, df_ancestry, by.x = "taxid", by.y = "descendant")
   return(df_tot)
 }
@@ -106,14 +104,16 @@ get_direct_ancestor <- function(df) {
 #' @param df a dataframe containing at least a column named "taxid"
 #' @param basemap the basemap wanted, either "fr" or "ncbi" ("ncbi" by default)
 #'
-#' @return a dataframe containing at least :
-#'  - the taxids (taxid)
-#'  - the longitude (long)
-#'  - the latitude (lat)
-#'  - the scientific nam (sci_name)
-#'  - the zoom at which the taxa can be seen (zoom)
-#'  - the ascendants of requested taxids (ascend)
-#'  - the type of each taxid ("requested" or "ancestor")
+#' @return a list with :
+#' - a dataframe containing at least :
+#'   - the taxids (taxid)
+#'   - the longitude (long)
+#'   - the latitude (lat)
+#'   - the scientific nam (sci_name)
+#'   - the zoom at which the taxa can be seen (zoom)
+#'   - the ascendants of requested taxids (ascend)
+#'   - the type of each taxid ("requested" or "ancestor")
+#' - the basemap used
 #'
 #' @importFrom jsonlite fromJSON
 #' @importFrom dplyr bind_rows
@@ -181,5 +181,5 @@ construct_dataframe <- function(df, basemap = "ncbi") {
 
   FINAL_DATA <- dplyr::bind_rows(FINAL_DATA, LUCA)
 
-  return(FINAL_DATA)
+  return(list(FINAL_DATA,basemap))
 }
