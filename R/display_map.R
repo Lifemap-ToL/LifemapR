@@ -11,7 +11,7 @@
 #' @export
 #'
 #' @examples display_map("fr")
-display_map <- function(df=NULL,map="ncbi") {
+display_map <- function(df=NULL,map) {
   if (map == "fr"){
     display="http://lifemap.univ-lyon1.fr/osm_tiles/{z}/{x}/{y}.png"
   } else if (map == "ncbi"){
