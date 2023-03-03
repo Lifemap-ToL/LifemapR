@@ -177,7 +177,7 @@ construct_dataframe <- function(df, basemap = "ncbi") {
   print("getting the direct ancestor ...")
   FINAL_DATA <- get_direct_ancestor(INFOS_DATA)
 
-  LUCA <- data.frame(taxid="0",lon=0, lat=-4.226497,sci_name="Luca", type="ancestor")
+  LUCA <- data.frame(taxid="0",lon=0, lat=-4.226497,sci_name="Luca",zoom=5, type="ancestor")
 
   FINAL_DATA <- dplyr::bind_rows(FINAL_DATA, LUCA)
 
