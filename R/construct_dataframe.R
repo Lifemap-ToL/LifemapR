@@ -92,6 +92,8 @@ get_direct_ancestor <- function(df) {
     }
   }
   colnames(df_ancestry) <- c("descendant", "ancestor")
+  print("direct_ancestry")
+  print(nrow(df_ancestry))
   df_tot <- merge(df, df_ancestry, by.x = "taxid", by.y = "descendant")
   return(df_tot)
 }
@@ -132,6 +134,8 @@ construct_dataframe <- function(df, basemap = "ncbi") {
     stop('The dataframe must at least contain a "taxid" column')
   }
 
+  df <- distinct(df,taxid)
+
   # get coordinates
   print("getting the coordinates ...")
   COO <- request_database(taxids = df$taxid, basemap, "taxo")
@@ -151,8 +155,8 @@ construct_dataframe <- function(df, basemap = "ncbi") {
   }
   if (length(not_found) > 0) {
     warning(sprintf(
-      "The following TaxIDs were not found in the database : %s",
-      paste(not_found, collapse = ",")
+      "%s TaxIDs were not found. The following TaxIDs were not found in the database : %s",
+      length(not_found),paste(not_found, collapse = ",")
     ))
   }
 
@@ -161,18 +165,24 @@ construct_dataframe <- function(df, basemap = "ncbi") {
   LIN <- request_database(taxids = df$taxid, basemap, "addi")
   DATA <- merge(COO, LIN, by.x = "taxid", by.y = "taxid")
 
+
+  INFOS_DATA <- merge(df, DATA, by.x = "taxid", by.y = "taxid")
+  class(INFOS_DATA$taxid) <- "character"
+
   # get the coordinates of the ancestors of the taxids
   print("constructing the ancestry ...")
   unique_ancestors <- unique(unlist(DATA$ascend))
   ANCESTORS <- request_database(taxids = unique_ancestors, basemap, "taxo")
 
-  INFOS_DATA <- merge(df, DATA, by.x = "taxid", by.y = "taxid")
-  class(INFOS_DATA$taxid) <- "character"
-
   ANCESTORS$type <- "ancestor"
   INFOS_DATA$type <- "requested"
 
   INFOS_DATA <- dplyr::bind_rows(INFOS_DATA, ANCESTORS)
+  print("INFOS")
+  print(nrow(INFOS_DATA))
+  print(length(unique(INFOS_DATA$taxid)))
+  print(INFOS_DATA[duplicated(INFOS_DATA$taxid)==TRUE,])
+
 
   print("getting the direct ancestor ...")
   FINAL_DATA <- get_direct_ancestor(INFOS_DATA)
