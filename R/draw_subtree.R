@@ -43,10 +43,12 @@ draw_subtree <- function(lm){
         print(df_zoom_bounds()[df_zoom_bounds()$taxid == id,])
         print("yo")
         print(df_descendants()[df_descendants()$ancestor == id,])
+        for (desc in df_descendants()[df_descendants()$ancestor == id,]$taxid) {
         proxy <- proxy %>%
-          addPolylines(lng=c(df_zoom_bounds()[df_zoom_bounds()$taxid == id,"lon"],df_descendants()[df_descendants()$ancestor == id,"lon"]),
-                       lat=c(df_zoom_bounds()[df_zoom_bounds()$taxid == id,"lat"],df_descendants()[df_descendants()$ancestor == id,"lat"]),
+          addPolylines(lng=c(df_zoom_bounds()[df_zoom_bounds()$taxid == id,"lon"],df_descendants()[df_descendants()$taxid == desc,"lon"]),
+                       lat=c(df_zoom_bounds()[df_zoom_bounds()$taxid == id,"lat"],df_descendants()[df_descendants()$taxid == desc,"lat"]),
                        color="red")
+        }
       }
       proxy
     })
