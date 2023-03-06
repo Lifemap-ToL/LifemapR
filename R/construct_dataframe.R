@@ -72,6 +72,7 @@ get_direct_ancestor <- function(df) {
     ancestry <- unlist(df[taxid, "ascend"])
     df_ancestry <- rbind(df_ancestry,c(as.numeric(df[taxid, "taxid"]), as.numeric(ancestry[1])))
     ancestors <- append(ancestors,ancestry[1])
+    descendants <- append(descendants,df[taxid, "taxid"])
 
     for (id in 1:(length(ancestry)-1)) {
       descendant <- ancestry[id]
@@ -92,8 +93,6 @@ get_direct_ancestor <- function(df) {
     }
   }
   colnames(df_ancestry) <- c("descendant", "ancestor")
-  print("direct_ancestry")
-  print(nrow(df_ancestry))
   df_tot <- merge(df, df_ancestry, by.x = "taxid", by.y = "descendant")
   return(df_tot)
 }
@@ -118,7 +117,7 @@ get_direct_ancestor <- function(df) {
 #' - the basemap used
 #'
 #' @importFrom jsonlite fromJSON
-#' @importFrom dplyr bind_rows
+#' @importFrom dplyr bind_rows distinct
 #'
 #' @export
 #'
@@ -165,24 +164,25 @@ construct_dataframe <- function(df, basemap = "ncbi") {
   LIN <- request_database(taxids = df$taxid, basemap, "addi")
   DATA <- merge(COO, LIN, by.x = "taxid", by.y = "taxid")
 
-
   INFOS_DATA <- merge(df, DATA, by.x = "taxid", by.y = "taxid")
   class(INFOS_DATA$taxid) <- "character"
 
   # get the coordinates of the ancestors of the taxids
   print("constructing the ancestry ...")
   unique_ancestors <- unique(unlist(DATA$ascend))
-  ANCESTORS <- request_database(taxids = unique_ancestors, basemap, "taxo")
+
+  # we don't request already requested taxid
+  tax_request <- as.vector(DATA$taxid)
+  real_ancestors <- setdiff(unique_ancestors,tax_request)
+
+  ANCESTORS <- request_database(taxids = real_ancestors, basemap, "taxo")
 
   ANCESTORS$type <- "ancestor"
   INFOS_DATA$type <- "requested"
 
-  INFOS_DATA <- dplyr::bind_rows(INFOS_DATA, ANCESTORS)
-  print("INFOS")
-  print(nrow(INFOS_DATA))
-  print(length(unique(INFOS_DATA$taxid)))
-  print(INFOS_DATA[duplicated(INFOS_DATA$taxid)==TRUE,])
+  nodes_requested <- ANCESTORS[ANCESTORS$taxid %in% INFOS_DATA$taxid,]
 
+  INFOS_DATA <- dplyr::bind_rows(INFOS_DATA, ANCESTORS)
 
   print("getting the direct ancestor ...")
   FINAL_DATA <- get_direct_ancestor(INFOS_DATA)
