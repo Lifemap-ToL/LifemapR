@@ -55,9 +55,9 @@ Functions :
 - [x] Transform the given dataframe to a format usable by future functions -> construct_dataframe() 
 - [x] Display the trace between TaxIDs 
     - \+ [ ] generate a Newick subtree
-- [ ] Represent continuous datas (like GC-content) with Shiny -> continuous_datas()
+- [x] Represent continuous datas (like GC-content) with Shiny -> add_Lifemap_markers()
+- [x] Passing information along the branches -> pass_infos()
 - [ ] Represent discret datas (like Status in the NCBI data format)
-- [ ] Passing information along the branches
 
 
 ### How to use during development
