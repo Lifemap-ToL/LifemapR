@@ -1,16 +1,17 @@
-
-## Pass the information from the leaves to the nodes
+#' Passes information from the leaves to the nodes
+#'
+#' @param df a dataframe from a lifemap_object 
+#' @param information the variable by wich the data needs to be represented
+#' @param my_function the function to be applied fom the representation
+#'
+#' @return a dataframe containing for each node the value for one variable according to a function
+#'
+#' @examples pass_infos (df, "GC_content", sum)
 pass_infos <- function(df, information, my_function) {
-  # print(information)
-  # df <- lm_obj[[1]]
-  # basemap <- lm_obj[[2]]
-  
   all_ancestors <- unique(unlist(df[df$type=="requested",]$ascend))
   tax_request <- as.vector(df[df$type=="requested",]$taxid)
   only_leaves <- setdiff(tax_request,all_ancestors)
-  # print(only_leaves)
-  # print(setdiff(all_ancestors,tax_request))
-  
+
   info <- data.frame(ancestors=all_ancestors)
   for (id in only_leaves) {
     info_tmp <- data.frame(unlist(df[df$taxid==id,"ascend"]),df[df$taxid==id,information])
@@ -27,33 +28,32 @@ pass_infos <- function(df, information, my_function) {
   final_res <- data.frame(info$ancestors)
   final_res$information <- res
   colnames(final_res) <- c("ancestors","value")
-  
-  # info$res <- res
-  
+
   return(final_res)
   
 }
 
 
+#' Represent continuous datas on a Lifemap background
+#'
+#' @param lm_obj a Lifemap object
+#' @param information the variable used to represent the datas
+#' @param my_function the function to be applied on the variable
+#'
+#' @return a shiny application
+#' @export
+#'
+#' @examples add_Lifemap_markers(LM_df_fr, "info1", my_function = sum)
 add_Lifemap_markers <- function(lm_obj, information, my_function){
   
   df <- lm_obj[[1]]
   basemap <- lm_obj[[2]]
   
   new_df <- pass_infos(df,information=information, my_function=my_function)
-  
-  # return(new_df)
-  # df <- merge(df, new_df, by.x="taxid", by.y="ancestors")
-  
-  # df[df$taxid %in% new_df$ancestors,information] <- new_df$value[new_df$ancestors %in% df$taxid]
-  
   for (id in 1:nrow(new_df)) {
     df[df$taxid==new_df[id, "ancestors"], information] <- new_df[id,]$value
   }
-  
-  # return(df)
-  
-  
+
   ui <- fluidPage(
     tags$style(type = "text/css", "html, body {width:100%;height:100%}"),
     leafletOutput("mymap", width = "100%", height = "1000px"),
@@ -78,38 +78,14 @@ add_Lifemap_markers <- function(lm_obj, information, my_function){
 
     # modification of the map to display the rights markers
     observe({
-      proxy <- leafletProxy("mymap", session=session, data = df_zoom_bounds()) %>%
+        leafletProxy("mymap", session=session, data = df_zoom_bounds()) %>%
         clearShapes() %>%
         clearMarkers() %>%
         addCircleMarkers(lng=~lon, lat=~lat, radius=~(info1/1000), fillColor = "red")
-      
-      proxy
+
     })
 
   }
 
   shinyApp(ui, server)
 }
-
-
-# add_Lifemap_markers(LM_df_fr, "info1", my_function = sum)
-
-
-
-
-
-
-
-
-
-
-
-# new_infos3 <- pass_infos(LM_df_fr[[1]],"info1",sum)
-
-
-
-
-
-
-
-
