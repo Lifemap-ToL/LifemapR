@@ -1,17 +1,17 @@
 library(shiny)
 library(leaflet)
 
-draw_subtree <- function(lm){
+draw_subtree <- function(lm_obj){
 
-  df <- lm[[1]]
-  basemap <- lm[[2]]
+  df <- lm_obj[[1]]
+  basemap <- lm_obj[[2]]
 
   ui <- fluidPage(
     tags$style(type = "text/css", "html, body {width:100%;height:100%}"),
     leafletOutput("mymap", width = "100%", height = "1000px"),
-    p(),
-    dataTableOutput("new_df"),
-    dataTableOutput("new_df2")
+    p()
+    # dataTableOutput("new_df"),
+    # dataTableOutput("new_df2")
   )
 
   server <- function(input, output, session) {
@@ -40,9 +40,9 @@ draw_subtree <- function(lm){
       proxy <- leafletProxy("mymap", session=session) %>%
         clearShapes()
       for (id in df_zoom_bounds()$taxid) {
-        print(df_zoom_bounds()[df_zoom_bounds()$taxid == id,])
-        print("yo")
-        print(df_descendants()[df_descendants()$ancestor == id,])
+        # print(df_zoom_bounds()[df_zoom_bounds()$taxid == id,])
+        # print("yo")
+        # print(df_descendants()[df_descendants()$ancestor == id,])
         for (desc in df_descendants()[df_descendants()$ancestor == id,]$taxid) {
         proxy <- proxy %>%
           addPolylines(lng=c(df_zoom_bounds()[df_zoom_bounds()$taxid == id,"lon"],df_descendants()[df_descendants()$taxid == desc,"lon"]),
@@ -53,8 +53,8 @@ draw_subtree <- function(lm){
       proxy
     })
 
-    output$new_df <- renderDataTable(df_zoom_bounds())
-    output$new_df2 <- renderDataTable(df_descendants())
+    # output$new_df <- renderDataTable(df_zoom_bounds())
+    # output$new_df2 <- renderDataTable(df_descendants())
 
   }
 
