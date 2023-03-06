@@ -133,7 +133,7 @@ construct_dataframe <- function(df, basemap = "ncbi") {
     stop('The dataframe must at least contain a "taxid" column')
   }
 
-  df <- distinct(df,taxid)
+  df <- distinct(df)
 
   # get coordinates
   print("getting the coordinates ...")
