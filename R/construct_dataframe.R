@@ -70,9 +70,12 @@ get_direct_ancestor <- function(df) {
 
   for (taxid in 1:nrow(df[df$type=="requested",])) {
     ancestry <- unlist(df[taxid, "ascend"])
-    df_ancestry <- rbind(df_ancestry,c(as.numeric(df[taxid, "taxid"]), as.numeric(ancestry[1])))
-    ancestors <- append(ancestors,ancestry[1])
-    descendants <- append(descendants,df[taxid, "taxid"])
+
+    if (!(as.numeric(df[taxid, "taxid"])) %in% descendants) {
+      df_ancestry <- rbind(df_ancestry,c(as.numeric(df[taxid, "taxid"]), as.numeric(ancestry[1])))
+      ancestors <- append(ancestors,ancestry[1])
+      descendants <- append(descendants,df[taxid, "taxid"])
+    }
 
     for (id in 1:(length(ancestry)-1)) {
       descendant <- ancestry[id]
@@ -93,6 +96,8 @@ get_direct_ancestor <- function(df) {
     }
   }
   colnames(df_ancestry) <- c("descendant", "ancestor")
+  # class(df_ancestry$taxid) <- "character"
+  # class(df_ancestry$ancestor) <- "character"
   df_tot <- merge(df, df_ancestry, by.x = "taxid", by.y = "descendant")
   return(df_tot)
 }
@@ -133,11 +138,11 @@ construct_dataframe <- function(df, basemap = "ncbi") {
     stop('The dataframe must at least contain a "taxid" column')
   }
 
-  df <- distinct(df)
+  df <- distinct(df,taxid, .keep_all = TRUE)
 
   # get coordinates
   print("getting the coordinates ...")
-  COO <- request_database(taxids = df$taxid, basemap, "taxo")
+  COO <- request_database(taxids = unique(df$taxid), basemap, "taxo")
 
   if (is.null(COO)) {
     stop("None of the TaxIDs given were found in the database")
@@ -161,7 +166,7 @@ construct_dataframe <- function(df, basemap = "ncbi") {
 
   # get lineage informations
   print("getting the lineage ...")
-  LIN <- request_database(taxids = df$taxid, basemap, "addi")
+  LIN <- request_database(taxids = unique(df$taxid), basemap, "addi")
   DATA <- merge(COO, LIN, by.x = "taxid", by.y = "taxid")
 
   INFOS_DATA <- merge(df, DATA, by.x = "taxid", by.y = "taxid")
@@ -180,7 +185,7 @@ construct_dataframe <- function(df, basemap = "ncbi") {
   ANCESTORS$type <- "ancestor"
   INFOS_DATA$type <- "requested"
 
-  nodes_requested <- ANCESTORS[ANCESTORS$taxid %in% INFOS_DATA$taxid,]
+  # nodes_requested <- ANCESTORS[ANCESTORS$taxid %in% INFOS_DATA$taxid,]
 
   INFOS_DATA <- dplyr::bind_rows(INFOS_DATA, ANCESTORS)
 
