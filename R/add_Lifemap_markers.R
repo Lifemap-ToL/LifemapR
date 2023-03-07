@@ -1,6 +1,6 @@
 #' Passes information from the leaves to the nodes
 #'
-#' @param df a dataframe from a lifemap_object 
+#' @param df a dataframe from a lifemap_object
 #' @param information the variable by wich the data needs to be represented
 #' @param my_function the function to be applied fom the representation
 #'
@@ -16,10 +16,10 @@ pass_infos <- function(df, information, my_function) {
   for (id in only_leaves) {
     info_tmp <- data.frame(unlist(df[df$taxid==id,"ascend"]),df[df$taxid==id,information])
     colnames(info_tmp) <- c("ancestors", as.character(id))
-    
+
     info <- left_join(info,info_tmp, by="ancestors")
   }
-  
+
   res <- apply(info,MARGIN=1,function(x){
     tmp <- x[!is.na(x)]
     my_function(tmp[-1])
@@ -30,7 +30,7 @@ pass_infos <- function(df, information, my_function) {
   colnames(final_res) <- c("ancestors","value")
 
   return(final_res)
-  
+
 }
 
 
@@ -43,12 +43,18 @@ pass_infos <- function(df, information, my_function) {
 #' @return a shiny application
 #' @export
 #'
-#' @examples add_Lifemap_markers(LM_df_fr, "info1", my_function = sum)
+#' @examples
+#' df <- read.csv("data/taxids_example.txt", row.names = 1)
+#' df <- distinct(df)
+#' info1 <- runif(n=950, min=1, max=200)
+#' df$info1 <- info1
+#' LM_df <- construct_dataframe(df)
+#' add_Lifemap_markers(LM_df, "info1", my_function = sum)
 add_Lifemap_markers <- function(lm_obj, information, my_function){
-  
+
   df <- lm_obj[[1]]
   basemap <- lm_obj[[2]]
-  
+
   new_df <- pass_infos(df,information=information, my_function=my_function)
   for (id in 1:nrow(new_df)) {
     df[df$taxid==new_df[id, "ancestors"], information] <- new_df[id,]$value
