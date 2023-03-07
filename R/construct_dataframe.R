@@ -196,5 +196,5 @@ construct_dataframe <- function(df, basemap = "ncbi") {
 
   FINAL_DATA <- dplyr::bind_rows(FINAL_DATA, LUCA)
 
-  return(list(FINAL_DATA,basemap))
+  return(list(df=FINAL_DATA,basemap=basemap))
 }
