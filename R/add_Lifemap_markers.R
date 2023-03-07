@@ -42,6 +42,7 @@ pass_infos <- function(df, information, my_function) {
 #'
 #' @return a shiny application
 #' @export
+#' @importFrom dplyr left_join
 #'
 #' @examples
 #' df <- read.csv("data/taxids_example.txt", row.names = 1)
