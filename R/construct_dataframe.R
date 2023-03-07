@@ -10,7 +10,7 @@ request_database <- function(taxids, basemap, core) {
   if (basemap == "ncbi") {
     basemap_url <- "https://lifemap-ncbi.univ-lyon1.fr/solr/"
   } else if (basemap == "fr") {
-    basemap_url <- "https://lifemap.univ-lyon1.fr/solr/"
+    basemap_url <- "https://lifemap-fr.univ-lyon1.fr/solr/"
   }
 
   DATA <- NULL
@@ -110,8 +110,8 @@ get_direct_ancestor <- function(df) {
 #' @param df a dataframe containing at least a column named "taxid"
 #' @param basemap the basemap wanted, either "fr" or "ncbi" ("ncbi" by default)
 #'
-#' @return a list with :
-#' - a dataframe containing at least :
+#' @return a lifemap object with :
+#' - df : a dataframe containing at least :
 #'   - the taxids (taxid)
 #'   - the longitude (long)
 #'   - the latitude (lat)
@@ -119,7 +119,7 @@ get_direct_ancestor <- function(df) {
 #'   - the zoom at which the taxa can be seen (zoom)
 #'   - the ascendants of requested taxids (ascend)
 #'   - the type of each taxid ("requested" or "ancestor")
-#' - the basemap used
+#' - basemap : the basemap used to get taxa's informations
 #'
 #' @importFrom jsonlite fromJSON
 #' @importFrom dplyr bind_rows distinct

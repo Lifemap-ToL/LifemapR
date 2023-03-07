@@ -28,7 +28,7 @@ draw_subtree <- function(lm_obj){
 
     # define the zone visible by the users
     df_zoom_bounds <- reactive(
-      df[df$zoom <= input$mymap_zoom &
+      df[df$zoom <= (input$mymap_zoom+5) &
            df$lat > input$mymap_bounds$south &
            df$lat < input$mymap_bounds$north &
            df$lon > input$mymap_bounds$west &
