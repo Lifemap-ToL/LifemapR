@@ -133,7 +133,7 @@ get_direct_ancestor <- function(df) {
 #' )
 #'
 #' Lifemap_df <- construct_dataframe(df, "ncbi")
-construct_dataframe <- function(df, basemap = "ncbi") {
+construct_dataframe <- function(df, basemap = "ncbi", verbose=TRUE) {
   if (is.null(df$taxid)) {
     stop('The dataframe must at least contain a "taxid" column')
   }
@@ -141,7 +141,9 @@ construct_dataframe <- function(df, basemap = "ncbi") {
   df <- distinct(df,taxid, .keep_all = TRUE)
 
   # get coordinates
-  print("getting the coordinates ...")
+  if (verbose){
+    cat("getting the coordinates ...\n")
+  }
   COO <- request_database(taxids = unique(df$taxid), basemap, "taxo")
 
   if (is.null(COO)) {
@@ -165,7 +167,9 @@ construct_dataframe <- function(df, basemap = "ncbi") {
   }
 
   # get lineage informations
-  print("getting the lineage ...")
+  if (verbose){
+    cat("getting the lineage ...\n")
+  }
   LIN <- request_database(taxids = unique(df$taxid), basemap, "addi")
   DATA <- merge(COO, LIN, by.x = "taxid", by.y = "taxid")
 
@@ -173,7 +177,9 @@ construct_dataframe <- function(df, basemap = "ncbi") {
   class(INFOS_DATA$taxid) <- "character"
 
   # get the coordinates of the ancestors of the taxids
-  print("constructing the ancestry ...")
+  if (verbose){
+    cat("constructing the ancestry ...\n")
+  }
   unique_ancestors <- unique(unlist(DATA$ascend))
 
   # we don't request already requested taxid
@@ -189,12 +195,23 @@ construct_dataframe <- function(df, basemap = "ncbi") {
 
   INFOS_DATA <- dplyr::bind_rows(INFOS_DATA, ANCESTORS)
 
-  print("getting the direct ancestor ...")
+  if (verbose){
+    cat("creating the final dataframe ...\n")
+  }
   FINAL_DATA <- get_direct_ancestor(INFOS_DATA)
 
   LUCA <- data.frame(taxid="0",lon=0, lat=-4.226497,sci_name="Luca",zoom=5, type="ancestor")
 
   FINAL_DATA <- dplyr::bind_rows(FINAL_DATA, LUCA)
 
-  return(list(df=FINAL_DATA,basemap=basemap))
+  lm_obj <- list(df=FINAL_DATA,basemap=basemap)
+  class(lm_obj) <- c("list", "lm_obj")
+
+  return(lm_obj)
 }
+
+print.lm_obj <- function(lm_obj) {
+  cat('The dataframe contains', nrow(lm_obj$df),'rows and', ncol(lm_obj$df), 'columns. \n')
+  cat('The basemap used is :', lm_obj$basemap,'\n')
+}
+
