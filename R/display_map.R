@@ -9,6 +9,7 @@
 #'
 #' @return HTML widget object  with graphics layers
 #' @export
+#' @importFrom leaflet leaflet addTiles
 #'
 #' @examples display_map("fr")
 display_map <- function(df=NULL,map) {

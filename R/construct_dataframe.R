@@ -53,8 +53,6 @@ request_database <- function(taxids, basemap, core) {
 }
 
 
-
-
 #' Create a df with informations about ancestry (father and son nodes)
 #'
 #' @param df a dataframe
