@@ -109,6 +109,7 @@ get_direct_ancestor <- function(df) {
 #'
 #' @param df a dataframe containing at least a column named "taxid"
 #' @param basemap the basemap wanted, either "fr" or "ncbi" ("ncbi" by default)
+#' @param verbose if TRUE will write informations in the terminal
 #'
 #' @return a lifemap object with :
 #' - df : a dataframe containing at least :
@@ -127,10 +128,7 @@ get_direct_ancestor <- function(df) {
 #' @export
 #'
 #' @examples
-#' df <- data.frame(
-#'   "taxid" = c(3641, 3649, 403667, 3394, 54308, 1902823),
-#'   "info1" = c(3, 3, 4, 3, 5, 1)
-#' )
+#' df <- read.csv(file="data/eukaryotes_1000.txt", sep="\t", header=TRUE)
 #'
 #' Lifemap_df <- construct_dataframe(df, "ncbi")
 construct_dataframe <- function(df, basemap = "ncbi", verbose=TRUE) {
@@ -138,22 +136,26 @@ construct_dataframe <- function(df, basemap = "ncbi", verbose=TRUE) {
     stop('The dataframe must at least contain a "taxid" column')
   }
 
-  df <- distinct(df,taxid, .keep_all = TRUE)
+  df_distinct <- dplyr::distinct(df,taxid, .keep_all = TRUE)
+  if (!(nrow(df_distinct) == nrow(df))) {
+    warning(sprintf("%s rows have been removed because there was duplicated TaxIDs \n",nrow(df)-nrow(df_distinct)))
+  }
+
 
   # get coordinates
   if (verbose){
     cat("getting the coordinates ...\n")
   }
-  COO <- request_database(taxids = unique(df$taxid), basemap, "taxo")
+  COO <- request_database(taxids = unique(df_distinct$taxid), basemap, "taxo")
 
   if (is.null(COO)) {
     stop("None of the TaxIDs given were found in the database")
   }
 
   not_found <- c()
-  if (nrow(df) != nrow(COO)) {
+  if (nrow(df_distinct) != nrow(COO)) {
     not_found <- c()
-    for (id in df$taxid) {
+    for (id in df_distinct$taxid) {
       if (!(id %in% COO$taxid)) {
         not_found <- append(not_found, id)
       }
@@ -166,14 +168,13 @@ construct_dataframe <- function(df, basemap = "ncbi", verbose=TRUE) {
     ))
   }
 
-  # get lineage informations
   if (verbose){
     cat("getting the lineage ...\n")
   }
-  LIN <- request_database(taxids = unique(df$taxid), basemap, "addi")
+  LIN <- request_database(taxids = unique(df_distinct$taxid), basemap, "addi")
   DATA <- merge(COO, LIN, by.x = "taxid", by.y = "taxid")
 
-  INFOS_DATA <- merge(df, DATA, by.x = "taxid", by.y = "taxid")
+  INFOS_DATA <- merge(df_distinct, DATA, by.x = "taxid", by.y = "taxid")
   class(INFOS_DATA$taxid) <- "character"
 
   # get the coordinates of the ancestors of the taxids
