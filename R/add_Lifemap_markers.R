@@ -56,17 +56,29 @@ pass_infos <- function(df, information, my_function) {
 #' add_Lifemap_markers(LM_df, "info1", my_function = sum)
 add_Lifemap_markers <- function(lm_obj,
                                 information,
+                                col_info,
                                 my_function,
                                 by="size",
                                 pass_info=TRUE,
                                 legend=TRUE){
 
-  df <- lm_obj$df
+  df <- lm_obj$df[,c("taxid", information,"lon", "lat", "sci_name", "zoom", "ascend", "genomes", "type", "ancestor")]
   basemap <- lm_obj$basemap
 
-  new_df <- pass_infos(df,information=information, my_function=my_function)
-  for (id in 1:nrow(new_df)) {
-    df[df$taxid==new_df[id, "ancestors"], information] <- new_df[id,]$value
+  print(df)
+  OldRange <- c()
+  NewRange <- c()
+  for (i in 1:length(information)) {
+    OldRange <- append(OldRange,(max(df[[information[i]]],na.rm = TRUE) - min(df[[information[i]]],na.rm = TRUE)))
+    NewRange <- append(NewRange,(50 - 20))
+  }
+
+
+  for (i in 1:length(information)){
+    new_df <- pass_infos(df,information=information[i], my_function=my_function)
+    for (id in 1:nrow(new_df)) {
+      df[df$taxid==new_df[id, "ancestors"], information[i]] <- new_df[id,]$value
+    }
   }
 
   ui <- fluidPage(
@@ -101,31 +113,34 @@ add_Lifemap_markers <- function(lm_obj,
         clearShapes() %>%
         clearMarkers() %>%
         clearControls()
-        if (by == "size") {
-          proxy <- addCircleMarkers(proxy, lng=df_zoom_bounds()$lon,
-                          lat=df_zoom_bounds()$lat,
-                          radius=df_zoom_bounds()[[information]],
-                          fillColor = "red",
-                          popup = paste(df_zoom_bounds()$sci_name))
-        } else if (by == "color") {
-          pal=colorpal()
-          proxy <- addCircleMarkers(proxy, lng=df_zoom_bounds()$lon,
-                                    lat=df_zoom_bounds()$lat,
-                                    radius=20,
-                                    fillColor = pal(df_zoom_bounds()[[information]]),
-                                    stroke=FALSE,
-                                    fillOpacity=0.5,
-                                    popup = paste(df_zoom_bounds()$sci_name))
-          if (legend == TRUE) {
 
-            proxy <- addLegend(proxy, position = "bottomright", title=information,
-                               pal = pal, values = df_zoom_bounds()[[information]])
 
+        for (i in 1:length(information)){
+          if (by == "size") {
+            proxy <- addCircleMarkers(proxy, lng=df_zoom_bounds()$lon,
+                            lat=df_zoom_bounds()$lat,
+                            radius=(((df_zoom_bounds()[[information[i]]] - 1) * NewRange[i]) / OldRange[i]) + 20,
+                            fillColor = col_info[i],
+                            popup = paste(df_zoom_bounds()$sci_name), stroke=FALSE)
+          } else if (by == "color") {
+            pal=colorpal()
+            proxy <- addCircleMarkers(proxy, lng=df_zoom_bounds()$lon,
+                                      lat=df_zoom_bounds()$lat,
+                                      radius=20,
+                                      fillColor = pal(df_zoom_bounds()[[information[i]]]),
+                                      stroke=FALSE,
+                                      fillOpacity=0.5,
+                                      popup = paste(df_zoom_bounds()$sci_name))
+            if (legend == TRUE) {
+
+              proxy <- addLegend(proxy, position = "bottomright", title=information,
+                                 pal = pal, values = df_zoom_bounds()[[information]])
+
+            }
           }
         }
-
-        proxy
-
+        proxy <- addLegend(proxy, position = "bottomright", title="size",
+                           colors = col_info, labels = information)
     })
 
   }
