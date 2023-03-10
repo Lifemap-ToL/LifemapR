@@ -105,7 +105,8 @@ add_Lifemap_markers <- function(lm_obj,
           proxy <- addCircleMarkers(proxy, lng=df_zoom_bounds()$lon,
                           lat=df_zoom_bounds()$lat,
                           radius=df_zoom_bounds()[[information]],
-                          fillColor = "red")
+                          fillColor = "red",
+                          popup = paste(df_zoom_bounds()$sci_name))
         } else if (by == "color") {
           pal=colorpal()
           proxy <- addCircleMarkers(proxy, lng=df_zoom_bounds()$lon,
@@ -113,14 +114,16 @@ add_Lifemap_markers <- function(lm_obj,
                                     radius=20,
                                     fillColor = pal(df_zoom_bounds()[[information]]),
                                     stroke=FALSE,
-                                    fillOpacity=0.5)
-        }
-        if (legend == TRUE) {
+                                    fillOpacity=0.5,
+                                    popup = paste(df_zoom_bounds()$sci_name))
+          if (legend == TRUE) {
 
-          proxy <- addLegend(proxy, position = "bottomright", title=information,
-                    pal = pal, values = df_zoom_bounds()[[information]])
+            proxy <- addLegend(proxy, position = "bottomright", title=information,
+                               pal = pal, values = df_zoom_bounds()[[information]])
 
+          }
         }
+
         proxy
 
     })
