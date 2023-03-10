@@ -65,7 +65,6 @@ add_Lifemap_markers <- function(lm_obj,
   df <- lm_obj$df[,c("taxid", information,"lon", "lat", "sci_name", "zoom", "ascend", "genomes", "type", "ancestor")]
   basemap <- lm_obj$basemap
 
-  print(df)
   OldRange <- c()
   NewRange <- c()
   for (i in 1:length(information)) {
@@ -114,31 +113,26 @@ add_Lifemap_markers <- function(lm_obj,
         clearMarkers() %>%
         clearControls()
 
-
         for (i in 1:length(information)){
           if (by == "size") {
+            radius_info <- (((df_zoom_bounds()[[information[i]]] - 1) * NewRange[i]) / OldRange[i]) + 20
+            fillCol_info <- col_info[i]
+          }
+          if (by == "color") {
+            radius_info <- 20
+            fillCol_info <- pal(df_zoom_bounds()[[information[i]]])
+          }
             proxy <- addCircleMarkers(proxy, lng=df_zoom_bounds()$lon,
                             lat=df_zoom_bounds()$lat,
-                            radius=(((df_zoom_bounds()[[information[i]]] - 1) * NewRange[i]) / OldRange[i]) + 20,
-                            fillColor = col_info[i],
-                            popup = paste(df_zoom_bounds()$sci_name), stroke=FALSE)
-          } else if (by == "color") {
-            pal=colorpal()
-            proxy <- addCircleMarkers(proxy, lng=df_zoom_bounds()$lon,
-                                      lat=df_zoom_bounds()$lat,
-                                      radius=20,
-                                      fillColor = pal(df_zoom_bounds()[[information[i]]]),
-                                      stroke=FALSE,
-                                      fillOpacity=0.5,
-                                      popup = paste(df_zoom_bounds()$sci_name))
+                            radius=radius_info,
+                            fillColor = fillCol_info,
+                            popup = paste('<p style="color:',fillCol_info,'";>',df_zoom_bounds()$sci_name,'</p>'), stroke=FALSE)
             if (legend == TRUE) {
-
               proxy <- addLegend(proxy, position = "bottomright", title=information,
                                  pal = pal, values = df_zoom_bounds()[[information]])
 
             }
           }
-        }
         proxy <- addLegend(proxy, position = "bottomright", title="size",
                            colors = col_info, labels = information)
     })
