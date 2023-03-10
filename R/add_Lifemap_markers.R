@@ -39,6 +39,9 @@ pass_infos <- function(df, information, my_function) {
 #' @param lm_obj a Lifemap object
 #' @param information the variable used to represent the datas
 #' @param my_function the function to be applied on the variable
+#' @param by the way the variable needs to be represented ("size", or "color")
+#' @param pass_info to pass the information to the nodes or not (either TRUE or FALSE)
+#' (note that not to pass the informations may cause a lot of markers to be displayed)
 #'
 #' @return a shiny application
 #' @export
@@ -51,10 +54,15 @@ pass_infos <- function(df, information, my_function) {
 #' df$info1 <- info1
 #' LM_df <- construct_dataframe(df)
 #' add_Lifemap_markers(LM_df, "info1", my_function = sum)
-add_Lifemap_markers <- function(lm_obj, information, my_function){
+add_Lifemap_markers <- function(lm_obj,
+                                information,
+                                my_function,
+                                by="size",
+                                pass_info=TRUE,
+                                legend=TRUE){
 
-  df <- lm_obj[[1]]
-  basemap <- lm_obj[[2]]
+  df <- lm_obj$df
+  basemap <- lm_obj$basemap
 
   new_df <- pass_infos(df,information=information, my_function=my_function)
   for (id in 1:nrow(new_df)) {
@@ -83,12 +91,37 @@ add_Lifemap_markers <- function(lm_obj, information, my_function){
       display_map(df,map = basemap) %>% fitBounds(~min(lon), ~min(lat), ~max(lon), ~max(lat))
     })
 
+    colorpal <- reactive({
+      colorNumeric("Accent", df[[information]])
+    })
+
     # modification of the map to display the rights markers
     observe({
-        leafletProxy("mymap", session=session, data = df_zoom_bounds()) %>%
+        proxy <- leafletProxy("mymap", session=session) %>%
         clearShapes() %>%
         clearMarkers() %>%
-        addCircleMarkers(lng=~lon, lat=~lat, radius=~(info1/1000), fillColor = "red")
+        clearControls()
+        if (by == "size") {
+          proxy <- addCircleMarkers(proxy, lng=df_zoom_bounds()$lon,
+                          lat=df_zoom_bounds()$lat,
+                          radius=df_zoom_bounds()[[information]],
+                          fillColor = "red")
+        } else if (by == "color") {
+          pal=colorpal()
+          proxy <- addCircleMarkers(proxy, lng=df_zoom_bounds()$lon,
+                                    lat=df_zoom_bounds()$lat,
+                                    radius=20,
+                                    fillColor = pal(df_zoom_bounds()[[information]]),
+                                    stroke=FALSE,
+                                    fillOpacity=0.5)
+        }
+        if (legend == TRUE) {
+
+          proxy <- addLegend(proxy, position = "bottomright", title=information,
+                    pal = pal, values = df_zoom_bounds()[[information]])
+
+        }
+        proxy
 
     })
 
