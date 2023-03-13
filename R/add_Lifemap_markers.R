@@ -65,19 +65,21 @@ add_Lifemap_markers <- function(lm_obj,
   df <- lm_obj$df[,c("taxid", information,"lon", "lat", "sci_name", "zoom", "ascend", "genomes", "type", "ancestor")]
   basemap <- lm_obj$basemap
 
-  OldRange <- c()
-  NewRange <- c()
-  for (i in 1:length(information)) {
-    OldRange <- append(OldRange,(max(df[[information[i]]],na.rm = TRUE) - min(df[[information[i]]],na.rm = TRUE)))
-    NewRange <- append(NewRange,(50 - 20))
-  }
 
-
+  # pass the info
   for (i in 1:length(information)){
     new_df <- pass_infos(df,information=information[i], my_function=my_function)
     for (id in 1:nrow(new_df)) {
       df[df$taxid==new_df[id, "ancestors"], information[i]] <- new_df[id,]$value
     }
+  }
+
+  # calculate the new scale for datas
+  OldRange <- c()
+  NewRange <- c()
+  for (i in 1:length(information)) {
+    OldRange <- append(OldRange,(max(df[[information[i]]],na.rm = TRUE) - min(df[[information[i]]],na.rm = TRUE)))
+    NewRange <- append(NewRange,(50 - 20))
   }
 
   ui <- fluidPage(
@@ -108,33 +110,51 @@ add_Lifemap_markers <- function(lm_obj,
 
     # modification of the map to display the rights markers
     observe({
-        proxy <- leafletProxy("mymap", session=session) %>%
+      proxy <- leafletProxy("mymap", session=session) %>%
         clearShapes() %>%
         clearMarkers() %>%
         clearControls()
 
-        for (i in 1:length(information)){
-          if (by == "size") {
-            radius_info <- (((df_zoom_bounds()[[information[i]]] - 1) * NewRange[i]) / OldRange[i]) + 20
-            fillCol_info <- col_info[i]
-          }
-          if (by == "color") {
-            radius_info <- 20
-            fillCol_info <- pal(df_zoom_bounds()[[information[i]]])
-          }
-            proxy <- addCircleMarkers(proxy, lng=df_zoom_bounds()$lon,
-                            lat=df_zoom_bounds()$lat,
-                            radius=radius_info,
-                            fillColor = fillCol_info,
-                            popup = paste('<p style="color:',fillCol_info,'";>',df_zoom_bounds()$sci_name,'</p>'), stroke=FALSE)
-            if (legend == TRUE) {
-              proxy <- addLegend(proxy, position = "bottomright", title=information,
-                                 pal = pal, values = df_zoom_bounds()[[information]])
+      for (i in 1:length(information)){
+        if (by == "size") {
+          radius_info <- (((df_zoom_bounds()[[information[i]]] - 1) * NewRange[i]) / OldRange[i]) + 20
+          fillCol_info <- col_info[i]
+        }
+        if (by == "color") {
+          radius_info <- 20
+          fillCol_info <- pal(df_zoom_bounds()[[information[i]]])
+        }
+        proxy <- addCircleMarkers(proxy, lng=df_zoom_bounds()$lon,
+                                  lat=df_zoom_bounds()$lat,
+                                  radius=radius_info,
+                                  fillColor = fillCol_info,
+                                  fillOpacity = 0.5,
+                                  stroke=FALSE)
+        if (legend == TRUE) {
+          proxy <- addLegend(proxy, position = "bottomright", title=information,
+                             pal = pal, values = df_zoom_bounds()[[information]])
 
-            }
-          }
-        proxy <- addLegend(proxy, position = "bottomright", title="size",
-                           colors = col_info, labels = information)
+        }
+      }
+      proxy <- addLegend(proxy, position = "bottomright", title="size",
+                         colors = col_info, labels = information)
+    })
+
+    showSciName <- function(taxid, lng, lat) {
+      selectedId <- df[round(df$lon, digits=6) == round(lng,digits=6) & round(df$lat, digits=6) == round(lat, digits = 6),]
+      content <- as.character(selectedId$taxid)
+      leafletProxy("mymap") %>% addPopups(lng, lat, content)
+    }
+
+    observe({
+      leafletProxy("mymap") %>% clearPopups()
+      event <- input$mymap_marker_click
+      if (is.null(event))
+        return()
+
+      isolate({
+        showSciName(event$id, event$lng, event$lat)
+      })
     })
 
   }
