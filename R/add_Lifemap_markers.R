@@ -56,7 +56,7 @@ pass_infos <- function(df, information, my_function) {
 #' add_Lifemap_markers(LM_df, "info1", my_function = sum)
 add_Lifemap_markers <- function(lm_obj,
                                 information,
-                                col_info,
+                                col_info = NULL,
                                 my_function,
                                 by="size",
                                 pass_info=TRUE,
@@ -65,6 +65,9 @@ add_Lifemap_markers <- function(lm_obj,
   df <- lm_obj$df[,c("taxid", information,"lon", "lat", "sci_name", "zoom", "ascend", "genomes", "type", "ancestor")]
   basemap <- lm_obj$basemap
 
+  if (is.null(col_info)) {
+    col_info <- hcl.colors(length(information),palette = "set3")
+  }
 
   # pass the info
   for (i in 1:length(information)){
