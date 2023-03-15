@@ -204,7 +204,7 @@ construct_dataframe <- function(df, basemap = "ncbi", verbose=TRUE) {
   FINAL_DATA <- dplyr::bind_rows(FINAL_DATA, LUCA)
 
   lm_obj <- list(df=FINAL_DATA,basemap=basemap)
-  class(lm_obj) <- c("list", "lm_obj")
+  class(lm_obj) <- c("lm_obj","list")
 
   return(lm_obj)
 }
@@ -214,3 +214,4 @@ print.lm_obj <- function(lm_obj) {
   cat('The basemap used is :', lm_obj$basemap,'\n')
 }
 
+is.lm_obj <- function(x) inherits(x, "lm_obj")

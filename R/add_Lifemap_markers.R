@@ -20,6 +20,7 @@ pass_infos <- function(df, information, my_function) {
     info <- left_join(info,info_tmp, by="ancestors")
   }
 
+  # compute the value for each row
   res <- apply(info,MARGIN=1,function(x){
     tmp <- x[!is.na(x)]
     my_function(tmp[-1])
@@ -139,13 +140,19 @@ add_Lifemap_markers <- function(lm_obj,
 
         }
       }
-      proxy <- addLegend(proxy, position = "bottomright", title="size",
-                         colors = col_info, labels = information)
+      if (by == "size" && legend == TRUE) {
+        proxy <- addLegend(proxy, position = "bottomright", title="size",
+                           colors = col_info, labels = information)
+      }
     })
 
     showSciName <- function(taxid, lng, lat) {
       selectedId <- df[round(df$lon, digits=6) == round(lng,digits=6) & round(df$lat, digits=6) == round(lat, digits = 6),]
       content <- as.character(selectedId$taxid)
+      for (i in 1:length(information)) {
+        new_string <- paste(information[i]," : ", selectedId[[information[i]]], sep="")
+        content <- paste(content,new_string, sep="\n")
+      }
       leafletProxy("mymap") %>% addPopups(lng, lat, content)
     }
 
