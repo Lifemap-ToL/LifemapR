@@ -49,12 +49,11 @@ pass_infos <- function(df, information, my_function) {
 #' @importFrom dplyr left_join
 #'
 #' @examples
-#' df <- read.csv("data/taxids_example.txt", row.names = 1)
-#' df <- distinct(df)
-#' info1 <- runif(n=950, min=1, max=200)
-#' df$info1 <- info1
+#' df <- read.csv("data/eukaryotes_1000.txt", header=TRUE, sep="\t")
+#' df_test[,"GC."] <- as.numeric(as.character(df_test[,"GC."]))
+#' df_test[,"Genes"] <- as.numeric(as.character(df_test[,"Genes"]))
 #' LM_df <- construct_dataframe(df)
-#' add_Lifemap_markers(LM_df, "info1", my_function = sum)
+#' add_Lifemap_markers(LM_df, information = c("GC.","Genes"), my_function=mean, legend = FALSE)
 add_Lifemap_markers <- function(lm_obj,
                                 information,
                                 col_info = NULL,
