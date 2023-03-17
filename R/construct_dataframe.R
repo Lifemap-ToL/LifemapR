@@ -209,9 +209,22 @@ construct_dataframe <- function(df, basemap = "ncbi", verbose=TRUE) {
   return(lm_obj)
 }
 
+#' print lm_obj
+#'
+#' @param lm_obj
+#'
+#' @return NA
+#' @export
+#'
+#' @examples print(LM_df)
 print.lm_obj <- function(lm_obj) {
-  cat('The dataframe contains', nrow(lm_obj$df),'rows and', ncol(lm_obj$df), 'columns. \n')
-  cat('The basemap used is :', lm_obj$basemap,'\n')
+  if (is.null(lm_obj$aes)) {
+    cat('The dataframe contains', nrow(lm_obj$df),'rows and', ncol(lm_obj$df), 'columns. \n')
+    cat('The basemap used is :', lm_obj$basemap,'\n')
+  } else {
+    print(add_Lifemap_markers(lm_obj))
+  }
+
 }
 
 is.lm_obj <- function(x) inherits(x, "lm_obj")
