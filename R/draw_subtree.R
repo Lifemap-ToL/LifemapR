@@ -1,9 +1,9 @@
 #' Draw the subtree of the ToL based on the taxids given
 #'
-#' @param lm_obj a lifemap object
-#' @param col the line color
+#' @param lm_obj a lifemap.obj object
+#' @param col the line's color
 #' @param lwd the line's weight
-#' @param ... any parameter that can be passed to the leaflet::addPolylines function
+#' @param ... any parameter that can be passed to the leaflet::addPolylines() function
 #'
 #' @return a shiny application
 #' @export
@@ -49,7 +49,7 @@ draw_subtree <- function(lm_obj, col="yellow", lwd=5,...){
       display_map(df,map = basemap) %>% leaflet::fitBounds(~min(lon), ~min(lat), ~max(lon), ~max(lat))
     })
 
-    # modification of the map to display the rights markers
+    # modification of the map to display the right lines
     shiny::observe({
       proxy <- leaflet::leafletProxy("mymap", session=session) %>%
         leaflet::clearShapes()
