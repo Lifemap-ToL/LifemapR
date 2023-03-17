@@ -11,18 +11,18 @@ An R package to visualise datas on a Lifemap base (https://lifemap-ncbi.univ-lyo
 
 Here is a brief introduction on how to use LifemapR.
 
-1. With the ```construct_dataframe``` function transform your already existing datas into a format usable by LifemapR functions
+1. With the ```build_Lifemap``` function transform your already existing datas into a format usable by LifemapR functions
 
 ```r
 df <- read.csv("data/taxids_example.txt", row.names = 1)
 
 # Construction of a LifemapR usable dataframe
-LM_df <- LifemapR::construct_dataframe(df)
+LM_obj <- LifemapR::build_Lifemap(df)
 ```
-After the ```construct_dataframe``` function the result is a LifemapR format containing a dataframe and the name of the basemap chosen. These elements are accessible as following :
+After the ```build_Lifemap``` function the result is a LifemapR format containing a dataframe and the name of the basemap chosen. These elements are accessible as following :
 ```r
-full_df <- LM_df[[1]]
-basemap <- LM_df[[2]]
+full_df <- LM_obj$df
+basemap <- LM_obj$basemap
 ```
 
 2. Then you can display a map with wanted informations either by calling one of ```LifemapR``` functions or by calling ```leaflet``` functions \
@@ -30,13 +30,13 @@ basemap <- LM_df[[2]]
 However, please note that it should only be used for small data sets.
 ```r
 # Note that even when using leaflet functions, you need to use the LifemapR display_map function
-LifemapR::display_map(df=LM_df[[1]][LM_df$type == "requested",], map=LM_df[[2]]) %>% 
+LifemapR::display_map(df=LM_obj$df[LM_obj$df$type == "requested",], m=LM_obj$basemap) %>% 
     addMarkers(~lon,~lat,label=~sci_name)
 
 # or
 
-map <- LifemapR::display_map(df=LM_df[[1]][LM_df$type == "requested",], map=LM_df[[2]]) 
-leaflet::addMarkers(map, ~lon,~lat,label=~sci_name)
+m <- LifemapR::display_map(df=LM_obj$df[LM_obj$df$type == "requested",], map=LM_df$basemap) 
+leaflet::addMarkers(m, ~lon,~lat,label=~sci_name)
 ```
 
 - The use of ```LifemapR``` function is recommended for all the other operations.\
@@ -44,7 +44,7 @@ Note that with the ```LifemapR``` functions, a ```shiny``` application will be l
 
 ```r
 # A LifemapR function
-LifemapR::draw_subtree(LM_df)
+LifemapR::draw_subtree(LM_obj)
 ```
 
 
