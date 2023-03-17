@@ -35,7 +35,7 @@ LifemapR::display_map(df=LM_obj$df[LM_obj$df$type == "requested",], m=LM_obj$bas
 
 # or
 
-m <- LifemapR::display_map(df=LM_obj$df[LM_obj$df$type == "requested",], map=LM_df$basemap) 
+m <- LifemapR::display_map(df=LM_obj$df[LM_obj$df$type == "requested",], map=LM_obj$basemap) 
 leaflet::addMarkers(m, ~lon,~lat,label=~sci_name)
 ```
 
