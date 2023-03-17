@@ -1,10 +1,10 @@
-#' Request one of the core of the solr database corresponding to the basemap choosen with TaxIDs
+#' Request one of the core of the solr database corresponding to the basemap choosen with TaxIDs wanted
 #'
 #' @param taxids a vector of TaxIDs to be requested
-#' @param basemap the name of the basemap wanted to represent the datas on, either "ncbi" or "fr"
-#' @param core The core to be requested either "taxo" or "addi"
+#' @param basemap the name of the basemap wanted to represent the datas on (can be "ncbi", "fr" ...)
+#' @param core The core to be requested either "taxo" (for position informations) or "addi" (ascendance informations)
 #'
-#' @return a dataframe containing all the informations from the database
+#' @return a dataframe containing all the informations requested from the database
 request_database <- function(taxids, basemap, core) {
   # getting the rigth URL depending on the basemap wanted
   if (basemap == "ncbi") {
@@ -16,8 +16,10 @@ request_database <- function(taxids, basemap, core) {
   DATA <- NULL
   i <- 1
   while (i <= length(taxids)) {
+    #requests are made 100 by 100
     taxids_sub <- taxids[i:(i + 99)]
     taxids_sub <- taxids_sub[!is.na(taxids_sub)]
+    # adding the URL separator between the taxids
     taxids_sub <- paste(taxids_sub, collapse = "%0Ataxid%3A")
 
     url <- paste(basemap_url, core, "/select?q=taxid%3A",
@@ -53,14 +55,13 @@ request_database <- function(taxids, basemap, core) {
 }
 
 
-#' Create a df with informations about ancestry (father and son nodes)
+#' Add the direct ancestor for each taxa of the dataframe
 #'
-#' @param df a dataframe
+#' @param df a dataframe with requested taxid and the full ascendance information
 #'
-#' @return a dataframe
+#' @return a dataframe with the direct ancestor for each taxa
 #'
 #' @importFrom dplyr bind_rows
-#'
 get_direct_ancestor <- function(df) {
   ancestors <- c()
   descendants <- c()
@@ -69,8 +70,10 @@ get_direct_ancestor <- function(df) {
   for (taxid in 1:nrow(df[df$type=="requested",])) {
     ancestry <- unlist(df[taxid, "ascend"])
 
+    # add the requested taxa and ancestor if not already encountered
     if (!(as.numeric(df[taxid, "taxid"])) %in% descendants) {
-      df_ancestry <- rbind(df_ancestry,c(as.numeric(df[taxid, "taxid"]), as.numeric(ancestry[1])))
+      df_ancestry <- rbind(df_ancestry,c(as.numeric(df[taxid, "taxid"]),
+                                         as.numeric(ancestry[1])))
       ancestors <- append(ancestors,ancestry[1])
       descendants <- append(descendants,df[taxid, "taxid"])
     }
@@ -79,13 +82,18 @@ get_direct_ancestor <- function(df) {
       descendant <- ancestry[id]
       ancestor <- ancestry[id+1]
 
+      # add descendant and ancestor if ancestor not already encountered
       if (!(ancestor %in% ancestors)) {
-        df_ancestry <- rbind(df_ancestry,c(descendant, ancestor))
+        df_ancestry <- rbind(df_ancestry,
+                             c(descendant, ancestor))
         ancestors <- append(ancestors,ancestor)
         descendants <- append(descendants, descendant)
       } else {
+
+        # add descendant if not already encountered and ancestor already known
         if (!(descendant %in% descendants)) {
-          df_ancestry <- rbind(df_ancestry,c(descendant, ancestor))
+          df_ancestry <- rbind(df_ancestry,
+                               c(descendant, ancestor))
           descendants <- append(descendants, descendant)
         } else {
           break
@@ -94,8 +102,6 @@ get_direct_ancestor <- function(df) {
     }
   }
   colnames(df_ancestry) <- c("descendant", "ancestor")
-  # class(df_ancestry$taxid) <- "character"
-  # class(df_ancestry$ancestor) <- "character"
   df_tot <- merge(df, df_ancestry, by.x = "taxid", by.y = "descendant")
   return(df_tot)
 }
@@ -103,11 +109,11 @@ get_direct_ancestor <- function(df) {
 
 
 
-#' A function to construct a dataframe usable by LifemapR functions
+#' A function to construct a LidemapR object, usable by other functions
 #'
 #' @param df a dataframe containing at least a column named "taxid"
-#' @param basemap the basemap wanted, either "fr" or "ncbi" ("ncbi" by default)
-#' @param verbose if TRUE will write informations in the terminal
+#' @param basemap the basemap wanted (can be "ncbi", "fr" ...)
+#' @param verbose if TRUE, will write informations in the terminal
 #'
 #' @return a lifemap object with :
 #' - df : a dataframe containing at least :
@@ -128,8 +134,8 @@ get_direct_ancestor <- function(df) {
 #' @examples
 #' df <- read.csv(file="data/eukaryotes_1000.txt", sep="\t", header=TRUE)
 #'
-#' Lifemap_df <- construct_dataframe(df, "ncbi")
-construct_dataframe <- function(df, basemap = "ncbi", verbose=TRUE) {
+#' Lifemap_df <- build_Lifemap(df, "fr")
+build_Lifemap <- function(df, basemap = "fr", verbose=TRUE) {
   if (is.null(df$taxid)) {
     stop('The dataframe must at least contain a "taxid" column')
   }
@@ -204,12 +210,16 @@ construct_dataframe <- function(df, basemap = "ncbi", verbose=TRUE) {
   FINAL_DATA <- dplyr::bind_rows(FINAL_DATA, LUCA)
 
   lm_obj <- list(df=FINAL_DATA,basemap=basemap)
-  class(lm_obj) <- c("lm_obj","list")
+  class(lm_obj) <- c("lifemap.obj","list")
 
   return(lm_obj)
 }
 
-#' print lm_obj
+#' print lifemap.obj objects
+#'
+#'
+#' @description When the LifemapR object is just created, give the number of columns and rows
+#' as well as the basemap used to get the datas form the database
 #'
 #' @param lm_obj
 #'
@@ -217,7 +227,7 @@ construct_dataframe <- function(df, basemap = "ncbi", verbose=TRUE) {
 #' @export
 #'
 #' @examples print(LM_df)
-print.lm_obj <- function(lm_obj) {
+print.lifemap.obj <- function(lm_obj) {
   if (is.null(lm_obj$aes)) {
     cat('The dataframe contains', nrow(lm_obj$df),'rows and', ncol(lm_obj$df), 'columns. \n')
     cat('The basemap used is :', lm_obj$basemap,'\n')
@@ -227,4 +237,4 @@ print.lm_obj <- function(lm_obj) {
 
 }
 
-is.lm_obj <- function(x) inherits(x, "lm_obj")
+is.lifemap.obj <- function(x) inherits(x, "lifemap.obj")
