@@ -9,7 +9,7 @@
 #' @export
 #'
 #' @importFrom shiny fluidPage reactive observe shinyApp
-#' @importFrom leaflet leafletOutput renderLeaflet fitBounds leafletProxy addPolylines clearShapes
+#' @importFrom leaflet leafletOutput renderLeaflet fitBounds leafletProxy addPolylines clearShapes providerTileOptions
 #'
 #' @examples draw_subtree(LM_df)
 #' df <- read.csv("data/taxids_example.txt", row.names = 1)
@@ -22,9 +22,9 @@ draw_subtree <- function(lm_obj, col="yellow", lwd=5,...){
   basemap <- lm_obj$basemap
 
   ui <- shiny::fluidPage(
-    tags$style(type = "text/css", "html, body {width:100%;height:100%}"),
-    leaflet::leafletOutput("mymap", width = "100%", height = "1000px"),
-    p()
+    # tags$style(type = "text/css", "html, body {width:100%;height:100%}"),
+    leaflet::leafletOutput("mymap", width = "100%", height = "1000px")
+    # p()
   )
 
   server <- function(input, output, session) {
@@ -69,3 +69,36 @@ draw_subtree <- function(lm_obj, col="yellow", lwd=5,...){
 
   shiny::shinyApp(ui, server)
 }
+
+#ordonne les taxids pour pourvoir construire le format phylo
+#' Prepare the datas for a transformation into a phylo format
+#'
+#' @param taxid the taxid of the descendant's ancestor we're looking at
+#' @param df tha dataframe of a lifemap object
+#' @param phylo the dtaframe to be created that contains sorted informations
+#'
+#' @return a dataframe
+#' @export
+#'
+#' @examples
+#' phylo <- data.frame()
+#'
+#' phylo <- ord_tax(0,LM_df$df, phylo)
+ord_tax <- function(taxid,df, phylo) {
+  # cat("hey", taxid,"\n")
+  phylo <- dplyr::bind_rows(phylo, df[which(df$taxid == taxid),])
+  desc <- as.vector(df[which(df$ancestor == taxid),]$taxid)
+  if (length(desc) == 1) {
+    phylo <- ord_tax(desc[1],df, phylo)
+  } else if(length(desc) >1) {
+    for (element in desc) {
+      phylo <- ord_tax(element,df, phylo)
+    }
+  }
+  return(phylo)
+}
+
+
+
+
+
