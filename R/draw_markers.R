@@ -46,7 +46,7 @@ pass_infos <- function(df, information, my_function) {
 #' @export
 #' @importFrom dplyr left_join
 #' @importFrom shiny fluidPage reactive observe shinyApp
-#' @importFrom leaflet leafletOutput renderLeaflet fitBounds leafletProxy addCircleMarkers clearMarkers clearShapes clearControls colorNumeric
+#' @importFrom leaflet leafletOutput renderLeaflet fitBounds leafletProxy addCircleMarkers clearMarkers clearShapes clearControls colorNumeric clearPopups
 #'
 #' @examples
 #' df <- read.csv("data/eukaryotes_1000.txt", header=TRUE, sep="\t")
@@ -69,14 +69,16 @@ draw_markers <- function(lm_obj, legend=TRUE){
 
     # passing informations if the function is given
     if (!(is.null(aes[i,"pass_info"]))) {
-      new_df <- pass_infos(df,information=aes[i,"obj"], my_function=aes[i,"pass_info"])
+      new_df <- pass_infos(df,information=aes[i,"size"], my_function=aes[i,"pass_info"])
+      new_df2 <- pass_infos(df,information=aes[i,"col"], my_function=aes[i,"pass_info"])
       for (id in 1:nrow(new_df)) {
-        df[df$taxid==new_df[id, "ancestors"], aes[i,"obj"]] <- new_df[id,]$value
+        df[df$taxid==new_df[id, "ancestors"], aes[i,"size"]] <- new_df[id,]$value
+        df[df$taxid==new_df[id, "ancestors"], aes[i,"col"]] <- new_df2[id,]$value
       }
     }
 
     # calculating the ranges of values for marker's size
-    aes$OldRange <- max(df[[aes[i,"obj"]]],na.rm = TRUE) - min(df[[aes[i,"obj"]]],na.rm = TRUE)
+    aes$OldRange <- max(df[[aes[i,"size"]]], na.rm = TRUE) - min(df[[aes[i,"size"]]], na.rm = TRUE)
     aes$NewRange <- aes[i,"max"] - aes[i,"min"]
 
   }
@@ -112,49 +114,63 @@ draw_markers <- function(lm_obj, legend=TRUE){
 
       for (i in 1:nrow(aes)){
 
-        if (aes[i,"by"] == "size") {
-          radius_info <- (((df_zoom_bounds()[[aes[i,"obj"]]] -1) * aes[i,"NewRange"]) / aes[i,"OldRange"]) + aes[i,"min"]
-          fillCol_info <- aes[i,"col"]
-          proxy <- leaflet::addCircleMarkers(proxy, lng=df_zoom_bounds()$lon,
-                                    lat=df_zoom_bounds()$lat,
-                                    radius=radius_info,
-                                    fillColor = fillCol_info,
-                                    fillOpacity = 0.5,
-                                    stroke=FALSE)
-          # if (legend == TRUE) {
-          #   proxy <- leaflegend::addLegendSize(proxy,
-          #                                      values=df_zoom_bounds()[[aes[i,"obj"]]],
-          #                                      color=aes[i,"col"],
-          #                                      title = aes[i,"obj"],
-          #                                      shape = "circle")
-          # }
-        } else if (aes[i,"by"] == "color") {
-          pal <- leaflet::colorNumeric(aes[i,"col"], df[[aes[i,"obj"]]])
-          radius_info <- aes[i,"min"]
-          proxy <- leaflet::addCircleMarkers(proxy, lng=df_zoom_bounds()$lon,
-                                    lat=df_zoom_bounds()$lat,
-                                    radius=radius_info,
-                                    fillColor = pal(df_zoom_bounds()[[aes[i,"obj"]]]),
-                                    fillOpacity = 0.5,
-                                    stroke=FALSE)
-          if (legend == TRUE) {
-              proxy <- leaflet::addLegend(proxy,
-                                          position = "bottomright",
-                                          title=aes[i,"obj"],
-                                          pal = pal,
-                                          values = df_zoom_bounds()[[aes[i,"obj"]]])
-          }
-        }
+        pal <- leaflet::colorNumeric(aes[i,"pal"], df[[aes[i,"col"]]])
+        radius_info <- (((df_zoom_bounds()[[aes[i,"size"]]] -1) * aes[i,"NewRange"]) / aes[i,"OldRange"]) + aes[i,"min"]
+
+        proxy <- leaflet::addCircleMarkers(proxy, lng=df_zoom_bounds()$lon,
+                                           lat=df_zoom_bounds()$lat,
+                                           radius=radius_info,
+                                           fillColor = pal(df_zoom_bounds()[[aes[i,"col"]]]),
+                                           fillOpacity = 0.6,
+                                           stroke=FALSE)
+
+      #   if (aes[i,"by"] == "size") {
+      #     radius_info <- (((df_zoom_bounds()[[aes[i,"obj"]]] -1) * aes[i,"NewRange"]) / aes[i,"OldRange"]) + aes[i,"min"]
+      #     fillCol_info <- aes[i,"col"]
+      #     proxy <- leaflet::addCircleMarkers(proxy, lng=df_zoom_bounds()$lon,
+      #                               lat=df_zoom_bounds()$lat,
+      #                               radius=radius_info,
+      #                               fillColor = fillCol_info,
+      #                               fillOpacity = 0.5,
+      #                               stroke=FALSE)
+      #     # if (legend == TRUE) {
+      #     #   proxy <- leaflegend::addLegendSize(proxy,
+      #     #                                      values=df_zoom_bounds()[[aes[i,"obj"]]],
+      #     #                                      color=aes[i,"col"],
+      #     #                                      title = aes[i,"obj"],
+      #     #                                      shape = "circle")
+      #     # }
+      #   } else if (aes[i,"by"] == "color") {
+      #     pal <- leaflet::colorNumeric(aes[i,"col"], df[[aes[i,"obj"]]])
+      #     radius_info <- aes[i,"min"]
+      #     proxy <- leaflet::addCircleMarkers(proxy, lng=df_zoom_bounds()$lon,
+      #                               lat=df_zoom_bounds()$lat,
+      #                               radius=radius_info,
+      #                               fillColor = pal(df_zoom_bounds()[[aes[i,"obj"]]]),
+      #                               fillOpacity = 0.5,
+      #                               stroke=FALSE)
+      #     if (legend == TRUE) {
+      #         proxy <- leaflet::addLegend(proxy,
+      #                                     position = "bottomright",
+      #                                     title=aes[i,"obj"],
+      #                                     pal = pal,
+      #                                     values = df_zoom_bounds()[[aes[i,"obj"]]])
+      #     }
+      #   }
       }
       proxy
     })
 
     # functions to add popups
     showSciName <- function(taxid, lng, lat) {
+      print(class(lat))
+      print(class(df_zoom_bounds()$lat))
       selectedId <- df[round(df$lon, digits=6) == round(lng,digits=6) & round(df$lat, digits=6) == round(lat, digits = 6),]
+      # selectedId <- df[which(identical(round(df$lon, digits=6),round(lng,digits=6)) && identical(round(df$lat, digits=6), round(lat, digits = 6))),]
+      print(selectedId)
       content <- as.character(selectedId$taxid)
       for (i in 1:nrow(aes)) {
-        new_string <- paste(aes[i, "obj"]," : ", selectedId[[aes[i,"obj"]]], sep="")
+        new_string <- paste(aes[i, "size"]," : ", selectedId[[aes[i,"size"]]], sep="")
         content <- paste(content,new_string, sep="\n")
       }
       leafletProxy("mymap") %>% addPopups(lng, lat, content)
