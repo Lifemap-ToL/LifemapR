@@ -6,6 +6,15 @@ An R package to visualise datas on a Lifemap base (https://lifemap-ncbi.univ-lyo
 
 ## Installation
 
+To install the development version of <code>LifemapR</code> from GitHub :
+```r
+remotes::install_github("cbompard/LifemapR")
+```
+Once installed, load the package with :
+```r
+library("LifemapR")
+```
+
 
 ## Usage
 
