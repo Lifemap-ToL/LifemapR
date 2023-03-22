@@ -106,60 +106,60 @@ draw_markers <- function(lm_obj, legend=TRUE){
     })
 
     # modification of the map to display the rights markers
-    shiny::observe({
-      proxy <- leaflet::leafletProxy("mymap", session=session) %>%
-        leaflet::clearShapes() %>%
-        leaflet::clearMarkers() %>%
-        leaflet::clearControls()
-
-      for (i in 1:nrow(aes)){
-
-        pal <- leaflet::colorNumeric(aes[i,"pal"], df[[aes[i,"col"]]])
-        radius_info <- (((df_zoom_bounds()[[aes[i,"size"]]] -1) * aes[i,"NewRange"]) / aes[i,"OldRange"]) + aes[i,"min"]
-
-        proxy <- leaflet::addCircleMarkers(proxy, lng=df_zoom_bounds()$lon,
-                                           lat=df_zoom_bounds()$lat,
-                                           radius=radius_info,
-                                           fillColor = pal(df_zoom_bounds()[[aes[i,"col"]]]),
-                                           fillOpacity = 0.6,
-                                           stroke=FALSE)
-
-      #   if (aes[i,"by"] == "size") {
-      #     radius_info <- (((df_zoom_bounds()[[aes[i,"obj"]]] -1) * aes[i,"NewRange"]) / aes[i,"OldRange"]) + aes[i,"min"]
-      #     fillCol_info <- aes[i,"col"]
-      #     proxy <- leaflet::addCircleMarkers(proxy, lng=df_zoom_bounds()$lon,
-      #                               lat=df_zoom_bounds()$lat,
-      #                               radius=radius_info,
-      #                               fillColor = fillCol_info,
-      #                               fillOpacity = 0.5,
-      #                               stroke=FALSE)
-      #     # if (legend == TRUE) {
-      #     #   proxy <- leaflegend::addLegendSize(proxy,
-      #     #                                      values=df_zoom_bounds()[[aes[i,"obj"]]],
-      #     #                                      color=aes[i,"col"],
-      #     #                                      title = aes[i,"obj"],
-      #     #                                      shape = "circle")
-      #     # }
-      #   } else if (aes[i,"by"] == "color") {
-      #     pal <- leaflet::colorNumeric(aes[i,"col"], df[[aes[i,"obj"]]])
-      #     radius_info <- aes[i,"min"]
-      #     proxy <- leaflet::addCircleMarkers(proxy, lng=df_zoom_bounds()$lon,
-      #                               lat=df_zoom_bounds()$lat,
-      #                               radius=radius_info,
-      #                               fillColor = pal(df_zoom_bounds()[[aes[i,"obj"]]]),
-      #                               fillOpacity = 0.5,
-      #                               stroke=FALSE)
-      #     if (legend == TRUE) {
-      #         proxy <- leaflet::addLegend(proxy,
-      #                                     position = "bottomright",
-      #                                     title=aes[i,"obj"],
-      #                                     pal = pal,
-      #                                     values = df_zoom_bounds()[[aes[i,"obj"]]])
-      #     }
-      #   }
-      }
-      proxy
-    })
+    # shiny::observe({
+    #   proxy <- leaflet::leafletProxy("mymap", session=session) %>%
+    #     leaflet::clearShapes() %>%
+    #     leaflet::clearMarkers() %>%
+    #     leaflet::clearControls()
+    #
+    #   for (i in 1:nrow(aes)){
+    #
+    #     pal <- leaflet::colorNumeric(aes[i,"pal"], df[[aes[i,"col"]]])
+    #     radius_info <- (((df_zoom_bounds()[[aes[i,"size"]]] -1) * aes[i,"NewRange"]) / aes[i,"OldRange"]) + aes[i,"min"]
+    #
+    #     proxy <- leaflet::addCircleMarkers(proxy, lng=df_zoom_bounds()$lon,
+    #                                        lat=df_zoom_bounds()$lat,
+    #                                        radius=radius_info,
+    #                                        fillColor = pal(df_zoom_bounds()[[aes[i,"col"]]]),
+    #                                        fillOpacity = 0.6,
+    #                                        stroke=FALSE)
+    #
+    #   #   if (aes[i,"by"] == "size") {
+    #   #     radius_info <- (((df_zoom_bounds()[[aes[i,"obj"]]] -1) * aes[i,"NewRange"]) / aes[i,"OldRange"]) + aes[i,"min"]
+    #   #     fillCol_info <- aes[i,"col"]
+    #   #     proxy <- leaflet::addCircleMarkers(proxy, lng=df_zoom_bounds()$lon,
+    #   #                               lat=df_zoom_bounds()$lat,
+    #   #                               radius=radius_info,
+    #   #                               fillColor = fillCol_info,
+    #   #                               fillOpacity = 0.5,
+    #   #                               stroke=FALSE)
+    #   #     # if (legend == TRUE) {
+    #   #     #   proxy <- leaflegend::addLegendSize(proxy,
+    #   #     #                                      values=df_zoom_bounds()[[aes[i,"obj"]]],
+    #   #     #                                      color=aes[i,"col"],
+    #   #     #                                      title = aes[i,"obj"],
+    #   #     #                                      shape = "circle")
+    #   #     # }
+    #   #   } else if (aes[i,"by"] == "color") {
+    #   #     pal <- leaflet::colorNumeric(aes[i,"col"], df[[aes[i,"obj"]]])
+    #   #     radius_info <- aes[i,"min"]
+    #   #     proxy <- leaflet::addCircleMarkers(proxy, lng=df_zoom_bounds()$lon,
+    #   #                               lat=df_zoom_bounds()$lat,
+    #   #                               radius=radius_info,
+    #   #                               fillColor = pal(df_zoom_bounds()[[aes[i,"obj"]]]),
+    #   #                               fillOpacity = 0.5,
+    #   #                               stroke=FALSE)
+    #   #     if (legend == TRUE) {
+    #   #         proxy <- leaflet::addLegend(proxy,
+    #   #                                     position = "bottomright",
+    #   #                                     title=aes[i,"obj"],
+    #   #                                     pal = pal,
+    #   #                                     values = df_zoom_bounds()[[aes[i,"obj"]]])
+    #   #     }
+    #   #   }
+    #   }
+    #   proxy
+    # })
 
     # functions to add popups
     showSciName <- function(taxid, lng, lat) {

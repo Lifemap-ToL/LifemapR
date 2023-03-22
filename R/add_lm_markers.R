@@ -27,6 +27,7 @@ is.lm_markers <- function(x) {inherits(x, "lm_markers")}
 #' @param e1 an object of class lm_obj that contains at least $df, a dataframe, and $basemap, hte map used ti get the coordinates
 #' @param e2 a description of the graphical features wanted for a set of points
 #' @export
+#' @return a lm_obj object
 #'
 #' @examples LM_df + add_lm_markers(size="GC.", col="Genes", min=30, max=40, FUN="mean")
 "+.lifemap.obj" <- function(e1,e2) {
