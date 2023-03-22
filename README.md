@@ -2,7 +2,7 @@
 
 ## Overview
 
-An R package to visualise datas on a Lifemap base (https://lifemap-ncbi.univ-lyon1.fr/) 
+An R package to visualise datas on a Lifemap base (https://lifemap-ncbi.univ-lyon1.fr/) <img src="man/figures/lifemapr-logo.png" align="right" style="float:right; width:20%;"/>
 
 ## Installation
 
