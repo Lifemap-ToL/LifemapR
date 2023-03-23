@@ -36,13 +36,24 @@ pass_infos <- function(df, information, my_function) {
 
 }
 
-# if (aes[i, "color"] %in% colnames(df)) {
-#   make_color <- leaflet::colorNumeric("viridis", df[[aes[i, "color"]]])
-#   color_info <- make_color(df_zoom_bounds()[[aes[i, "color"]]])
-# } else { color_info <- aes[i, "color"] }
-#
-#
-# create_color_range <- function(){}
+#' compute a new scale for a value
+#'
+#' @param value the value
+#' @param df the full dataframe
+#' @param df2 the dataframe containing visibles taxas
+#' @param min the new range min
+#' @param max the new range max
+#'
+#' @return a vector of values
+create_value_range <- function(value, df, df2, min, max){
+  if (value %in% colnames(df)) {
+    old_min <- min(df[[value]], na.rm = TRUE)
+    old_max <- max(df[[value]], na.rm = TRUE)
+    old_range <- old_max - old_min
+    new_range <- max - min
+    info <- (((df2[[value]] - old_min) * new_range) / old_range) + min
+  } else { info <- value }
+}
 
 
 
@@ -96,10 +107,6 @@ draw_markers <- function(lm_obj, legend=TRUE){
       }
     }
 
-    # calculating the ranges of values for marker's size
-    aes$OldRange <- max(df[[aes[i,"radius"]]], na.rm = TRUE) - min(df[[aes[i,"radius"]]], na.rm = TRUE)
-    aes$NewRange <- aes[i,"max"] - aes[i,"min"]
-
   }
 
   ui <- shiny::fluidPage(
@@ -126,15 +133,23 @@ draw_markers <- function(lm_obj, legend=TRUE){
 
     # modification of the map to display the rights markers
     shiny::observe({
+      # clearing all the already existing shapes/markers/controls
       proxy <- leaflet::leafletProxy("mymap", session=session) %>%
         leaflet::clearShapes() %>%
         leaflet::clearMarkers() %>%
         leaflet::clearControls()
 
+      # adding the visible shapes
       for (i in 1:nrow(aes)){
 
         pal <- leaflet::colorNumeric(aes[i,"pal"], df[[aes[i,"fillColor"]]])
-        radius_info <- (((df_zoom_bounds()[[aes[i,"radius"]]] -1) * aes[i,"NewRange"]) / aes[i,"OldRange"]) + aes[i,"min"]
+
+        if (aes[i, "fillColor"] %in% colnames(df)) {
+          make_color <- leaflet::colorNumeric(aes[i,"pal"], df[[aes[i, "fillColor"]]])
+          fillColor_info <- make_color(df_zoom_bounds()[[aes[i, "fillColor"]]])
+        } else { fillColor_info <- aes[i, "fillColor"] }
+
+        radius_info <- create_value_range(aes[i, "radius"], df, df_zoom_bounds(), aes[i, "min"], aes[i, "max"])
 
         # stroke presence
         if(aes[i,"stroke"] %in% colnames(df)) {
@@ -148,35 +163,19 @@ draw_markers <- function(lm_obj, legend=TRUE){
         } else { color_info <- aes[i, "color"] }
 
         # stroke opacity
-        if (aes[i, "opacity"] %in% colnames(df)) {
-          old_opacity_range <- max(df[[aes[i,"opacity"]]], na.rm = TRUE) - min(df[[aes[i,"opacity"]]], na.rm = TRUE)
-          new_opacity_range <- 1 - 0.1
-          opacity_info <- (((df_zoom_bounds()[[aes[i,"opacity"]]] -1) * new_opacity_range) / old_opacity_range) + 0.1
-        } else { opacity_info <- aes[i, "opacity"] }
+        opacity_info <- create_value_range(aes[i, "opacity"], df, df_zoom_bounds(), 0.1, 1)
 
         # stroke weight
-        if (aes[i, "weight"] %in% colnames(df)) {
-          old_weight_range <- max(df[[aes[i,"weight"]]], na.rm = TRUE) - min(df[[aes[i,"weight"]]], na.rm = TRUE)
-          new_weight_range <- 10 - 1
-          weight_info <- (((df_zoom_bounds()[[aes[i,"weight"]]] -1) * new_weight_range) / old_weight_range) + 1
-        } else { weight_info <- aes[i, "weight"] }
+        weight_info <- create_value_range(aes[i, "weight"], df, df_zoom_bounds(), 1, 10)
 
         # fill opacity
-        if (aes[i, "fillOpacity"] %in% colnames(df)) {
-          old_fillOpacity_range <- max(df[[aes[i,"fillOpacity"]]], na.rm = TRUE) - min(df[[aes[i,"fillOpacity"]]], na.rm = TRUE)
-          new_fillOpacity_range <- 1 - 0.1
-          fillOpacity_info <- (((df_zoom_bounds()[[aes[i,"fillOpacity"]]] -1) * new_fillOpacity_range) / old_fillOpacity_range) + 0.1
-        } else { fillOpacity_info <- aes[i, "fillOpacity"] }
-
-
-
-
+        fillOpacity_info <- create_value_range(aes[i, "fillOpacity"], df, df_zoom_bounds(), 0.1, 1)
 
         proxy <- leaflet::addCircleMarkers(proxy,
                                            lng = df_zoom_bounds()$lon,
                                            lat = df_zoom_bounds()$lat,
                                            radius = radius_info,
-                                           fillColor = pal(df_zoom_bounds()[[aes[i, "fillColor"]]]),
+                                           fillColor = fillColor_info,
                                            fillOpacity = fillOpacity_info,
                                            stroke = stroke_info,
                                            color = color_info,
