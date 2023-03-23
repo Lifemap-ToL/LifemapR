@@ -11,8 +11,13 @@
 #' @export
 #'
 #' @examples add_lm_markers(size="GC.", col="Genes", min=30, max=40, FUN="mean")
-add_lm_markers <- function(size, col, min=20, max=50, FUN="",...) {
-  res <- data.frame(size=size, col=col, min=min,max=max, pass_info=FUN,...)
+add_lm_markers <- function(radius, fillColor, stroke=FALSE, color="#03F", weight=5, opacity=0.8, fillOpacity=0.5, popup="", label="", min=20, max=50, FUN="",...) {
+  res <- data.frame(radius=radius, fillColor=fillColor,
+                    min=min,max=max,
+                    pass_info=FUN, stroke=stroke,
+                    color=color, weight=weight,
+                    opacity=opacity, fillOpacity=fillOpacity,
+                    popup=popup, label=label,...)
   class(res)=c("lifemap.obj", "lm_markers","data.frame")
   return(res)
 }
@@ -29,7 +34,7 @@ is.lm_markers <- function(x) {inherits(x, "lm_markers")}
 #' @export
 #' @return a lm_obj object
 #'
-#' @examples LM_df + add_lm_markers(size="GC.", col="Genes", min=30, max=40, FUN="mean")
+#' @examples LM_df + add_lm_markers(size="GC.", col="Genes", min=10, max=80, FUN="mean", pal="Accent")
 "+.lifemap.obj" <- function(e1,e2) {
   if(is.lm_markers(e2)) {
     if(is.null(e1$aes)) {
@@ -45,11 +50,3 @@ is.lm_markers <- function(x) {inherits(x, "lm_markers")}
 # draw_markers <- function(lm_obj,...){
 #   return(lm_obj)
 # }
-
-
-# LM_df + add_lm_markers(size="GC.", col="Genes", min=30, max=40, FUN="mean")
-
-
-# aes <- LM_df + add_lm_markers(obj="GC.", by="size", col="red", min=30, max=40, FUN="mean") + add_lm_markers(obj="Genes", by="color", col="Accent", min=50, max=50, FUN="mean")
-#
-# aes
