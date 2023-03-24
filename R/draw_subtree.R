@@ -2,7 +2,8 @@
 #'
 #' @param lm_obj a lifemap.obj object
 #' @param col the line's color
-#' @param lwd the line's weight
+#' @param FUN the function to be applied when visualising data on branches
+#' @param pal the palette used to display information
 #' @param ... any parameter that can be passed to the leaflet::addPolylines() function
 #'
 #' @return a shiny application
