@@ -38,9 +38,9 @@ is.lm_markers <- function(x) {inherits(x, "lm_markers")}
 "+.lifemap.obj" <- function(e1,e2) {
   if(is.lm_markers(e2)) {
     if(is.null(e1$aes)) {
-      e1$aes <- e2
+      e1$aes <- list(e2)
     } else {
-      e1$aes <- dplyr::bind_rows(e1$aes,e2)
+      e1$aes <- append(e1$aes,list(e2))
     }
   }
   return(e1)

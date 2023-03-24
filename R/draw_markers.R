@@ -65,7 +65,6 @@ create_value_range <- function(value, df, df2, min, max, map){
 #' Represent continuous datas on a Lifemap background
 #'
 #' @param lm_obj a Lifemap object
-#' @param aes a dataframe representing the aesthetics for the representation
 #'
 #' @return a shiny application
 #' @export
@@ -81,30 +80,28 @@ create_value_range <- function(value, df, df2, min, max, map){
 #' draw_markers(LM_df, information = c("GC.","Genes"), my_function=mean, legend = FALSE)
 draw_markers <- function(lm_obj, legend=TRUE){
 
-  # df <- lm_obj$df[,c("taxid", information,"lon", "lat", "sci_name", "zoom", "ascend", "genomes", "type", "ancestor")]
   df <- lm_obj$df
   basemap <- lm_obj$basemap
   aes <- lm_obj$aes
+  print(aes)
 
   other <- c("min", "max", "pass_info","pal")
   # variables that are columns of the lm_obj dataframe
-  variables <- colnames(aes)[!(colnames(aes) %in% other)]
+  variables <- colnames(aes[[1]])[!(colnames(aes[[1]]) %in% other)]
 
   #pass the information to the nodes or not
-  for (i in 1:nrow(aes)){
+  for (i in 1:length(aes)){
 
     # si pas d'info de couleur, on rempli aes
     # current_row <- aes[i,]
 
     # passing informations if the function is given
-    if (!(is.null(aes[i,"pass_info"]))) {
+    if (!(is.null(aes[[i]]$pass_info))) {
       for (column in variables) {
-        # print (aes[[column]])
-        # print (colnames(df))
-        if (aes[i,column] %in% colnames (df) ) {
-          new_df <- pass_infos(df, information = aes[i, column], my_function = aes[i, "pass_info"])
+        if (aes[[i]][[column]] %in% colnames(df) ) {
+          new_df <- pass_infos(df, information = aes[[i]][[column]], my_function = aes[[i]]$pass_info)
           for (id in 1:nrow(new_df)) {
-            df[df$taxid == new_df[id, "ancestors"], aes[i,column]] <- new_df[id,]$value
+            df[df$taxid == new_df[id, "ancestors"], aes[[i]][[column]]]<- new_df[id, ]$value
           }
         }
       }
@@ -154,33 +151,33 @@ draw_markers <- function(lm_obj, legend=TRUE){
         leaflet::clearMarkers()
 
       # adding the visible shapes
-      for (i in 1:nrow(aes)){
+      for (i in 1:length(aes)){
 
-        if (aes[i, "fillColor"] %in% colnames(df)) {
-          make_fillColor <- leaflet::colorNumeric(aes[i,"pal"], df[[aes[i, "fillColor"]]])
-          fillColor_info <- make_fillColor(df_zoom_bounds()[[aes[i, "fillColor"]]])
-        } else { fillColor_info <- aes[i, "fillColor"] }
+        if (aes[[i]]$fillColor %in% colnames(df)) {
+          make_fillColor <- leaflet::colorNumeric(aes[[i]]$pal, df[[aes[[i]]$fillColor]])
+          fillColor_info <- make_fillColor(df_zoom_bounds()[[aes[[i]]$fillColor]])
+        } else { fillColor_info <- aes[[i]]$fillColor }
 
-        radius_info <- create_value_range(aes[i, "radius"], df, df_zoom_bounds(), aes[i, "min"], aes[i, "max"])
+        radius_info <- create_value_range(aes[[i]]$radius, df, df_zoom_bounds(), aes[[i]]$min, aes[[i]]$max)
 
         # stroke presence
-        if(aes[i,"stroke"] %in% colnames(df)) {
-          stroke_info <- df_zoom_bounds()[[aes[i,"stroke"]]]
-        } else { stroke_info <- aes[i, "stroke"] }
+        if(aes[[i]]$stroke %in% colnames(df)) {
+          stroke_info <- df_zoom_bounds()[[aes[[i]]$stroke]]
+        } else { stroke_info <- aes[[i]]$stroke }
 
-        if (aes[i, "color"] %in% colnames(df)) {
-          make_color <- leaflet::colorNumeric("viridis", df[[aes[i, "color"]]])
-          color_info <- make_color(df_zoom_bounds()[[aes[i, "color"]]])
-        } else { color_info <- aes[i, "color"] }
+        if (aes[[i]]$color %in% colnames(df)) {
+          make_color <- leaflet::colorNumeric("viridis", df[[aes[[i]]$color]])
+          color_info <- make_color(df_zoom_bounds()[[aes[[i]]$color]])
+        } else { color_info <- aes[[i]]$color }
 
         # stroke opacity
-        opacity_info <- create_value_range(aes[i, "opacity"], df, df_zoom_bounds(), 0.1, 1)
+        opacity_info <- create_value_range(aes[[i]]$opacity, df, df_zoom_bounds(), 0.1, 1)
 
         # stroke weight
-        weight_info <- create_value_range(aes[i, "weight"], df, df_zoom_bounds(), 1, 10)
+        weight_info <- create_value_range(aes[[i]]$weight, df, df_zoom_bounds(), 1, 10)
 
         # fill opacity
-        fillOpacity_info <- create_value_range(aes[i, "fillOpacity"], df, df_zoom_bounds(), 0.1, 1)
+        fillOpacity_info <- create_value_range(aes[[i]]$fillOpacity, df, df_zoom_bounds(), 0.1, 1)
 
         proxy <- leaflet::addCircleMarkers(proxy,
                                            lng = df_zoom_bounds()$lon,
@@ -225,8 +222,8 @@ draw_markers <- function(lm_obj, legend=TRUE){
     showSciName <- function(taxid, lng, lat) {
       selectedId <- df[round(df$lon, digits=6) == round(lng,digits=6) & round(df$lat, digits=6) == round(lat, digits = 6),]
       content <- as.character(selectedId$taxid)
-      for (i in 1:nrow(aes)) {
-        new_string <- paste(aes[i, "radius"]," : ", selectedId[[aes[i,"radius"]]], sep="")
+      for (i in 1:length(aes)) {
+        new_string <- paste(aes[[i]]$radius," : ", selectedId[[aes[[i]]$radius]], sep="")
         content <- paste(content,new_string, sep="\n")
       }
       leafletProxy("mymap") %>% leaflet::addPopups(lng, lat, content)
