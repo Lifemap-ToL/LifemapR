@@ -21,12 +21,17 @@ pass_infos <- function(df, information, my_function) {
     info <- left_join(info,info_tmp, by="ancestors")
   }
 
-  my_function <- match.fun(my_function)
-  # compute the value for each row
-  res <- apply(info,MARGIN=1,function(x){
-    tmp <- x[!is.na(x)]
-    my_function(tmp[-1])
-  })
+  if (length(unique(df[df$type=="requested",information])) > 10) {
+    my_function <- match.fun(my_function)
+    # compute the value for each row
+    res <- apply(info,MARGIN=1,function(x){
+      tmp <- x[!is.na(x)]
+      my_function(tmp[-1])
+    })
+  } else {
+    print(table(df[df$type=="requested",information]))
+    print(info)}
+
 
   final_res <- data.frame(info$ancestors)
   final_res$information <- res
@@ -45,7 +50,7 @@ pass_infos <- function(df, information, my_function) {
 #' @param max the new range max
 #'
 #' @return a vector of values
-create_value_range <- function(value, df, df2, min, max){
+create_value_range <- function(value, df, df2, min, max, map){
   if (value %in% colnames(df)) {
     old_min <- min(df[[value]], na.rm = TRUE)
     old_max <- max(df[[value]], na.rm = TRUE)
@@ -53,10 +58,8 @@ create_value_range <- function(value, df, df2, min, max){
     new_range <- max - min
     info <- (((df2[[value]] - old_min) * new_range) / old_range) + min
   } else { info <- value }
+  return(info)
 }
-
-
-
 
 
 #' Represent continuous datas on a Lifemap background
@@ -98,7 +101,7 @@ draw_markers <- function(lm_obj, legend=TRUE){
       for (column in variables) {
         # print (aes[[column]])
         # print (colnames(df))
-        if (aes[[column]] %in% colnames (df) ) {
+        if (aes[i,column] %in% colnames (df) ) {
           new_df <- pass_infos(df, information = aes[i, column], my_function = aes[i, "pass_info"])
           for (id in 1:nrow(new_df)) {
             df[df$taxid == new_df[id, "ancestors"], aes[i,column]] <- new_df[id,]$value
@@ -131,22 +134,31 @@ draw_markers <- function(lm_obj, legend=TRUE){
       display_map(df,map = basemap) %>% leaflet::fitBounds(~min(lon), ~min(lat), ~max(lon), ~max(lat))
     })
 
+    # make_fillColor_pal <- reactive({
+    #     leaflet::colorNumeric(aes[i,"pal"], df[[aes[i, "fillColor"]]])
+    # })
+    #
+    # make_fillColor_pal2 <- reactive({
+    #     leaflet::colorNumeric(pal, domain)
+    #   })
+    #
+    # make_color_pal <- reactive ({
+    #   leaflet::colorNumeric("viridis", df[[aes[i, "color"]]])
+    # })
+
     # modification of the map to display the rights markers
     shiny::observe({
       # clearing all the already existing shapes/markers/controls
       proxy <- leaflet::leafletProxy("mymap", session=session) %>%
         leaflet::clearShapes() %>%
-        leaflet::clearMarkers() %>%
-        leaflet::clearControls()
+        leaflet::clearMarkers()
 
       # adding the visible shapes
       for (i in 1:nrow(aes)){
 
-        pal <- leaflet::colorNumeric(aes[i,"pal"], df[[aes[i,"fillColor"]]])
-
         if (aes[i, "fillColor"] %in% colnames(df)) {
-          make_color <- leaflet::colorNumeric(aes[i,"pal"], df[[aes[i, "fillColor"]]])
-          fillColor_info <- make_color(df_zoom_bounds()[[aes[i, "fillColor"]]])
+          make_fillColor <- leaflet::colorNumeric(aes[i,"pal"], df[[aes[i, "fillColor"]]])
+          fillColor_info <- make_fillColor(df_zoom_bounds()[[aes[i, "fillColor"]]])
         } else { fillColor_info <- aes[i, "fillColor"] }
 
         radius_info <- create_value_range(aes[i, "radius"], df, df_zoom_bounds(), aes[i, "min"], aes[i, "max"])
@@ -156,7 +168,6 @@ draw_markers <- function(lm_obj, legend=TRUE){
           stroke_info <- df_zoom_bounds()[[aes[i,"stroke"]]]
         } else { stroke_info <- aes[i, "stroke"] }
 
-        # stroke color
         if (aes[i, "color"] %in% colnames(df)) {
           make_color <- leaflet::colorNumeric("viridis", df[[aes[i, "color"]]])
           color_info <- make_color(df_zoom_bounds()[[aes[i, "color"]]])
@@ -183,8 +194,32 @@ draw_markers <- function(lm_obj, legend=TRUE){
                                            weight=weight_info
                                            )
       }
+
       proxy
     })
+
+    # update the legend as needed
+    # shiny::observe({
+    #   proxy <- leaflet::leafletProxy("mymap", session=session) %>%
+    #     leaflet::clearControls()
+    #   for (i in 1:nrow(aes)) {
+    #     if (aes[i,"legend"] == TRUE) {
+    #       if (aes[i, "fillColor"] %in% colnames(df)) {
+    #         make_fillColor <- make_fillColor_pal()
+    #         proxy <- addLegend(proxy,
+    #                            position = "bottomright",
+    #                            title=aes[i,"fillColor"],
+    #                            pal = make_fillColor,
+    #                            values = df_zoom_bounds()[[aes[i,"fillColor"]]])
+    #
+    #       }
+    #
+    #     }
+    #
+    #   }
+    #
+    #
+    # })
 
     # functions to add popups
     showSciName <- function(taxid, lng, lat) {

@@ -34,7 +34,7 @@ is.lm_markers <- function(x) {inherits(x, "lm_markers")}
 #' @export
 #' @return a lm_obj object
 #'
-#' @examples LM_df + add_lm_markers(size="GC.", col="Genes", min=10, max=80, FUN="mean", pal="Accent")
+#' @examples LM_df + add_lm_markers(radius="GC.", fillColor="Genes", min=10, max=80, FUN="mean", pal="Accent")
 "+.lifemap.obj" <- function(e1,e2) {
   if(is.lm_markers(e2)) {
     if(is.null(e1$aes)) {
