@@ -13,14 +13,19 @@
 #'
 #' @examples draw_subtree(LM_df)
 #' df <- read.csv("data/taxids_example.txt", row.names = 1)
-#'
 #' LM_df <- LifemapR::construct_dataframe(df)
+#'
+#' # to simply view the subtree
 #' draw_subtree(LM_df)
+#'
+#' # to color branches according to a variable
+#' draw_subtree(LM_df, col="GC.")
 draw_subtree <- function(lm_obj, col = "yellow", FUN = "mean", pal = "Accent",legend = TRUE, ...){
 
   df <- lm_obj$df
   basemap <- lm_obj$basemap
 
+  # pass the info if a variable needs to be represented
   if (col %in% colnames(df)) {
     new_df <- pass_infos(df, information = col, my_function = FUN)
     for (id in 1:nrow(new_df)) {
@@ -36,7 +41,7 @@ draw_subtree <- function(lm_obj, col = "yellow", FUN = "mean", pal = "Accent",le
 
   server <- function(input, output, session) {
 
-    # define the zone visible by the users
+    # define the taxa visible by the users
     df_zoom_bounds <- shiny::reactive(
       df[df$zoom <= (input$mymap_zoom+5) &
            df$lat > input$mymap_bounds$south &
@@ -45,7 +50,7 @@ draw_subtree <- function(lm_obj, col = "yellow", FUN = "mean", pal = "Accent",le
            df$lon < input$mymap_bounds$east,]
       )
 
-    # define the descendants of df_zoom_bounds taxids
+    # define the descendants of df_zoom_bounds' taxids
     df_descendants <- shiny::reactive({
       visibles <- df_zoom_bounds()$taxid
       df[df$ancestor %in% visibles,]
@@ -56,13 +61,16 @@ draw_subtree <- function(lm_obj, col = "yellow", FUN = "mean", pal = "Accent",le
       display_map(df,map = basemap) %>% leaflet::fitBounds(~min(lon), ~min(lat), ~max(lon), ~max(lat))
     })
 
-    # modification of the map to display the right lines
+    # modification of the map to draw the right branches
     shiny::observe({
+      # clearing all the already existing shapes/controls
       proxy <- leaflet::leafletProxy("mymap", session=session) %>%
         leaflet::clearShapes() %>%
         leaflet::clearControls()
 
-      make_col <- leaflet::colorNumeric(palette = pal, domain = df[[col]])
+      if (col %in% colnames(df)) {
+        make_col <- leaflet::colorNumeric(palette = pal, domain = df[[col]])
+      }
 
       for (id in df_zoom_bounds()$taxid) {
         # for each descendant of each taxid
@@ -81,11 +89,13 @@ draw_subtree <- function(lm_obj, col = "yellow", FUN = "mean", pal = "Accent",le
                        ...)
         }
       }
+      # adding legend if necessary
       if(legend == TRUE && col %in% colnames(df)) {
-        proxy <- leaflet::addLegend(proxy, position = "bottomright",
-                           title="legend",
-                           pal = make_col,
-                           values = df_descendants()[[col]])
+        proxy <- proxy %>%
+          leaflet::addLegend(position = "bottomright",
+                             title="legend",
+                             pal = make_col,
+                             values = df_descendants()[[col]])
       }
 
       proxy
