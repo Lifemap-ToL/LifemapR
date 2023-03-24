@@ -9,22 +9,29 @@
 #' @export
 #'
 #' @importFrom shiny fluidPage reactive observe shinyApp
-#' @importFrom leaflet leafletOutput renderLeaflet fitBounds leafletProxy addPolylines clearShapes providerTileOptions
+#' @importFrom leaflet leafletOutput renderLeaflet fitBounds leafletProxy addPolylines clearShapes providerTileOptions addLegend
 #'
 #' @examples draw_subtree(LM_df)
 #' df <- read.csv("data/taxids_example.txt", row.names = 1)
 #'
 #' LM_df <- LifemapR::construct_dataframe(df)
 #' draw_subtree(LM_df)
-draw_subtree <- function(lm_obj, col="yellow", lwd=5,...){
+draw_subtree <- function(lm_obj, col = "yellow", FUN = "mean", pal = "Accent",legend = TRUE, ...){
 
   df <- lm_obj$df
   basemap <- lm_obj$basemap
 
+  if (col %in% colnames(df)) {
+    new_df <- pass_infos(df, information = col, my_function = FUN)
+    for (id in 1:nrow(new_df)) {
+      df[df$taxid == new_df[id, "ancestors"], col] <- new_df[id,]$value
+    }
+  }
+
   ui <- shiny::fluidPage(
-    tags$style(type = "text/css", "html, body {width:100%;height:100%}"),
+    shiny::tags$style(type = "text/css", "html, body {width:100%;height:100%}"),
     leaflet::leafletOutput("mymap", width = "100%", height = "1000px"),
-    p()
+    shiny::p()
   )
 
   server <- function(input, output, session) {
@@ -52,17 +59,35 @@ draw_subtree <- function(lm_obj, col="yellow", lwd=5,...){
     # modification of the map to display the right lines
     shiny::observe({
       proxy <- leaflet::leafletProxy("mymap", session=session) %>%
-        leaflet::clearShapes()
+        leaflet::clearShapes() %>%
+        leaflet::clearControls()
+
+      make_col <- leaflet::colorNumeric(palette = pal, domain = df[[col]])
+
       for (id in df_zoom_bounds()$taxid) {
+        # for each descendant of each taxid
         for (desc in df_descendants()[df_descendants()$ancestor == id,]$taxid) {
-        proxy <- proxy %>%
-          leaflet::addPolylines(lng=c(df_zoom_bounds()[df_zoom_bounds()$taxid == id,"lon"],df_descendants()[df_descendants()$taxid == desc,"lon"]),
-                       lat=c(df_zoom_bounds()[df_zoom_bounds()$taxid == id,"lat"],df_descendants()[df_descendants()$taxid == desc,"lat"]),
-                       color=col,
-                       weight=lwd,
+
+          if (col %in% colnames(df)) {
+            col_info <- make_col(df_descendants()[df_descendants()$taxid == desc, col])
+          } else { col_info <- col}
+
+          proxy <- proxy %>%
+          leaflet::addPolylines(lng = c(df_zoom_bounds()[df_zoom_bounds()$taxid == id, "lon"],
+                                        df_descendants()[df_descendants()$taxid == desc, "lon"]),
+                       lat = c(df_zoom_bounds()[df_zoom_bounds()$taxid == id, "lat"],
+                               df_descendants()[df_descendants()$taxid == desc, "lat"]),
+                       color = col_info,
                        ...)
         }
       }
+      if(legend == TRUE && col %in% colnames(df)) {
+        proxy <- leaflet::addLegend(proxy, position = "bottomright",
+                           title="legend",
+                           pal = make_col,
+                           values = df_descendants()[[col]])
+      }
+
       proxy
     })
   }
@@ -70,7 +95,6 @@ draw_subtree <- function(lm_obj, col="yellow", lwd=5,...){
   shiny::shinyApp(ui, server)
 }
 
-#ordonne les taxids pour pourvoir construire le format phylo
 #' Prepare the datas for a transformation into a phylo format
 #'
 #' @param taxid the taxid of the descendant's ancestor we're looking at
