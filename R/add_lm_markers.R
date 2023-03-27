@@ -10,7 +10,7 @@
 #' @return a dataframe containing all aesthetics informations for one serie of markers
 #' @export
 #'
-#' @examples add_lm_markers(size="GC.", col="Genes", min=30, max=40, FUN="mean")
+#' @examples add_lm_markers(radius="GC.", fillColor="Genes", min=30, max=40, FUN="mean")
 add_lm_markers <- function(radius, fillColor, stroke=FALSE, color="#03F", weight=5, opacity=0.8, fillOpacity=0.5, popup="", label="", min=20, max=50, FUN="",...) {
   res <- data.frame(radius=radius, fillColor=fillColor,
                     min=min,max=max,

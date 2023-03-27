@@ -13,6 +13,7 @@ pass_infos <- function(df, information, my_function) {
   tax_request <- as.vector(df[df$type=="requested",]$taxid)
   only_leaves <- setdiff(tax_request,all_ancestors)
 
+  # fill the matrix (the value of each leaf is added to all of it's ancestors)
   info <- data.frame(ancestors=all_ancestors)
   for (id in only_leaves) {
     info_tmp <- data.frame(unlist(df[df$taxid==id,"ascend"]),df[df$taxid==id,information])
@@ -21,6 +22,7 @@ pass_infos <- function(df, information, my_function) {
     info <- left_join(info,info_tmp, by="ancestors")
   }
 
+  # apply of the function to get the final value
   if (length(unique(df[df$type=="requested",information])) > 10) {
     my_function <- match.fun(my_function)
     # compute the value for each row
@@ -83,7 +85,6 @@ draw_markers <- function(lm_obj, legend=TRUE){
   df <- lm_obj$df
   basemap <- lm_obj$basemap
   aes <- lm_obj$aes
-  print(aes)
 
   other <- c("min", "max", "pass_info","pal")
   # variables that are columns of the lm_obj dataframe
@@ -91,9 +92,6 @@ draw_markers <- function(lm_obj, legend=TRUE){
 
   #pass the information to the nodes or not
   for (i in 1:length(aes)){
-
-    # si pas d'info de couleur, on rempli aes
-    # current_row <- aes[i,]
 
     # passing informations if the function is given
     if (!(is.null(aes[[i]]$pass_info))) {
@@ -110,9 +108,9 @@ draw_markers <- function(lm_obj, legend=TRUE){
   }
 
   ui <- shiny::fluidPage(
-    tags$style(type = "text/css", "html, body {width:100%;height:100%}"),
+    shiny::tags$style(type = "text/css", "html, body {width:100%;height:100%}"),
     leaflet::leafletOutput("mymap", width = "100%", height = "1000px"),
-    p()
+    shiny::p()
   )
 
   server <- function(input, output, session) {
@@ -130,18 +128,6 @@ draw_markers <- function(lm_obj, legend=TRUE){
     output$mymap <- leaflet::renderLeaflet({
       display_map(df,map = basemap) %>% leaflet::fitBounds(~min(lon), ~min(lat), ~max(lon), ~max(lat))
     })
-
-    # make_fillColor_pal <- reactive({
-    #     leaflet::colorNumeric(aes[i,"pal"], df[[aes[i, "fillColor"]]])
-    # })
-    #
-    # make_fillColor_pal2 <- reactive({
-    #     leaflet::colorNumeric(pal, domain)
-    #   })
-    #
-    # make_color_pal <- reactive ({
-    #   leaflet::colorNumeric("viridis", df[[aes[i, "color"]]])
-    # })
 
     # modification of the map to display the rights markers
     shiny::observe({
@@ -196,27 +182,42 @@ draw_markers <- function(lm_obj, legend=TRUE){
     })
 
     # update the legend as needed
-    # shiny::observe({
-    #   proxy <- leaflet::leafletProxy("mymap", session=session) %>%
-    #     leaflet::clearControls()
-    #   for (i in 1:nrow(aes)) {
-    #     if (aes[i,"legend"] == TRUE) {
-    #       if (aes[i, "fillColor"] %in% colnames(df)) {
-    #         make_fillColor <- make_fillColor_pal()
-    #         proxy <- addLegend(proxy,
-    #                            position = "bottomright",
-    #                            title=aes[i,"fillColor"],
-    #                            pal = make_fillColor,
-    #                            values = df_zoom_bounds()[[aes[i,"fillColor"]]])
-    #
-    #       }
-    #
-    #     }
-    #
-    #   }
-    #
-    #
-    # })
+    shiny::observe({
+      proxy <- leaflet::leafletProxy("mymap", session=session) %>%
+        leaflet::clearControls()
+      for (i in 1:length(aes)) {
+
+        if (aes[[i]]$legend == TRUE) {
+
+          if (aes[[i]]$fillColor %in% colnames(df)) {
+            make_fillColor <- leaflet::colorNumeric(aes[[i]]$pal, df[[aes[[i]]$fillColor]])
+
+          proxy <- proxy %>% leaflet::addLegend(position = "bottomright",
+                             title = aes[[i]]$fillColor,
+                             pal = make_fillColor,
+                             values = df_zoom_bounds()[[aes[[i]]$fillColor]])
+          }
+
+          if (aes[[i]]$radius %in% colnames(df)) {
+            proxy <- proxy %>%
+              addLegendSize(
+                values = df_zoom_bounds()[[aes[[i]]$radius]],
+                color = 'red',
+                opacity = .5,
+                fillOpacity = 0,
+                title = aes[[i]]$radius,
+                shape = "circle",
+                orientation = 'horizontal',
+                breaks = 5,
+                baseSize = 50)
+          }
+        }
+      }
+
+      proxy
+
+
+    })
 
     # functions to add popups
     showSciName <- function(taxid, lng, lat) {
