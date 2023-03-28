@@ -10,13 +10,14 @@
 #' lm_branches(col="red")
 #'
 #' # branches are colored according to the average GC rate
+#' lm_branches(col="GC.", FUN="mean")
 lm_branches <- function(col="yellow", FUN="mean") {
   res <- c(col, FUN)
-  class(res)=c("lifemap_obj", "lm_branches","vector")
+  class(res)=c("lifemap_obj", "lm_branches", "vector")
   return(res)
 }
 
-#' Reports whether x is a lm_obj object
+#' Reports whether x is a lm_branches object
 #' @param x the object to test
 #' @export
 is.lm_branches <- function(x) {inherits(x, "lm_branches")}

@@ -26,12 +26,12 @@ print.lifemap_obj <- function(lm_obj) {
 is.lifemap_obj <- function(x) inherits(x, "lifemap_obj")
 
 #' Add a graphical element to a tree visualisation
-#' @param e1 an object of class lm_obj that contains at least $df, a dataframe, and $basemap, hte map used ti get the coordinates
-#' @param e2 a description of the graphical features wanted for a set of points
+#' @param e1 an object of class lm_obj that contains at least $df, a dataframe, and $basemap, the map used to get the coordinates
+#' @param e2 a description of the graphical features wanted for a set of points (eg. markers, subtree, popups, ...)
 #' @export
 #' @return a lm_obj object
 #'
-#' @examples LM_df + lm_markers(radius="GC.", fillColor="Genes", min=10, max=80, FUN="mean", pal="Accent")
+#' @examples LM_df + lm_markers(radius="GC.", fillColor="Genes", min=10, max=80, FUN="mean", pal="Accent", legend=TRUE, stroke = TRUE, weight="Size..Mb.")
 "+.lifemap_obj" <- function(e1,e2) {
   if(is.null(e1$aes)) {
     e1$aes <- list(e2)

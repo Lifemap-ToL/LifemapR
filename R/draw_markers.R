@@ -72,15 +72,14 @@ create_value_range <- function(value, df, df2, min, max, map){
 #' @export
 #' @importFrom dplyr left_join
 #' @importFrom shiny fluidPage reactive observe shinyApp
-#' @importFrom leaflet leafletOutput renderLeaflet fitBounds leafletProxy addCircleMarkers addPopups clearMarkers clearShapes clearControls colorNumeric clearPopups
+#' @importFrom leaflet leafletOutput renderLeaflet fitBounds leafletProxy addPopups clearMarkers clearShapes clearControls colorNumeric clearPopups
+#' @importFrom leaflegend addLegendSize addSymbolsSize
 #'
 #' @examples
-#' df <- read.csv("data/eukaryotes_1000.txt", header=TRUE, sep="\t")
-#' df_test[,"GC."] <- as.numeric(as.character(df_test[,"GC."]))
-#' df_test[,"Genes"] <- as.numeric(as.character(df_test[,"Genes"]))
-#' LM_df <- construct_dataframe(df)
-#' draw_markers(LM_df, information = c("GC.","Genes"), my_function=mean, legend = FALSE)
-draw_markers <- function(lm_obj, legend=TRUE){
+#' load("data/eukaryote_1000.RData")
+#' LM_df <- construct_dataframe(eukaryote_1000, basemap = "fr")
+#' LM_df + lm_markers(radius="GC.", fillColor="Genes", min=10, max=80, FUN="mean", pal="Accent", legend=TRUE, stroke = TRUE, weight="Size..Mb.")
+draw_markers <- function(lm_obj){
 
   df <- lm_obj$df
   basemap <- lm_obj$basemap
@@ -126,7 +125,44 @@ draw_markers <- function(lm_obj, legend=TRUE){
 
     # output of the map
     output$mymap <- leaflet::renderLeaflet({
-      display_map(df,map = basemap) %>% leaflet::fitBounds(~min(lon), ~min(lat), ~max(lon), ~max(lat))
+      m <- display_map(df,map = basemap) %>% leaflet::fitBounds(~min(lon), ~min(lat), ~max(lon), ~max(lat))
+
+      for (i in 1:length(aes)) {
+
+            if (is.lm_markers(aes[[i]]) & aes[[i]]$legend == TRUE) {
+
+              if (aes[[i]]$radius %in% colnames(df)) {
+                m <- m %>%
+                  leaflegend::addLegendSize(values = min(df[[aes[[i]]$radius]], na.rm = TRUE):max(df[[aes[[i]]$radius]], na.rm = TRUE),
+                                            color = 'black',
+                                            opacity = .5,
+                                            fillOpacity = 0,
+                                            title = aes[[i]]$radius,
+                                            shape = aes[[i]]$shape,
+                                            orientation = 'horizontal',
+                                            baseSize = 50,
+                                            position = "bottomright")
+              }
+              if (aes[[i]]$fillColor %in% colnames(df)) {
+                make_fillColor <- leaflet::colorNumeric(aes[[i]]$pal, df[[aes[[i]]$fillColor]])
+
+              m <- m %>% leaflet::addLegend(position = "bottomright",
+                                 title = aes[[i]]$fillColor,
+                                 pal = make_fillColor,
+                                 values = df[[aes[[i]]$fillColor]])
+              }
+              if (aes[[i]]$color %in% colnames(df)) {
+                make_color <- leaflet::colorNumeric(aes[[i]]$pal, df[[aes[[i]]$color]])
+
+                m <- m %>% leaflet::addLegend(position = "bottomright",
+                                              title = aes[[i]]$color,
+                                              pal = make_color,
+                                              values = df[[aes[[i]]$color]])
+              }
+            }
+          }
+
+      m
     })
 
     # modification of the map to display the rights markers
@@ -165,58 +201,21 @@ draw_markers <- function(lm_obj, legend=TRUE){
         # fill opacity
         fillOpacity_info <- create_value_range(aes[[i]]$fillOpacity, df, df_zoom_bounds(), 0.1, 1)
 
-        proxy <- leaflet::addCircleMarkers(proxy,
+        proxy <- leaflegend::addSymbolsSize(proxy,
                                            lng = df_zoom_bounds()$lon,
                                            lat = df_zoom_bounds()$lat,
-                                           radius = radius_info,
+                                           values = radius_info,
+                                           shape = aes[[i]]$shape,
+                                           color = color_info,
                                            fillColor = fillColor_info,
                                            fillOpacity = fillOpacity_info,
-                                           stroke = stroke_info,
-                                           color = color_info,
                                            opacity = opacity_info,
-                                           weight=weight_info
-                                           )
+                                           strokeWidth = weight_info,
+                                           baseSize = 50
+        )
       }
 
       proxy
-    })
-
-    # update the legend as needed
-    shiny::observe({
-      proxy <- leaflet::leafletProxy("mymap", session=session) %>%
-        leaflet::clearControls()
-      for (i in 1:length(aes)) {
-
-        if (aes[[i]]$legend == TRUE) {
-
-          if (aes[[i]]$fillColor %in% colnames(df)) {
-            make_fillColor <- leaflet::colorNumeric(aes[[i]]$pal, df[[aes[[i]]$fillColor]])
-
-          proxy <- proxy %>% leaflet::addLegend(position = "bottomright",
-                             title = aes[[i]]$fillColor,
-                             pal = make_fillColor,
-                             values = df_zoom_bounds()[[aes[[i]]$fillColor]])
-          }
-
-          if (aes[[i]]$radius %in% colnames(df)) {
-            proxy <- proxy %>%
-              addLegendSize(
-                values = df_zoom_bounds()[[aes[[i]]$radius]],
-                color = 'red',
-                opacity = .5,
-                fillOpacity = 0,
-                title = aes[[i]]$radius,
-                shape = "circle",
-                orientation = 'horizontal',
-                breaks = 5,
-                baseSize = 50)
-          }
-        }
-      }
-
-      proxy
-
-
     })
 
     # functions to add popups
