@@ -210,31 +210,9 @@ build_Lifemap <- function(df, basemap = "fr", verbose=TRUE) {
   FINAL_DATA <- dplyr::bind_rows(FINAL_DATA, LUCA)
 
   lm_obj <- list(df=FINAL_DATA,basemap=basemap)
-  class(lm_obj) <- c("lifemap.obj","list")
+  class(lm_obj) <- c("lifemap_obj","list")
 
   return(lm_obj)
 }
 
-#' print lifemap.obj objects
-#'
-#'
-#' @description When the LifemapR object is just created, give the number of columns and rows
-#' as well as the basemap used to get the datas form the database
-#'
-#' @param lm_obj
-#'
-#' @return NA
-#' @export
-#'
-#' @examples print(LM_df)
-print.lifemap.obj <- function(lm_obj) {
-  if (is.null(lm_obj$aes)) {
-    cat('The dataframe contains', nrow(lm_obj$df),'rows and', ncol(lm_obj$df), 'columns. \n')
-    cat('The basemap used is :', lm_obj$basemap,'\n')
-  } else {
-    print(draw_markers(lm_obj))
-  }
 
-}
-
-is.lifemap.obj <- function(x) inherits(x, "lifemap.obj")
