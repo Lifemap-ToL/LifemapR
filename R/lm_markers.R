@@ -5,6 +5,7 @@
 #' @param max the maximal size
 #' @param fillColor fill color
 #' @param fillColor_pal the palette to be used if <code>fillColor</code> represent a variable
+#' @param shape a string for the desired shape, can be in c("rect", "circle", "triangle", "plus", "cross", "diamond", "star")
 #' @param stroke whether to draw a border for points
 #' @param color stroke color
 #' @param color_pal the palette to be used if <code>color</code> represent a variable

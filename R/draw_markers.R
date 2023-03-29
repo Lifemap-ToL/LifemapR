@@ -132,8 +132,8 @@ add_lm_markers <- function(data, df, df_zoom_bounds, proxy) {
 #' load("data/eukaryote_1000.RData")
 #' LM_df <- construct_dataframe(eukaryote_1000, basemap = "fr")
 #' LM_df +
-#' lm_markers(radius = "GC.", fillColor = "Genes", min = 10, max = 80, FUN="mean", pal = "Accent", legend = TRUE, stroke = TRUE, weight = "Size..Mb.") +
-#' lm_branches(col = "GC.", FUN = "mean")
+#' lm_markers(radius = "GC.", fillColor = "Size..Mb.", min = 10, max = 80, FUN="mean", fillColor_pal = "Accent", legend = TRUE, stroke = TRUE) +
+#' lm_branches(col = "Genes", FUN = "mean")
 draw_markers <- function(lm_obj){
 
   df <- lm_obj$df
@@ -175,7 +175,7 @@ draw_markers <- function(lm_obj){
 
     # define the zone visible by the users
     df_zoom_bounds <- shiny::reactive(
-      df[df$zoom <= (input$mymap_zoom +5) &
+      df[df$zoom <= (input$mymap_zoom + 4) &
            df$lat > input$mymap_bounds$south &
            df$lat < input$mymap_bounds$north &
            df$lon > input$mymap_bounds$west &
@@ -221,6 +221,15 @@ draw_markers <- function(lm_obj){
 
             m <- m %>% leaflet::addLegend(position = "bottomright",
                                           title = aes[[i]]$color,
+                                          pal = make_color,
+                                          values = df[[aes[[i]]$color]])
+          }
+        } else if (is.lm_branches(aes[[i]])) {
+          if (aes[[i]]$color %in% colnames(df)) {
+            make_color <- leaflet::colorNumeric(aes[[i]]$color_pal, df[[aes[[i]]$color]])
+
+            m <- m %>% leaflet::addLegend(position = "bottomright",
+                                          title = paste("subtree : ", aes[[i]]$color, sep = "", collapse = ""),
                                           pal = make_color,
                                           values = df[[aes[[i]]$color]])
           }
@@ -274,10 +283,10 @@ draw_markers <- function(lm_obj){
     showSciName <- function(taxid, lng, lat) {
       selectedId <- df[round(df$lon, digits=6) == round(lng,digits=6) & round(df$lat, digits=6) == round(lat, digits = 6),]
       content <- as.character(selectedId$taxid)
-      for (i in 1:length(aes)) {
-        new_string <- paste(aes[[i]]$radius," : ", selectedId[[aes[[i]]$radius]], sep="")
-        content <- paste(content,new_string, sep="\n")
-      }
+      # for (i in 1:length(aes)) {
+      #   new_string <- paste("coucou","toi", sep="")
+      #   content <- paste(content,new_string, sep="\n")
+      # }
       leafletProxy("mymap") %>% leaflet::addPopups(lng, lat, content)
     }
 
