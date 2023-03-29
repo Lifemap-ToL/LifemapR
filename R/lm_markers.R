@@ -34,13 +34,13 @@ lm_markers <- function(radius,
                        legend = TRUE,
                        FUN,
                        ...) {
-  res <- data.frame(radius=radius, fillColor=fillColor,
+  res <- data.frame(radius = radius, fillColor = fillColor,
                     min = min,max = max,
                     pass_info = FUN, stroke = stroke,
                     color = color, weight = weight,
                     opacity = opacity, fillOpacity = fillOpacity,
-                    shape = shape,
-                    legend = legend, ...)
+                    shape = shape, fillColor_pal = fillColor_pal,
+                    color_pal = color_pal, legend = legend, ...)
   class(res)=c("lifemap_obj", "lm_markers", "data.frame")
   return(res)
 }

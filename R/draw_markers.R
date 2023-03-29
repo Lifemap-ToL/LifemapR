@@ -129,38 +129,38 @@ draw_markers <- function(lm_obj){
 
       for (i in 1:length(aes)) {
 
-            if (is.lm_markers(aes[[i]]) & aes[[i]]$legend == TRUE) {
+        if (is.lm_markers(aes[[i]]) & aes[[i]]$legend == TRUE) {
 
-              if (aes[[i]]$radius %in% colnames(df)) {
-                m <- m %>%
-                  leaflegend::addLegendSize(values = min(df[[aes[[i]]$radius]], na.rm = TRUE):max(df[[aes[[i]]$radius]], na.rm = TRUE),
-                                            color = 'black',
-                                            opacity = .5,
-                                            fillOpacity = 0,
-                                            title = aes[[i]]$radius,
-                                            shape = aes[[i]]$shape,
-                                            orientation = 'horizontal',
-                                            baseSize = 50,
-                                            position = "bottomright")
-              }
-              if (aes[[i]]$fillColor %in% colnames(df)) {
-                make_fillColor <- leaflet::colorNumeric(aes[[i]]$pal, df[[aes[[i]]$fillColor]])
-
-              m <- m %>% leaflet::addLegend(position = "bottomright",
-                                 title = aes[[i]]$fillColor,
-                                 pal = make_fillColor,
-                                 values = df[[aes[[i]]$fillColor]])
-              }
-              if (aes[[i]]$color %in% colnames(df)) {
-                make_color <- leaflet::colorNumeric(aes[[i]]$pal, df[[aes[[i]]$color]])
-
-                m <- m %>% leaflet::addLegend(position = "bottomright",
-                                              title = aes[[i]]$color,
-                                              pal = make_color,
-                                              values = df[[aes[[i]]$color]])
-              }
-            }
+          if (aes[[i]]$radius %in% colnames(df)) {
+            m <- m %>%
+              leaflegend::addLegendSize(values = min(df[[aes[[i]]$radius]], na.rm = TRUE):max(df[[aes[[i]]$radius]], na.rm = TRUE),
+                                        color = 'black',
+                                        opacity = .5,
+                                        fillOpacity = 0,
+                                        title = aes[[i]]$radius,
+                                        shape = aes[[i]]$shape,
+                                        orientation = 'horizontal',
+                                        baseSize = 50,
+                                        position = "bottomright")
           }
+          if (aes[[i]]$fillColor %in% colnames(df)) {
+            make_fillColor <- leaflet::colorNumeric(aes[[i]]$fillColor_pal, df[[aes[[i]]$fillColor]])
+
+            m <- m %>% leaflet::addLegend(position = "bottomright",
+                                          title = aes[[i]]$fillColor,
+                                          pal = make_fillColor,
+                                          values = df[[aes[[i]]$fillColor]])
+          }
+          if (aes[[i]]$color %in% colnames(df)) {
+            make_color <- leaflet::colorNumeric(aes[[i]]$color_pal, df[[aes[[i]]$color]])
+
+            m <- m %>% leaflet::addLegend(position = "bottomright",
+                                          title = aes[[i]]$color,
+                                          pal = make_color,
+                                          values = df[[aes[[i]]$color]])
+          }
+        }
+      }
 
       m
     })
@@ -176,7 +176,7 @@ draw_markers <- function(lm_obj){
       for (i in 1:length(aes)){
 
         if (aes[[i]]$fillColor %in% colnames(df)) {
-          make_fillColor <- leaflet::colorNumeric(aes[[i]]$pal, df[[aes[[i]]$fillColor]])
+          make_fillColor <- leaflet::colorNumeric(aes[[i]]$fillColor_pal, df[[aes[[i]]$fillColor]])
           fillColor_info <- make_fillColor(df_zoom_bounds()[[aes[[i]]$fillColor]])
         } else { fillColor_info <- aes[[i]]$fillColor }
 
@@ -188,7 +188,7 @@ draw_markers <- function(lm_obj){
         } else { stroke_info <- aes[[i]]$stroke }
 
         if (aes[[i]]$color %in% colnames(df)) {
-          make_color <- leaflet::colorNumeric("viridis", df[[aes[[i]]$color]])
+          make_color <- leaflet::colorNumeric(aes[[i]]$color_pal, df[[aes[[i]]$color]])
           color_info <- make_color(df_zoom_bounds()[[aes[[i]]$color]])
         } else { color_info <- aes[[i]]$color }
 
@@ -202,16 +202,16 @@ draw_markers <- function(lm_obj){
         fillOpacity_info <- create_value_range(aes[[i]]$fillOpacity, df, df_zoom_bounds(), 0.1, 1)
 
         proxy <- leaflegend::addSymbolsSize(proxy,
-                                           lng = df_zoom_bounds()$lon,
-                                           lat = df_zoom_bounds()$lat,
-                                           values = radius_info,
-                                           shape = aes[[i]]$shape,
-                                           color = color_info,
-                                           fillColor = fillColor_info,
-                                           fillOpacity = fillOpacity_info,
-                                           opacity = opacity_info,
-                                           strokeWidth = weight_info,
-                                           baseSize = 50
+                                            lng = df_zoom_bounds()$lon,
+                                            lat = df_zoom_bounds()$lat,
+                                            values = radius_info,
+                                            shape = aes[[i]]$shape,
+                                            color = color_info,
+                                            fillColor = fillColor_info,
+                                            fillOpacity = fillOpacity_info,
+                                            opacity = opacity_info,
+                                            strokeWidth = weight_info,
+                                            baseSize = 50
         )
       }
 
@@ -245,4 +245,3 @@ draw_markers <- function(lm_obj){
 
   shinyApp(ui, server)
 }
-
