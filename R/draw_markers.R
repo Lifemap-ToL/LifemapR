@@ -64,6 +64,59 @@ create_value_range <- function(value, df, df2, min, max, map){
 }
 
 
+#' compute the aes for a set of points
+#'
+#' @param data the dataframe containing the aes informations (must be of lm_markers class)
+#' @param df the full dataframe
+#' @param df_zoom_bounds the dataframe containing visibles taxas
+#'
+#' @return a list of values
+add_lm_markers <- function(data, df, df_zoom_bounds, proxy) {
+
+  if (data$fillColor %in% colnames(df)) {
+    make_fillColor <- leaflet::colorNumeric(data$fillColor_pal, df[[data$fillColor]])
+    fillColor_info <- make_fillColor(df_zoom_bounds[[data$fillColor]])
+  } else { fillColor_info <- data$fillColor }
+
+  radius_info <- create_value_range(data$radius, df, df_zoom_bounds, data$min, data$max)
+
+  # stroke presence
+  if(data$stroke %in% colnames(df)) {
+    stroke_info <- df_zoom_bounds[[data$stroke]]
+  } else { stroke_info <- data$stroke }
+
+  #stroke color
+  if (data$color %in% colnames(df)) {
+    make_color <- leaflet::colorNumeric(data$color_pal, df[[data$color]])
+    color_info <- make_color(df_zoom_bounds[[data$color]])
+  } else { color_info <- data$color }
+
+  # stroke opacity
+  opacity_info <- create_value_range(data$opacity, df, df_zoom_bounds, 0.1, 1)
+
+  # stroke weight
+  weight_info <- create_value_range(data$weight, df, df_zoom_bounds, 1, 10)
+
+  # fill opacity
+  fillOpacity_info <- create_value_range(data$fillOpacity, df, df_zoom_bounds, 0.1, 1)
+
+  proxy <- leaflegend::addSymbolsSize(proxy,
+                                      lng = df_zoom_bounds$lon,
+                                      lat = df_zoom_bounds$lat,
+                                      values = radius_info,
+                                      shape = data$shape,
+                                      color = color_info,
+                                      fillColor = fillColor_info,
+                                      fillOpacity = fillOpacity_info,
+                                      opacity = opacity_info,
+                                      strokeWidth = weight_info,
+                                      baseSize = 50
+  )
+  proxy
+
+}
+
+
 #' Represent continuous datas on a Lifemap background
 #'
 #' @param lm_obj a Lifemap object
@@ -72,20 +125,22 @@ create_value_range <- function(value, df, df2, min, max, map){
 #' @export
 #' @importFrom dplyr left_join
 #' @importFrom shiny fluidPage reactive observe shinyApp
-#' @importFrom leaflet leafletOutput renderLeaflet fitBounds leafletProxy addPopups clearMarkers clearShapes clearControls colorNumeric clearPopups
+#' @importFrom leaflet leafletOutput renderLeaflet fitBounds leafletProxy addPopups clearMarkers clearShapes clearControls colorNumeric clearPopups addPolylines
 #' @importFrom leaflegend addLegendSize addSymbolsSize
 #'
 #' @examples
 #' load("data/eukaryote_1000.RData")
 #' LM_df <- construct_dataframe(eukaryote_1000, basemap = "fr")
-#' LM_df + lm_markers(radius="GC.", fillColor="Genes", min=10, max=80, FUN="mean", pal="Accent", legend=TRUE, stroke = TRUE, weight="Size..Mb.")
+#' LM_df +
+#' lm_markers(radius = "GC.", fillColor = "Genes", min = 10, max = 80, FUN="mean", pal = "Accent", legend = TRUE, stroke = TRUE, weight = "Size..Mb.") +
+#' lm_branches(col = "GC.", FUN = "mean")
 draw_markers <- function(lm_obj){
 
   df <- lm_obj$df
   basemap <- lm_obj$basemap
   aes <- lm_obj$aes
 
-  other <- c("min", "max", "pass_info","pal")
+  other <- c("min", "max", "pass_info")
   # variables that are columns of the lm_obj dataframe
   variables <- colnames(aes[[1]])[!(colnames(aes[[1]]) %in% other)]
 
@@ -93,17 +148,21 @@ draw_markers <- function(lm_obj){
   for (i in 1:length(aes)){
 
     # passing informations if the function is given
-    if (!(is.null(aes[[i]]$pass_info))) {
+    if (is.lm_markers(aes[[i]]) & !(is.null(aes[[i]]$pass_info))) {
       for (column in variables) {
-        if (aes[[i]][[column]] %in% colnames(df) ) {
+        if (aes[[i]][[column]] %in% colnames(df)) {
           new_df <- pass_infos(df, information = aes[[i]][[column]], my_function = aes[[i]]$pass_info)
           for (id in 1:nrow(new_df)) {
             df[df$taxid == new_df[id, "ancestors"], aes[[i]][[column]]]<- new_df[id, ]$value
           }
         }
       }
+    } else if (is.lm_branches(aes[[i]]) & aes[[i]]$color %in% colnames(df)) {
+      new_df <- pass_infos(df, information = aes[[i]]$color, my_function = aes[[i]]$FUN)
+      for (id in 1:nrow(new_df)) {
+        df[df$taxid == new_df[id, "ancestors"], aes[[i]]$color]<- new_df[id, ]$value
+      }
     }
-
   }
 
   ui <- shiny::fluidPage(
@@ -122,6 +181,12 @@ draw_markers <- function(lm_obj){
            df$lon > input$mymap_bounds$west &
            df$lon < input$mymap_bounds$east,]
     )
+
+    # define the descendants of df_zoom_bounds' taxids
+    df_descendants <- shiny::reactive({
+      visibles <- df_zoom_bounds()$taxid
+      df[df$ancestor %in% visibles,]
+    })
 
     # output of the map
     output$mymap <- leaflet::renderLeaflet({
@@ -175,44 +240,31 @@ draw_markers <- function(lm_obj){
       # adding the visible shapes
       for (i in 1:length(aes)){
 
-        if (aes[[i]]$fillColor %in% colnames(df)) {
-          make_fillColor <- leaflet::colorNumeric(aes[[i]]$fillColor_pal, df[[aes[[i]]$fillColor]])
-          fillColor_info <- make_fillColor(df_zoom_bounds()[[aes[[i]]$fillColor]])
-        } else { fillColor_info <- aes[[i]]$fillColor }
+        if (is.lm_markers(aes[[i]])) {
+          proxy <- add_lm_markers(aes[[i]], df = df, df_zoom_bounds = df_zoom_bounds(), proxy = proxy)
 
-        radius_info <- create_value_range(aes[[i]]$radius, df, df_zoom_bounds(), aes[[i]]$min, aes[[i]]$max)
+        } else if (is.lm_branches(aes[[i]])) {
+          if (aes[[i]]$color %in% colnames(df)) {
+            make_col <- leaflet::colorNumeric(palette = aes[[i]]$color_pal, domain = df[[aes[[i]]$color]])
+          }
 
-        # stroke presence
-        if(aes[[i]]$stroke %in% colnames(df)) {
-          stroke_info <- df_zoom_bounds()[[aes[[i]]$stroke]]
-        } else { stroke_info <- aes[[i]]$stroke }
+          for (id in df_zoom_bounds()$taxid) {
+            # for each descendant of each taxid
+            for (desc in df_descendants()[df_descendants()$ancestor == id, ]$taxid) {
+              if (aes[[i]]$color %in% colnames(df)) {
+                col_info <- make_col(df_descendants()[df_descendants()$taxid == desc, aes[[i]]$color])
+              } else { col_info <- aes[[i]]$color}
 
-        if (aes[[i]]$color %in% colnames(df)) {
-          make_color <- leaflet::colorNumeric(aes[[i]]$color_pal, df[[aes[[i]]$color]])
-          color_info <- make_color(df_zoom_bounds()[[aes[[i]]$color]])
-        } else { color_info <- aes[[i]]$color }
-
-        # stroke opacity
-        opacity_info <- create_value_range(aes[[i]]$opacity, df, df_zoom_bounds(), 0.1, 1)
-
-        # stroke weight
-        weight_info <- create_value_range(aes[[i]]$weight, df, df_zoom_bounds(), 1, 10)
-
-        # fill opacity
-        fillOpacity_info <- create_value_range(aes[[i]]$fillOpacity, df, df_zoom_bounds(), 0.1, 1)
-
-        proxy <- leaflegend::addSymbolsSize(proxy,
-                                            lng = df_zoom_bounds()$lon,
-                                            lat = df_zoom_bounds()$lat,
-                                            values = radius_info,
-                                            shape = aes[[i]]$shape,
-                                            color = color_info,
-                                            fillColor = fillColor_info,
-                                            fillOpacity = fillOpacity_info,
-                                            opacity = opacity_info,
-                                            strokeWidth = weight_info,
-                                            baseSize = 50
-        )
+              proxy <- leaflet::addPolylines(proxy,
+                                      lng = c(df_zoom_bounds()[df_zoom_bounds()$taxid == id, "lon"],
+                                              df_descendants()[df_descendants()$taxid == desc, "lon"]),
+                                      lat = c(df_zoom_bounds()[df_zoom_bounds()$taxid == id, "lat"],
+                                              df_descendants()[df_descendants()$taxid == desc, "lat"]),
+                                      color = col_info,
+                                      opacity = 0.8)
+            }
+          }
+        }
       }
 
       proxy
