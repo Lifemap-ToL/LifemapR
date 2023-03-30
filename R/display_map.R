@@ -17,7 +17,11 @@ display_map <- function(df=NULL,map) {
     display="http://lifemap-fr.univ-lyon1.fr/osm_tiles/{z}/{x}/{y}.png"
   } else if (map == "ncbi"){
     display="http://lifemap-ncbi.univ-lyon1.fr/osm_tiles/{z}/{x}/{y}.png"
-    }
+  } else if (map == "base"){
+    display="http://lifemap.univ-lyon1.fr/osm_tiles/{z}/{x}/{y}.png"
+  } else if (map == "virus"){
+    display="http://virusmap.univ-lyon1.fr/osm_tiles/{z}/{x}/{y}.png"
+  }
   m <- leaflet::leaflet(df) %>%
     leaflet::addTiles(display,options = providerTileOptions(minZoom = 5, maxZoom = 50))
   return(m)

@@ -1,3 +1,18 @@
+#' Check if the URL is working
+#'
+#' @param url_in the url to test
+#' @param t the time before timeout
+#'
+#' @return a logical
+valid_url <- function(url_in,t=20){
+  con <- url(url_in)
+  check <- suppressWarnings(try(open.connection(con,open="rt",timeout=t),silent=T)[1])
+  suppressWarnings(try(close.connection(con),silent=T))
+  ifelse(is.null(check),TRUE,FALSE)
+}
+
+
+
 #' Request one of the core of the solr database corresponding to the basemap choosen with TaxIDs wanted
 #'
 #' @param taxids a vector of TaxIDs to be requested
@@ -11,6 +26,10 @@ request_database <- function(taxids, basemap, core) {
     basemap_url <- "https://lifemap-ncbi.univ-lyon1.fr/solr/"
   } else if (basemap == "fr") {
     basemap_url <- "https://lifemap-fr.univ-lyon1.fr/solr/"
+  } else if (basemap == "base") {
+    basemap_url <- "https://lifemap.univ-lyon1.fr/solr/"
+  } else if (basemap == "virus") {
+    basemap_url <- "http://virusmap.univ-lyon1.fr/solr/"
   }
 
   DATA <- NULL
@@ -28,6 +47,10 @@ request_database <- function(taxids, basemap, core) {
     )
 
     # doing the request :
+    if (valid_url(url_in = url) == FALSE) {
+      basemaps <- c("base", "ncbi", "fr", "virus")
+      stop(sprintf("the url you are triyng is not working,why not try these one : %s", paste(basemaps[!(basemaps %in% basemap)], collapse = ", ")))
+    }
     data_sub <- jsonlite::fromJSON(url)
     if (data_sub$response$numFound > 0) {
       if (core == "taxo") {

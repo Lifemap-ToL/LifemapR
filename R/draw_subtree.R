@@ -21,7 +21,7 @@
 #'
 #' # to color branches according to a variable
 #' draw_subtree(LM_df, col="GC.")
-draw_subtree <- function(lm_obj, col = "yellow", FUN = "mean", pal = "Accent",legend = TRUE, ...){
+draw_subtree <- function(lm_obj, col = "yellow", FUN = "mean", pal = "Accent", legend = TRUE, ...){
 
   df <- lm_obj$df
   basemap <- lm_obj$basemap
