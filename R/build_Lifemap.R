@@ -49,7 +49,7 @@ request_database <- function(taxids, basemap, core) {
     # doing the request :
     if (valid_url(url_in = url) == FALSE) {
       basemaps <- c("base", "ncbi", "fr", "virus")
-      stop(sprintf("the url you are triyng is not working,why not try these one : %s", paste(basemaps[!(basemaps %in% basemap)], collapse = ", ")))
+      stop(sprintf("the url you are trying is not working,why not try these one : %s", paste(basemaps[!(basemaps %in% basemap)], collapse = ", ")))
     }
     data_sub <- jsonlite::fromJSON(url)
     if (data_sub$response$numFound > 0) {
