@@ -4,11 +4,11 @@
 #' 1 if the ancestor appears in the ascendants of a descendant, 0 either
 #'
 #' @param df a dataframe from a lifemap object
-#' @return
 #' @export
 #'
-#' @example
-#' load("data/taxids_10000.RData")
+#' @return a dataframe filled with 0 or 1
+#'
+#' @examples load("data/taxids_10000.RData")
 #' LM <- build_Lifemap(taxids_10000,"fr")
 #' create_matrix(LM$df)
 create_matrix <- function(df) {
