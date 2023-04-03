@@ -8,6 +8,7 @@
 #'
 #' @examples pass_infos (df, "GC_content", sum)
 pass_infos <- function(df, information, my_function) {
+  print("pass")
   # separate leaves from nodes
   all_ancestors <- unique(unlist(df[df$type=="requested",]$ascend))
   tax_request <- as.vector(df[df$type=="requested",]$taxid)
@@ -79,6 +80,7 @@ add_lm_markers <- function(data, df, df_zoom_bounds, proxy) {
   } else { fillColor_info <- data$fillColor }
 
   radius_info <- create_value_range(data$radius, df, df_zoom_bounds, data$min, data$max)
+  print(radius_info)
 
   # stroke presence
   if(data$stroke %in% colnames(df)) {
@@ -100,17 +102,17 @@ add_lm_markers <- function(data, df, df_zoom_bounds, proxy) {
   # fill opacity
   fillOpacity_info <- create_value_range(data$fillOpacity, df, df_zoom_bounds, 0.1, 1)
 
-  proxy <- leaflegend::addSymbolsSize(proxy,
-                                      lng = df_zoom_bounds$lon,
-                                      lat = df_zoom_bounds$lat,
-                                      values = radius_info,
-                                      shape = data$shape,
-                                      color = color_info,
-                                      fillColor = fillColor_info,
-                                      fillOpacity = fillOpacity_info,
-                                      opacity = opacity_info,
-                                      strokeWidth = weight_info,
-                                      baseSize = 50
+
+  proxy <- leaflet::addCircleMarkers(proxy,
+                                     lng = df_zoom_bounds$lon,
+                                     lat = df_zoom_bounds$lat,
+                                     radius = radius_info,
+                                     fillColor = fillColor_info,
+                                     fillOpacity = fillOpacity_info,
+                                     stroke = stroke_info,
+                                     color = color_info,
+                                     opacity = opacity_info,
+                                     weight = weight_info
   )
   proxy
 
@@ -205,7 +207,7 @@ draw_markers <- function(lm_obj){
                                         title = aes[[i]]$radius,
                                         shape = aes[[i]]$shape,
                                         orientation = 'horizontal',
-                                        baseSize = 50,
+                                        baseSize = (aes[[i]]$min + ((aes[[i]]$max - aes[[i]]$min) / 2)) * 2,
                                         position = "bottomright")
           }
           if (aes[[i]]$fillColor %in% colnames(df)) {
@@ -283,10 +285,10 @@ draw_markers <- function(lm_obj){
     showSciName <- function(taxid, lng, lat) {
       selectedId <- df[round(df$lon, digits=6) == round(lng,digits=6) & round(df$lat, digits=6) == round(lat, digits = 6),]
       content <- as.character(selectedId$taxid)
-      # for (i in 1:length(aes)) {
-      #   new_string <- paste("coucou","toi", sep="")
-      #   content <- paste(content,new_string, sep="\n")
-      # }
+      for (i in 1:length(aes)) {
+        new_string <- paste(aes[[i]]$radius," : ", selectedId[[aes[[i]]$radius]], sep="")
+        content <- paste(content,new_string, sep="\n")
+      }
       leafletProxy("mymap") %>% leaflet::addPopups(lng, lat, content)
     }
 

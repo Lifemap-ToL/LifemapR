@@ -39,13 +39,13 @@ basemap <- LM_obj$basemap
 However, please note that it should only be used for small data sets.
 ```r
 # Note that even when using leaflet functions, you need to use the LifemapR display_map function
-LifemapR::display_map(df=LM_obj$df[LM_obj$df$type == "requested",], m=LM_obj$basemap) %>% 
-    addMarkers(~lon,~lat,label=~sci_name)
+LifemapR::display_map(df = LM_obj$df[LM_obj$df$type == "requested", ], m = LM_obj$basemap) %>% 
+    addMarkers(~lon, ~lat, label = ~sci_name)
 
 # or
 
-m <- LifemapR::display_map(df=LM_obj$df[LM_obj$df$type == "requested",], map=LM_obj$basemap) 
-leaflet::addMarkers(m, ~lon,~lat,label=~sci_name)
+m <- LifemapR::display_map(df = LM_obj$df[LM_obj$df$type == "requested", ], map = LM_obj$basemap) 
+leaflet::addMarkers(m, ~lon, ~lat, label = ~sci_name)
 ```
 
 - The use of ```LifemapR``` function is recommended for all the other operations.\
@@ -53,7 +53,11 @@ Note that with the ```LifemapR``` functions, a ```shiny``` application will be l
 
 ```r
 # A LifemapR function
-LifemapR::draw_subtree(LM_obj)
+LM_obj + 
+# adding a set of points
+LifemapR::lm_markers(radius = "GC.", fillColor = "Size..Mb.", min = 10, max = 80, FUN="mean", fillColor_pal = "Accent", legend = TRUE, stroke = TRUE) +
+# adding a subtree with colored branches
+LifemapR::lm_branches(col = "Genes", FUN = "mean")
 ```
 
 
