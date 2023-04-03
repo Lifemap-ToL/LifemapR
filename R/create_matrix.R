@@ -5,6 +5,7 @@
 #'
 #' @param df a dataframe from a lifemap object
 #' @return
+#' @export
 #'
 #' @example
 #' load("data/taxids_10000.RData")

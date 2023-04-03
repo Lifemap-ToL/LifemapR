@@ -3,6 +3,7 @@
 S3method("+",lifemap_obj)
 S3method(print,lifemap_obj)
 export(build_Lifemap)
+export(create_matrix)
 export(display_map)
 export(draw_markers)
 export(draw_subtree)
