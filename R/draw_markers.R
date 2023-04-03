@@ -71,6 +71,8 @@ create_value_range <- function(value, df, df2, min, max, map){
 #' @param df the full dataframe
 #' @param df_zoom_bounds the dataframe containing visibles taxas
 #'
+#' @importFrom leaflet addCircleMarkers
+#'
 #' @return a list of values
 add_lm_markers <- function(data, df, df_zoom_bounds, proxy) {
 
