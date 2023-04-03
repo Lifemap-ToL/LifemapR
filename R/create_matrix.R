@@ -16,13 +16,14 @@ create_matrix <- function(df) {
   only_leaves <- as.list(setdiff(tax_request,all_ancestors))
   print("step 1")
 
-  # fill the matrix (1 if matching ancestor-descendant, 0 either way)
+  # create a list of dataframes : one for each leaf, containing all it's ancestors
   info_tmp <- lapply(only_leaves, FUN = function(x) {
     df_tmp <- data.frame(unlist(df[df$taxid==x,"ascend"]),1)
     colnames(df_tmp) <- c("ancestors",x)
     df_tmp
   })
   print("step 2")
+  # merging all the dataframes together
   final_df <- reduce(info_tmp, full_join, by = "ancestors") %>% replace(., is.na(.), 0)
   return(final_df)
 }
