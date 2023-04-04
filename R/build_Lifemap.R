@@ -11,8 +11,6 @@ valid_url <- function(url_in,t=20){
   ifelse(is.null(check),TRUE,FALSE)
 }
 
-
-
 #' Request one of the core of the solr database corresponding to the basemap choosen with TaxIDs wanted
 #'
 #' @param taxids a vector of TaxIDs to be requested
@@ -84,52 +82,17 @@ request_database <- function(taxids, basemap, core) {
 #'
 #' @return a dataframe with the direct ancestor for each taxa
 #'
-#' @importFrom dplyr bind_rows
+#' @importFrom purrr reduce
 get_direct_ancestor <- function(df) {
-  ancestors <- c()
-  descendants <- c()
-  df_ancestry <- data.frame("descendant"=numeric(0), "ancestor"=numeric(0))
-
-  for (taxid in 1:nrow(df[df$type=="requested",])) {
-    ancestry <- unlist(df[taxid, "ascend"])
-
-    # add the requested taxa and ancestor if not already encountered
-    if (!(as.numeric(df[taxid, "taxid"])) %in% descendants) {
-      df_ancestry <- rbind(df_ancestry,c(as.numeric(df[taxid, "taxid"]),
-                                         as.numeric(ancestry[1])))
-      ancestors <- append(ancestors,ancestry[1])
-      descendants <- append(descendants,df[taxid, "taxid"])
-    }
-
-    for (id in 1:(length(ancestry)-1)) {
-      descendant <- ancestry[id]
-      ancestor <- ancestry[id+1]
-
-      # add descendant and ancestor if ancestor not already encountered
-      if (!(ancestor %in% ancestors)) {
-        df_ancestry <- rbind(df_ancestry,
-                             c(descendant, ancestor))
-        ancestors <- append(ancestors,ancestor)
-        descendants <- append(descendants, descendant)
-      } else {
-
-        # add descendant if not already encountered and ancestor already known
-        if (!(descendant %in% descendants)) {
-          df_ancestry <- rbind(df_ancestry,
-                               c(descendant, ancestor))
-          descendants <- append(descendants, descendant)
-        } else {
-          break
-        }
-      }
-    }
-  }
+  df_ancestry <- apply(df[df$type=="requested",],1,function(x) {
+    vec <- c(as.numeric(x$taxid), unlist(x$ascend))
+    cbind(vec[-length(vec)], vec[-1])
+  })
+  df_ancestry <- purrr::reduce(df_ancestry, rbind, by = colnames(df_ancestry)[2])
+  df_ancestry <- unique(df_ancestry)
   colnames(df_ancestry) <- c("descendant", "ancestor")
   df_tot <- merge(df, df_ancestry, by.x = "taxid", by.y = "descendant")
-  return(df_tot)
 }
-
-
 
 
 #' A function to construct a LidemapR object, usable by other functions
@@ -165,7 +128,7 @@ build_Lifemap <- function(df, basemap = "fr", verbose=TRUE) {
 
   df_distinct <- dplyr::distinct(df,taxid, .keep_all = TRUE)
   if (!(nrow(df_distinct) == nrow(df))) {
-    warning(sprintf("%s rows have been removed because there was duplicated TaxIDs \n",nrow(df)-nrow(df_distinct)))
+    warning(sprintf("%s duplicated TaxIDs were removed \n",nrow(df)-nrow(df_distinct)))
   }
 
 
@@ -188,7 +151,12 @@ build_Lifemap <- function(df, basemap = "fr", verbose=TRUE) {
       }
     }
   }
-  if (length(not_found) > 0) {
+  if (length(not_found) == 1) {
+    warning(sprintf(
+      "%s TaxID was not found. The following TaxID was not found in the database : %s",
+      length(not_found),paste(not_found, collapse = ",")
+    ))
+  } else if (length(not_found) > 0) {
     warning(sprintf(
       "%s TaxIDs were not found. The following TaxIDs were not found in the database : %s",
       length(not_found),paste(not_found, collapse = ",")
@@ -201,8 +169,14 @@ build_Lifemap <- function(df, basemap = "fr", verbose=TRUE) {
   LIN <- request_database(taxids = unique(df_distinct$taxid), basemap, "addi")
   DATA <- merge(COO, LIN, by.x = "taxid", by.y = "taxid")
 
+  if (0 %in% df$taxid) {
+    LUCA <- data.frame(taxid="0",lon=0, lat=-4.226497,sci_name="Luca",zoom=5)
+    DATA <- dplyr::bind_rows(DATA, LUCA)
+  }
+
   INFOS_DATA <- merge(df_distinct, DATA, by.x = "taxid", by.y = "taxid")
   class(INFOS_DATA$taxid) <- "character"
+
 
   # get the coordinates of the ancestors of the taxids
   if (verbose){
@@ -222,13 +196,16 @@ build_Lifemap <- function(df, basemap = "fr", verbose=TRUE) {
   # nodes_requested <- ANCESTORS[ANCESTORS$taxid %in% INFOS_DATA$taxid,]
 
   INFOS_DATA <- dplyr::bind_rows(INFOS_DATA, ANCESTORS)
+  LUCA <- INFOS_DATA[INFOS_DATA$taxid == "0",]
 
   if (verbose){
     cat("creating the final dataframe ...\n")
   }
   FINAL_DATA <- get_direct_ancestor(INFOS_DATA)
 
-  LUCA <- data.frame(taxid="0",lon=0, lat=-4.226497,sci_name="Luca",zoom=5, type="ancestor")
+  if (!(0 %in% df$taxid)) {
+    LUCA <- data.frame(taxid="0",lon=0, lat=-4.226497,sci_name="Luca",zoom=5, type="ancestor")
+  }
 
   FINAL_DATA <- dplyr::bind_rows(FINAL_DATA, LUCA)
 

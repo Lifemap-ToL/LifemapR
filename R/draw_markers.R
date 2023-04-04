@@ -1,47 +1,22 @@
-#' Passes information from the leaves to the nodes
+#' pass the information to nodes
 #'
-#' @param df a dataframe from a lifemap_object
-#' @param information the variable by wich the data needs to be represented
-#' @param my_function the function to be applied fom the representation
+#' @param M the boolean matrix
+#' @param func the function to be applied
+#' @param value a vector of the values
 #'
-#' @return a dataframe containing for each node the value for one variable according to a function
-#'
-#' @examples pass_infos (df, "GC_content", sum)
-pass_infos <- function(df, information, my_function) {
-  print("pass")
-  # separate leaves from nodes
-  all_ancestors <- unique(unlist(df[df$type=="requested",]$ascend))
-  tax_request <- as.vector(df[df$type=="requested",]$taxid)
-  only_leaves <- setdiff(tax_request,all_ancestors)
-
-  # fill the matrix (the value of each leaf is added to all of it's ancestors)
-  info <- data.frame(ancestors=all_ancestors)
-  for (id in only_leaves) {
-    info_tmp <- data.frame(unlist(df[df$taxid==id,"ascend"]),df[df$taxid==id,information])
-    colnames(info_tmp) <- c("ancestors", as.character(id))
-
-    info <- left_join(info,info_tmp, by="ancestors")
-  }
-
-  # apply of the function to get the final value
-  if (length(unique(df[df$type=="requested",information])) > 10) {
-    my_function <- match.fun(my_function)
-    # compute the value for each row
-    res <- apply(info,MARGIN=1,function(x){
-      tmp <- x[!is.na(x)]
-      my_function(tmp[-1])
-    })
-  } else {
-    print(table(df[df$type=="requested",information]))
-    print(info)}
-
-
-  final_res <- data.frame(info$ancestors)
-  final_res$information <- res
-  colnames(final_res) <- c("ancestors","value")
-
-  return(final_res)
-
+#' @return a dataframe
+#' @export
+pass_infos <- function(M, values, ancestors, my_func) {
+  my_func <- match.fun(my_func)
+  inferred_values <- apply(X = M, MARGIN = 1, FUN = function(x){
+    vrais <- which(x== TRUE)
+    vrais <- as.vector(vrais)
+    val <- values[vrais]
+    val <- val[!is.na(val)]
+    my_func(val)
+  })
+  data.frame(ancestors = ancestors,
+             value = inferred_values)
 }
 
 #' compute a new scale for a value
@@ -82,7 +57,6 @@ add_lm_markers <- function(data, df, df_zoom_bounds, proxy) {
   } else { fillColor_info <- data$fillColor }
 
   radius_info <- create_value_range(data$radius, df, df_zoom_bounds, data$min, data$max)
-  print(radius_info)
 
   # stroke presence
   if(data$stroke %in% colnames(df)) {
@@ -144,18 +118,16 @@ draw_markers <- function(lm_obj){
   basemap <- lm_obj$basemap
   aes <- lm_obj$aes
 
-  other <- c("min", "max", "pass_info")
-  # variables that are columns of the lm_obj dataframe
-  variables <- colnames(aes[[1]])[!(colnames(aes[[1]]) %in% other)]
+  M <- create_matrix(df)
 
+  cat("passing the information to the nodes \n")
   #pass the information to the nodes or not
   for (i in 1:length(aes)){
-
     # passing informations if the function is given
-    if (is.lm_markers(aes[[i]]) & !(is.null(aes[[i]]$pass_info))) {
-      for (column in variables) {
+    if (is.lm_markers(aes[[i]]) && !(is.na(aes[[i]]$pass_info))) {
+      for (column in 1:ncol(aes[[i]])) {
         if (aes[[i]][[column]] %in% colnames(df)) {
-          new_df <- pass_infos(df, information = aes[[i]][[column]], my_function = aes[[i]]$pass_info)
+          new_df <- pass_infos(M,values = as.vector(df[df$type == "requested",aes[[i]][[column]]]), ancestors = unique(unlist(df[df$type == "requested","ascend"])), my_func = aes[[i]]$pass_info)
           for (id in 1:nrow(new_df)) {
             df[df$taxid == new_df[id, "ancestors"], aes[[i]][[column]]]<- new_df[id, ]$value
           }
@@ -274,7 +246,7 @@ draw_markers <- function(lm_obj){
                                       lat = c(df_zoom_bounds()[df_zoom_bounds()$taxid == id, "lat"],
                                               df_descendants()[df_descendants()$taxid == desc, "lat"]),
                                       color = col_info,
-                                      opacity = 0.8)
+                                      opacity = 0.7)
             }
           }
         }
@@ -288,7 +260,7 @@ draw_markers <- function(lm_obj){
       selectedId <- df[round(df$lon, digits=6) == round(lng,digits=6) & round(df$lat, digits=6) == round(lat, digits = 6),]
       content <- as.character(selectedId$taxid)
       for (i in 1:length(aes)) {
-        new_string <- paste(aes[[i]]$radius," : ", selectedId[[aes[[i]]$radius]], sep="")
+        new_string <- paste(aes[[i]]$fillColor," : ", selectedId[[aes[[i]]$fillColor]], sep="")
         content <- paste(content,new_string, sep="\n")
       }
       leafletProxy("mymap") %>% leaflet::addPopups(lng, lat, content)
