@@ -20,7 +20,8 @@
 #' @export
 #'
 #' @examples lm_markers(radius="GC.", fillColor="Genes", min=10, max=80, FUN="mean", pal="Accent", legend=TRUE, stroke = TRUE, weight="Size..Mb.")
-lm_markers <- function(radius,
+lm_markers <- function(data = NULL,
+                       radius,
                        min = 20,
                        max = 50,
                        fillColor,
@@ -36,12 +37,15 @@ lm_markers <- function(radius,
                        legendPosition = c("topright", "bottomright", "bottomleft", "topleft"),
                        legendOrientation = c("vertical", "horizontal"),
                        legendOpacity = 0.5,
-                       FUN,
+                       FUN = NaN,
                        ...) {
   legendPosition <- match.arg(arg = legendPosition, choices = legendPosition)
   legendOrientation <- match.arg(arg = legendOrientation, choices = legendOrientation)
 
-  res <- data.frame(radius, fillColor, min, max,
+  if (!(is.null(data))) {
+    taxids <- I(list(c(data$taxid)))
+  } else { taxids <- ""}
+  res <- data.frame(taxids=taxids, radius, fillColor, min, max,
                     FUN, stroke, color, weight,
                     opacity, fillOpacity, fillColor_pal,
                     color_pal, legend, legendPosition, legendOrientation,

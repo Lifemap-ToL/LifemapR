@@ -13,8 +13,20 @@
 #'
 #' # branches are colored according to the average GC rate
 #' lm_branches(col="GC.", FUN="mean")
-lm_branches <- function(col = "yellow", FUN = "mean", pal = "Accent", legend=TRUE) {
-  res <- data.frame(color = col, FUN = FUN, color_pal = pal, legend = legend)
+lm_branches <- function(data = NULL,
+                        col = "yellow",
+                        FUN = "mean",
+                        pal = "Accent",
+                        legend=TRUE,
+                        legendPosition = c("topright", "bottomright", "bottomleft", "topleft")) {
+
+  legendPosition <- match.arg(arg = legendPosition, choices = legendPosition)
+
+  if (!(is.null(data))) {
+    taxids <- I(list(c(data$taxid)))
+  } else { taxids <- ""}
+
+  res <- data.frame(taxids = taxids, color = col, FUN, color_pal = pal, legend, legendPosition)
   class(res)=c("lifemap_obj", "lm_branches", "data.frame")
   return(res)
 }

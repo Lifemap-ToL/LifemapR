@@ -22,46 +22,46 @@ create_value_range <- function(value, df, df2, min, max, map){
 
 #' compute the aes for a set of points
 #'
-#' @param data the dataframe containing the aes informations (must be of lm_markers class)
+#' @param aes the dataframe containing the aes informations (must be of lm_markers class)
 #' @param df the full dataframe
 #' @param df_zoom_bounds the dataframe containing visibles taxas
 #'
 #' @importFrom leaflet addCircleMarkers
 #'
 #' @return a list of values
-add_lm_markers <- function(data, df, df_zoom_bounds, proxy) {
+add_lm_markers <- function(aes, df, df_visible, proxy) {
 
-  if (data$fillColor %in% colnames(df)) {
-    make_fillColor <- leaflet::colorNumeric(data$fillColor_pal, df[[data$fillColor]])
-    fillColor_info <- make_fillColor(df_zoom_bounds[[data$fillColor]])
-  } else { fillColor_info <- data$fillColor }
+  if (aes$fillColor %in% colnames(df)) {
+    make_fillColor <- leaflet::colorNumeric(aes$fillColor_pal, df[[aes$fillColor]])
+    fillColor_info <- make_fillColor(df_visible[[aes$fillColor]])
+  } else { fillColor_info <- aes$fillColor }
 
-  radius_info <- create_value_range(data$radius, df, df_zoom_bounds, data$min, data$max)
+  radius_info <- create_value_range(aes$radius, df, df_visible, aes$min, aes$max)
 
   # stroke presence
-  if(data$stroke %in% colnames(df)) {
-    stroke_info <- df_zoom_bounds[[data$stroke]]
-  } else { stroke_info <- data$stroke }
+  if(aes$stroke %in% colnames(df)) {
+    stroke_info <- df_visible[[aes$stroke]]
+  } else { stroke_info <- aes$stroke }
 
   #stroke color
-  if (data$color %in% colnames(df)) {
-    make_color <- leaflet::colorNumeric(data$color_pal, df[[data$color]])
-    color_info <- make_color(df_zoom_bounds[[data$color]])
-  } else { color_info <- data$color }
+  if (aes$color %in% colnames(df)) {
+    make_color <- leaflet::colorNumeric(aes$color_pal, df[[aes$color]])
+    color_info <- make_color(df_visible[[aes$color]])
+  } else { color_info <- aes$color }
 
   # stroke opacity
-  opacity_info <- create_value_range(data$opacity, df, df_zoom_bounds, 0.1, 1)
+  opacity_info <- create_value_range(aes$opacity, df, df_visible, 0.1, 1)
 
   # stroke weight
-  weight_info <- create_value_range(data$weight, df, df_zoom_bounds, 1, 10)
+  weight_info <- create_value_range(aes$weight, df, df_visible, 1, 10)
 
   # fill opacity
-  fillOpacity_info <- create_value_range(data$fillOpacity, df, df_zoom_bounds, 0.1, 1)
+  fillOpacity_info <- create_value_range(aes$fillOpacity, df, df_visible, 0.1, 1)
 
 
   proxy <- leaflet::addCircleMarkers(proxy,
-                                     lng = df_zoom_bounds$lon,
-                                     lat = df_zoom_bounds$lat,
+                                     lng = df_visible$lon,
+                                     lat = df_visible$lat,
                                      radius = radius_info,
                                      fillColor = fillColor_info,
                                      fillOpacity = fillOpacity_info,
@@ -221,40 +221,50 @@ draw_markers <- function(lm_obj){
       # adding the visible shapes
       for (i in 1:length(aes)){
 
+        if (!(aes[[i]]$taxids == "")) {
+          ancestors <- unique(unlist(df[df$taxid %in% aes[[i]]$taxids[[1]],"ascend"]))
+          all_taxids <- c(df[df$taxid %in% aes[[i]]$taxids[[1]],"taxid"], ancestors)
+          df_visible = df_zoom_bounds()[df_zoom_bounds()$taxid %in% all_taxids,]
+        } else { df_visible = df_zoom_bounds()}
+
         if (is.lm_markers(aes[[i]])) {
-          proxy <- add_lm_markers(aes[[i]], df = df, df_zoom_bounds = df_zoom_bounds(), proxy = proxy)
+          proxy <- add_lm_markers(aes = aes[[i]], df = df, df_visible = df_visible, proxy = proxy)
 
         } else if (is.lm_branches(aes[[i]])) {
           if (aes[[i]]$color %in% colnames(df)) {
             make_col <- leaflet::colorNumeric(palette = aes[[i]]$color_pal, domain = df[[aes[[i]]$color]])
           }
 
-          for (id in df_zoom_bounds()$taxid) {
+          for (id in df_visible$taxid) {
             # for each descendant of each taxid
             for (desc in df_descendants()[df_descendants()$ancestor == id, ]$taxid) {
               if (aes[[i]]$color %in% colnames(df)) {
                 col_info <- make_col(df_descendants()[df_descendants()$taxid == desc, aes[[i]]$color])
               } else { col_info <- aes[[i]]$color}
 
+              if (!(aes[[i]]$taxids == "")) {
+                descendants_visible <- df_descendants()[df_descendants()$taxid %in% all_taxids, ]
+              } else { descendants_visible = df_descendants()}
+
               proxy <- leaflet::addPolylines(proxy,
-                                      lng = c(df_zoom_bounds()[df_zoom_bounds()$taxid == id, "lon"],
-                                              df_descendants()[df_descendants()$taxid == desc, "lon"]),
-                                      lat = c(df_zoom_bounds()[df_zoom_bounds()$taxid == id, "lat"],
-                                              df_descendants()[df_descendants()$taxid == desc, "lat"]),
+                                      lng = c(df_visible[df_visible$taxid == id, "lon"],
+                                              descendants_visible[descendants_visible$taxid == desc, "lon"]),
+                                      lat = c(df_visible[df_visible$taxid == id, "lat"],
+                                              descendants_visible[descendants_visible$taxid == desc, "lat"]),
                                       color = col_info,
                                       opacity = 0.7)
             }
           }
-        } else if(is.lm_discret(aes[[i]]) && nrow(df_zoom_bounds()) > 0) {
+        } else if(is.lm_discret(aes[[i]]) && nrow(df_visible) > 0) {
           values <- unique(df[df$type == "requested", aes[[i]]$param])
           # values <- values[!is.na(values)]
           make_col <- colorFactor(aes[[i]]$pal,values)
           print(values)
             proxy <- proxy %>%
               leaflet.minicharts::addMinicharts(
-                lng = df_zoom_bounds()$lon,
-                lat = df_zoom_bounds()$lat,
-                chartdata = df_zoom_bounds()[,values],
+                lng = df_visible$lon,
+                lat = df_visible$lat,
+                chartdata = df_visible[,values],
                 type = aes[[i]]$type,
                 colorPalette = make_col(values),
                 width = aes[[i]]$width,

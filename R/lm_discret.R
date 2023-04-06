@@ -14,7 +14,8 @@
 #' @export
 #'
 #' @examples lm_discret(param="Status")
-lm_discret <- function(param,
+lm_discret <- function(data = NULL,
+                       param,
                        type = c("pie","bar", "polar-area","polar-radius", "auto"),
                        width = 30,
                        height = 30,
@@ -25,7 +26,12 @@ lm_discret <- function(param,
                        legendPosition = c("topright", "bottomright", "bottomleft", "topleft")) {
   type <- match.arg(arg = type, choices = type)
   legendPosition <- match.arg(arg = legendPosition, choices = legendPosition)
-  res <- data.frame(param, type, width, opacity,
+
+  if (!(is.null(data))) {
+    taxids <- I(list(c(data$taxid)))
+  } else { taxids <- ""}
+
+  res <- data.frame(taxids = taxids, param, type, width, opacity,
                     showLabels, pal, legend, legendPosition)
   class(res)=c("lifemap_obj", "lm_discret", "data.frame")
   return(res)
