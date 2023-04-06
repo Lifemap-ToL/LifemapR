@@ -1,23 +1,3 @@
-#' pass the information to nodes
-#'
-#' @param M the boolean matrix
-#' @param func the function to be applied
-#' @param value a vector of the values
-#'
-#' @return a dataframe
-#' @export
-pass_infos <- function(M, values, ancestors, my_func) {
-  my_func <- match.fun(my_func)
-  inferred_values <- apply(X = M, MARGIN = 1, FUN = function(x){
-    vrais <- which(x== TRUE)
-    vrais <- as.vector(vrais)
-    val <- values[vrais]
-    val <- val[!is.na(val)]
-    my_func(val)
-  })
-  data.frame(ancestors = ancestors,
-             value = inferred_values)
-}
 
 #' compute a new scale for a value
 #'
@@ -97,7 +77,10 @@ add_lm_markers <- function(data, df, df_zoom_bounds, proxy) {
 
 #' Represent continuous datas on a Lifemap background
 #'
-#' @param lm_obj a Lifemap object
+#' @description
+#' draw a map and all the aesthetics in the order you put them, the last one will be on top of the others
+#'
+#' @param lm_obj a Lifemap object filled with aesthetics
 #'
 #' @return a shiny application
 #' @export
@@ -119,25 +102,37 @@ draw_markers <- function(lm_obj){
   aes <- lm_obj$aes
 
   M <- create_matrix(df)
+  M_discrete <- create_matrix_discret(df)
 
   cat("passing the information to the nodes \n")
   #pass the information to the nodes or not
   for (i in 1:length(aes)){
     # passing informations if the function is given
-    if (is.lm_markers(aes[[i]]) && !(is.na(aes[[i]]$pass_info))) {
+    if (is.lm_markers(aes[[i]]) && !(is.na(aes[[i]]$FUN))) {
       for (column in 1:ncol(aes[[i]])) {
         if (aes[[i]][[column]] %in% colnames(df)) {
-          new_df <- pass_infos(M,values = as.vector(df[df$type == "requested",aes[[i]][[column]]]), ancestors = unique(unlist(df[df$type == "requested","ascend"])), my_func = aes[[i]]$pass_info)
+          new_df <- pass_infos(M = M,
+                               values = as.vector(df[df$type == "requested",aes[[i]][[column]]]),
+                               ancestors = unique(unlist(df[df$type == "requested","ascend"])),
+                               my_func = aes[[i]]$FUN)
           for (id in 1:nrow(new_df)) {
             df[df$taxid == new_df[id, "ancestors"], aes[[i]][[column]]]<- new_df[id, ]$value
           }
         }
       }
-    } else if (is.lm_branches(aes[[i]]) & aes[[i]]$color %in% colnames(df)) {
-      new_df <- pass_infos(df, information = aes[[i]]$color, my_function = aes[[i]]$FUN)
+    } else if (is.lm_branches(aes[[i]]) && aes[[i]]$color %in% colnames(df)) {
+      new_df <- pass_infos(M = M,
+                           values = as.vector(df[df$type == "requested",aes[[i]]$color]),
+                           ancestors = unique(unlist(df[df$type == "requested","ascend"])),
+                           my_func = aes[[i]]$FUN)
       for (id in 1:nrow(new_df)) {
         df[df$taxid == new_df[id, "ancestors"], aes[[i]]$color]<- new_df[id, ]$value
       }
+    } else if (is.lm_discret(aes[[i]])) {
+      new_df <- pass_infos_discret(M = M_discrete,
+                                   values = df[df$type == "requested", aes[[i]]$param],
+                                   tax = df$taxid)
+      df <- merge(df, new_df, by.x = "taxid", by.y = "tax")
     }
   }
 
@@ -175,14 +170,14 @@ draw_markers <- function(lm_obj){
           if (aes[[i]]$radius %in% colnames(df)) {
             m <- m %>%
               leaflegend::addLegendSize(values = min(df[[aes[[i]]$radius]], na.rm = TRUE):max(df[[aes[[i]]$radius]], na.rm = TRUE),
-                                        color = 'black',
-                                        opacity = .5,
+                                        color = aes[[i]]$color,
+                                        opacity = aes[[i]]$legendOpacity,
                                         fillOpacity = 0,
                                         title = aes[[i]]$radius,
-                                        shape = aes[[i]]$shape,
-                                        orientation = 'horizontal',
+                                        shape = "circle",
+                                        orientation = aes[[i]]$legendOrientation,
                                         baseSize = (aes[[i]]$min + ((aes[[i]]$max - aes[[i]]$min) / 2)) * 2,
-                                        position = "bottomright")
+                                        position = aes[[i]]$legendPosition)
           }
           if (aes[[i]]$fillColor %in% colnames(df)) {
             make_fillColor <- leaflet::colorNumeric(aes[[i]]$fillColor_pal, df[[aes[[i]]$fillColor]])
@@ -220,7 +215,8 @@ draw_markers <- function(lm_obj){
       # clearing all the already existing shapes/markers/controls
       proxy <- leaflet::leafletProxy("mymap", session=session) %>%
         leaflet::clearShapes() %>%
-        leaflet::clearMarkers()
+        leaflet::clearMarkers() %>%
+        leaflet.minicharts::clearMinicharts()
 
       # adding the visible shapes
       for (i in 1:length(aes)){
@@ -249,6 +245,27 @@ draw_markers <- function(lm_obj){
                                       opacity = 0.7)
             }
           }
+        } else if(is.lm_discret(aes[[i]]) && nrow(df_zoom_bounds()) > 0) {
+          values <- unique(df[df$type == "requested", aes[[i]]$param])
+          # values <- values[!is.na(values)]
+          make_col <- colorFactor(aes[[i]]$pal,values)
+          print(values)
+            proxy <- proxy %>%
+              leaflet.minicharts::addMinicharts(
+                lng = df_zoom_bounds()$lon,
+                lat = df_zoom_bounds()$lat,
+                chartdata = df_zoom_bounds()[,values],
+                type = aes[[i]]$type,
+                colorPalette = make_col(values),
+                width = aes[[i]]$width,
+                height = aes[[i]]$height,
+                opacity = aes[[i]]$opacity,
+                showLabels = aes[[i]]$showLabels,
+                transitionTime = 0,
+                legend = aes[[i]]$legend,
+                legendPosition = aes[[i]]$legendPosition
+            )
+
         }
       }
 

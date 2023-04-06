@@ -25,23 +25,27 @@ lm_markers <- function(radius,
                        max = 50,
                        fillColor,
                        fillColor_pal,
-                       shape = "circle",
+                       fillOpacity = 0.8,
+                       # shape = "circle",
                        stroke = FALSE,
                        color = "black",
                        color_pal = "viridis",
                        weight = 0,
                        opacity = 0.8,
-                       fillOpacity = 0.8,
                        legend = TRUE,
+                       legendPosition = c("topright", "bottomright", "bottomleft", "topleft"),
+                       legendOrientation = c("vertical", "horizontal"),
+                       legendOpacity = 0.5,
                        FUN,
                        ...) {
-  res <- data.frame(radius = radius, fillColor = fillColor,
-                    min = min,max = max,
-                    pass_info = FUN, stroke = stroke,
-                    color = color, weight = weight,
-                    opacity = opacity, fillOpacity = fillOpacity,
-                    shape = shape, fillColor_pal = fillColor_pal,
-                    color_pal = color_pal, legend = legend, ...)
+  legendPosition <- match.arg(arg = legendPosition, choices = legendPosition)
+  legendOrientation <- match.arg(arg = legendOrientation, choices = legendOrientation)
+
+  res <- data.frame(radius, fillColor, min, max,
+                    FUN, stroke, color, weight,
+                    opacity, fillOpacity, fillColor_pal,
+                    color_pal, legend, legendPosition, legendOrientation,
+                    legendOpacity , ...)
   class(res)=c("lifemap_obj", "lm_markers", "data.frame")
   return(res)
 }
