@@ -9,10 +9,13 @@
 #'
 #' @examples
 #' # a unique color for all the branches
-#' lm_branches(col="red")
+#' lm_branches(col = "red")
 #'
 #' # branches are colored according to the average GC rate
-#' lm_branches(col="GC.", FUN="mean")
+#' lm_branches(col = "GC.", FUN = "mean")
+#'
+#' # to apply it on a subdataset
+#' lm_branches(data = LM$df[LM$df$Group %in% "Fungi",], col = "GC.", FUN = "mean")
 lm_branches <- function(data = NULL,
                         col = "yellow",
                         FUN = "mean",

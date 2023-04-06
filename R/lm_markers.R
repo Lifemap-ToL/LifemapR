@@ -5,7 +5,6 @@
 #' @param max the maximal size
 #' @param fillColor fill color
 #' @param fillColor_pal the palette to be used if <code>fillColor</code> represent a variable
-#' @param shape a string for the desired shape, can be in c("rect", "circle", "triangle", "plus", "cross", "diamond", "star")
 #' @param stroke whether to draw a border for points
 #' @param color stroke color
 #' @param color_pal the palette to be used if <code>color</code> represent a variable
@@ -19,7 +18,10 @@
 #' @return a dataframe containing all aesthetics informations for one serie of markers
 #' @export
 #'
-#' @examples lm_markers(radius="GC.", fillColor="Genes", min=10, max=80, FUN="mean", pal="Accent", legend=TRUE, stroke = TRUE, weight="Size..Mb.")
+#' @examples lm_markers(radius = "GC.", fillColor = "Genes", min = 10, max = 80, FUN = "mean", pal = "Accent", legend = TRUE, stroke = TRUE)
+#'
+#' # to apply it only on a subdataset
+#' lm_markers(data = LM$df[LM$df$Group %in% "Fungi",], radius = "GC.", fillColor = "Genes", min = 10, max = 80, FUN = "mean", pal = "Accent", legend = TRUE, stroke = TRUE)
 lm_markers <- function(data = NULL,
                        radius,
                        min = 20,

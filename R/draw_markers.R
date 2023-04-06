@@ -259,7 +259,6 @@ draw_markers <- function(lm_obj){
           values <- unique(df[df$type == "requested", aes[[i]]$param])
           # values <- values[!is.na(values)]
           make_col <- colorFactor(aes[[i]]$pal,values)
-          print(values)
             proxy <- proxy %>%
               leaflet.minicharts::addMinicharts(
                 lng = df_visible$lon,

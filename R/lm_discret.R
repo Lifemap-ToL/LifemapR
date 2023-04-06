@@ -14,6 +14,9 @@
 #' @export
 #'
 #' @examples lm_discret(param="Status")
+#'
+#' # to apply it only on a subdataset
+#' lm_discret(data = LM$df[LM$df$Group %in% "Fungi",], param = "Status")
 lm_discret <- function(data = NULL,
                        param,
                        type = c("pie","bar", "polar-area","polar-radius", "auto"),
