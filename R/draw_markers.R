@@ -1,7 +1,7 @@
 
 #' compute a new scale for a value
 #'
-#' @param value the value
+#' @param value a vector of values
 #' @param df the full dataframe
 #' @param df2 the dataframe containing visibles taxas
 #' @param min the new range min
@@ -22,7 +22,7 @@ create_value_range <- function(value, df, df2, min, max, map){
 
 #' compute the aes for a set of points
 #'
-#' @param aes the dataframe containing the aes informations (must be of lm_markers class)
+#' @param aes the dataframe containing the aesthetics informations (must be of lm_markers class)
 #' @param df the full dataframe
 #' @param df_zoom_bounds the dataframe containing visibles taxas
 #'
@@ -86,13 +86,13 @@ add_lm_markers <- function(aes, df, df_visible, proxy) {
 #' @export
 #' @importFrom dplyr left_join
 #' @importFrom shiny fluidPage reactive observe shinyApp
-#' @importFrom leaflet leafletOutput renderLeaflet fitBounds leafletProxy addPopups clearMarkers clearShapes clearControls colorNumeric clearPopups addPolylines
+#' @importFrom leaflet leafletOutput renderLeaflet fitBounds leafletProxy addPopups clearMarkers clearShapes clearControls colorNumeric colorFactor clearPopups addPolylines
 #' @importFrom leaflegend addLegendSize addSymbolsSize
 #'
 #' @examples
 #' load("data/eukaryote_1000.RData")
-#' LM_df <- construct_dataframe(eukaryote_1000, basemap = "fr")
-#' LM_df +
+#' LM <- build_Lifemap(eukaryote_1000, basemap = "fr")
+#' LM +
 #' lm_markers(radius = "GC.", fillColor = "Size..Mb.", min = 10, max = 80, FUN="mean", fillColor_pal = "Accent", legend = TRUE, stroke = TRUE) +
 #' lm_branches(col = "Genes", FUN = "mean")
 draw_markers <- function(lm_obj){
@@ -108,26 +108,30 @@ draw_markers <- function(lm_obj){
   #pass the information to the nodes or not
   for (i in 1:length(aes)){
     # passing informations if the function is given
-    if (is.lm_markers(aes[[i]]) && !(is.na(aes[[i]]$FUN))) {
-      for (column in 1:ncol(aes[[i]])) {
-        if (aes[[i]][[column]] %in% colnames(df)) {
+    if (is.lm_markers(aes[[i]]) && !(is.null(aes[[i]]$FUN))) {
+      for (parameter in aes[[i]]) {
+
+        if (!(is.null(parameter)) && parameter %in% colnames(df)) {
           new_df <- pass_infos(M = M,
-                               values = as.vector(df[df$type == "requested",aes[[i]][[column]]]),
-                               ancestors = unique(unlist(df[df$type == "requested","ascend"])),
+                               values = as.vector(df[df$type == "requested", parameter]),
+                               ancestors = unique(unlist(df[df$type == "requested", "ascend"])),
                                my_func = aes[[i]]$FUN)
           for (id in 1:nrow(new_df)) {
-            df[df$taxid == new_df[id, "ancestors"], aes[[i]][[column]]]<- new_df[id, ]$value
+            df[df$taxid == new_df[id, "ancestors"], parameter]<- new_df[id, ]$value
           }
         }
       }
+
     } else if (is.lm_branches(aes[[i]]) && aes[[i]]$color %in% colnames(df)) {
       new_df <- pass_infos(M = M,
                            values = as.vector(df[df$type == "requested",aes[[i]]$color]),
                            ancestors = unique(unlist(df[df$type == "requested","ascend"])),
                            my_func = aes[[i]]$FUN)
+      print("oskour")
       for (id in 1:nrow(new_df)) {
         df[df$taxid == new_df[id, "ancestors"], aes[[i]]$color]<- new_df[id, ]$value
       }
+
     } else if (is.lm_discret(aes[[i]])) {
       new_df <- pass_infos_discret(M = M_discrete,
                                    values = df[df$type == "requested", aes[[i]]$param],
@@ -212,6 +216,7 @@ draw_markers <- function(lm_obj){
 
     # modification of the map to display the rights markers
     shiny::observe({
+
       # clearing all the already existing shapes/markers/controls
       proxy <- leaflet::leafletProxy("mymap", session=session) %>%
         leaflet::clearShapes() %>%
@@ -221,7 +226,7 @@ draw_markers <- function(lm_obj){
       # adding the visible shapes
       for (i in 1:length(aes)){
 
-        if (!(aes[[i]]$taxids == "")) {
+        if (!(is.null(aes[[i]]$taxids))) {
           ancestors <- unique(unlist(df[df$taxid %in% aes[[i]]$taxids[[1]],"ascend"]))
           all_taxids <- c(df[df$taxid %in% aes[[i]]$taxids[[1]],"taxid"], ancestors)
           df_visible = df_zoom_bounds()[df_zoom_bounds()$taxid %in% all_taxids,]
@@ -242,9 +247,9 @@ draw_markers <- function(lm_obj){
                 col_info <- make_col(df_descendants()[df_descendants()$taxid == desc, aes[[i]]$color])
               } else { col_info <- aes[[i]]$color}
 
-              if (!(aes[[i]]$taxids == "")) {
+              if (!(is.null(aes[[i]]$taxids))) {
                 descendants_visible <- df_descendants()[df_descendants()$taxid %in% all_taxids, ]
-              } else { descendants_visible = df_descendants()}
+              } else { descendants_visible = df_descendants() }
 
               proxy <- leaflet::addPolylines(proxy,
                                       lng = c(df_visible[df_visible$taxid == id, "lon"],

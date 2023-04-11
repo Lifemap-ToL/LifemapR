@@ -95,10 +95,11 @@ get_direct_ancestor <- function(df) {
 }
 
 
+
 #' A function to construct a LidemapR object, usable by other functions
 #'
 #' @param df a dataframe containing at least a column named "taxid"
-#' @param basemap the basemap wanted (can be "ncbi", "fr" ...)
+#' @param basemap the basemap wanted ("fr","ncbi", "base" or "virus")
 #' @param verbose if TRUE, will write informations in the terminal
 #'
 #' @return a lifemap object with :
@@ -121,7 +122,9 @@ get_direct_ancestor <- function(df) {
 #' df <- read.csv(file="data/eukaryotes_1000.txt", sep="\t", header=TRUE)
 #'
 #' Lifemap_df <- build_Lifemap(df, "fr")
-build_Lifemap <- function(df, basemap = "fr", verbose=TRUE) {
+build_Lifemap <- function(df, basemap = c("fr","ncbi", "base","virus"), verbose=TRUE) {
+  basemap <- match.arg(arg = basemap, choices = basemap)
+
   if (is.null(df$taxid)) {
     stop('The dataframe must at least contain a "taxid" column')
   }
@@ -154,12 +157,12 @@ build_Lifemap <- function(df, basemap = "fr", verbose=TRUE) {
   if (length(not_found) == 1) {
     warning(sprintf(
       "%s TaxID was not found. The following TaxID was not found in the database : %s",
-      length(not_found),paste(not_found, collapse = ",")
+      length(not_found), paste(not_found, collapse = ",")
     ))
   } else if (length(not_found) > 0) {
     warning(sprintf(
       "%s TaxIDs were not found. The following TaxIDs were not found in the database : %s",
-      length(not_found),paste(not_found, collapse = ",")
+      length(not_found), paste(not_found, collapse = ",")
     ))
   }
 

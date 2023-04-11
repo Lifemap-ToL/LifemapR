@@ -32,11 +32,13 @@ lm_discret <- function(data = NULL,
 
   if (!(is.null(data))) {
     taxids <- I(list(c(data$taxid)))
-  } else { taxids <- ""}
+  } else { taxids <- NULL}
 
-  res <- data.frame(taxids = taxids, param, type, width, opacity,
-                    showLabels, pal, legend, legendPosition)
-  class(res)=c("lifemap_obj", "lm_discret", "data.frame")
+  res <- list(taxids = taxids, param = param,
+              type = type, width = width, opacity = opacity,
+              showLabels = showLabels, pal = pal,
+              legend = legend, legendPosition = legendPosition)
+  class(res)=c("lifemap_obj", "lm_discret", "list")
   return(res)
 }
 

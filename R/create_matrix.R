@@ -49,6 +49,7 @@ pass_infos <- function(M, values, ancestors, my_func) {
 #'
 #' @param df a dataframe from a lifemap object
 #' @export
+#' @importFrom stringr str_split_fixed
 #'
 #' @return a dataframe filled with TRUE or FALSE
 #'
@@ -71,8 +72,11 @@ create_matrix_discret <- function(df) {
 #' @export
 pass_infos_discret <- function(M, values, tax) {
   # my_func <- match.fun(my_func)
+  # get all the values possible for the variable (eg. for Status there is Chromosome, Scaffold ...)
   unique_values <- unique(values)
   df_uniques <- data.frame(val = unique_values)
+
+  # inferring values to the nodes
   inferred_values <- apply(X = M, MARGIN = 1, FUN = function(x){
     trues <- which(x == TRUE)
     trues <- as.vector(trues)
@@ -83,8 +87,6 @@ pass_infos_discret <- function(M, values, tax) {
     count[is.na(count)] <- 0
     paste(count$Freq, sep="", collapse = ",")
   })
-
-  # print(inferred_values)
   new_vals <- str_split_fixed(inferred_values, ",", 4)
   df_values <- data.frame(tax,new_vals)
   colnames(df_values) <- c("tax",unique_values)
@@ -94,3 +96,5 @@ pass_infos_discret <- function(M, values, tax) {
   return(df_values)
 
 }
+
+

@@ -27,10 +27,12 @@ lm_branches <- function(data = NULL,
 
   if (!(is.null(data))) {
     taxids <- I(list(c(data$taxid)))
-  } else { taxids <- ""}
+  } else { taxids <- NULL}
 
-  res <- data.frame(taxids = taxids, color = col, FUN, color_pal = pal, legend, legendPosition)
-  class(res)=c("lifemap_obj", "lm_branches", "data.frame")
+  res <- list(taxids = taxids, color = col,
+              FUN = FUN, color_pal = pal,
+              legend = legend, legendPosition = legendPosition)
+  class(res)=c("lifemap_obj", "lm_branches", "list")
   return(res)
 }
 
