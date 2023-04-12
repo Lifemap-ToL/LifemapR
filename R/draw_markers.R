@@ -24,12 +24,14 @@ create_value_range <- function(value, df, df2, min, max, map){
 #'
 #' @param aes the dataframe containing the aesthetics informations (must be of lm_markers class)
 #' @param df the full dataframe
-#' @param df_zoom_bounds the dataframe containing visibles taxas
+#' @param df_visible the dataframe containing visible taxa
+#' @param proxy the map to be modified
+#' @param group_info the points' group
 #'
 #' @importFrom leaflet addCircleMarkers
 #'
 #' @return a list of values
-add_lm_markers <- function(aes, df, df_visible, proxy) {
+add_lm_markers <- function(proxy, aes, df, df_visible, group_info) {
 
   if (aes$fillColor %in% colnames(df)) {
     make_fillColor <- leaflet::colorNumeric(aes$fillColor_pal, df[[aes$fillColor]])
@@ -68,11 +70,91 @@ add_lm_markers <- function(aes, df, df_visible, proxy) {
                                      stroke = stroke_info,
                                      color = color_info,
                                      opacity = opacity_info,
-                                     weight = weight_info
+                                     weight = weight_info,
+                                     group =group_info
   )
   proxy
 
 }
+
+#' compute the aes for a subtree
+#'
+#' @param aes the dataframe containing the aesthetics informations (must be of lm_markers class)
+#' @param df the full dataframe
+#' @param df_visible the dataframe containing visible taxa
+#' @param df_descendant the dataframe containing all the information on the descendants
+#' @param proxy the map to be modified
+#' @param group_info the points' group
+#'
+#' @importFrom leaflet addPolylines
+#'
+#' @return a list of values
+add_lm_branches <- function(proxy, aes, df, df_visible, df_descendants, group_info, all_taxids) {
+  if (aes$color %in% colnames(df)) {
+    make_col <- leaflet::colorNumeric(palette = aes$color_pal, domain = df[[aes$color]])
+  }
+
+  for (id in df_visible$taxid) {
+    # for each descendant of each taxid
+    for (desc in df_descendants[df_descendants$ancestor == id, ]$taxid) {
+      if (aes$color %in% colnames(df)) {
+        col_info <- make_col(df_descendants[df_descendants$taxid == desc, aes$color])
+      } else { col_info <- aes$color}
+
+      if (!(is.null(aes$taxids))) {
+        descendants_visible <- df_descendants[df_descendants$taxid %in% all_taxids, ]
+      } else { descendants_visible = df_descendants }
+
+      proxy <- leaflet::addPolylines(proxy,
+                                     lng = c(df_visible[df_visible$taxid == id, "lon"],
+                                             descendants_visible[descendants_visible$taxid == desc, "lon"]),
+                                     lat = c(df_visible[df_visible$taxid == id, "lat"],
+                                             descendants_visible[descendants_visible$taxid == desc, "lat"]),
+                                     color = col_info,
+                                     opacity = 0.7,
+                                     group = group_info)
+    }
+  }
+  proxy
+}
+#' compute the aes for discret values
+#'
+#' @param aes the dataframe containing the aesthetics informations (must be of lm_markers class)
+#' @param df the full dataframe
+#' @param df_visible the dataframe containing visible taxa
+#' @param proxy the map to be modified
+#' @param layer the points' group
+#'
+#' @importFrom leaflet.minicharts addMinicharts
+#'
+#' @return a list of values
+add_lm_discretes <- function(proxy, aes, df, df_visible, layer) {
+  values <- unique(df[df$type == "requested", aes$param])
+  layerId_info <- sapply(X = 1:nrow(df_visible), FUN = function(x){paste(layer,x,collapse="", sep="")})
+  # values <- values[!is.na(values)]
+  make_col <- colorFactor(aes$pal, values)
+  proxy <- proxy %>%
+    leaflet.minicharts::addMinicharts(
+      lng = df_visible$lon,
+      lat = df_visible$lat,
+      chartdata = df_visible[, values],
+      type = aes$type,
+      colorPalette = make_col(values),
+      width = aes$width,
+      height = aes$height,
+      opacity = aes$opacity,
+      showLabels = aes$showLabels,
+      transitionTime = 0,
+      legend = aes$legend,
+      legendPosition = aes$legendPosition
+    )
+  proxy
+}
+
+
+
+
+
 
 
 #' Represent continuous datas on a Lifemap background
@@ -86,8 +168,9 @@ add_lm_markers <- function(aes, df, df_visible, proxy) {
 #' @export
 #' @importFrom dplyr left_join
 #' @importFrom shiny fluidPage reactive observe shinyApp
-#' @importFrom leaflet leafletOutput renderLeaflet fitBounds leafletProxy addPopups clearMarkers clearShapes clearControls colorNumeric colorFactor clearPopups addPolylines
+#' @importFrom leaflet leafletOutput renderLeaflet fitBounds leafletProxy addPopups clearMarkers clearShapes clearControls colorNumeric colorFactor clearPopups addPolylines clearGroup
 #' @importFrom leaflegend addLegendSize addSymbolsSize
+#' @importFrom leaflet.minicharts clearMinicharts
 #'
 #' @examples
 #' load("data/eukaryote_1000.RData")
@@ -127,7 +210,6 @@ draw_markers <- function(lm_obj){
                            values = as.vector(df[df$type == "requested",aes[[i]]$color]),
                            ancestors = unique(unlist(df[df$type == "requested","ascend"])),
                            my_func = aes[[i]]$FUN)
-      print("oskour")
       for (id in 1:nrow(new_df)) {
         df[df$taxid == new_df[id, "ancestors"], aes[[i]]$color]<- new_df[id, ]$value
       }
@@ -209,6 +291,18 @@ draw_markers <- function(lm_obj){
                                           values = df[[aes[[i]]$color]])
           }
         }
+
+
+        if (is.lm_markers(aes[[i]]) && aes[[i]]$display_all == TRUE) {
+          print(aes[[i]]$display_all)
+          m <- m %>%
+            add_lm_markers(aes = aes[[i]], df = df,
+                           df_visible = df[df$type == "requested",],
+                           group_info = as.character(i))
+
+        }
+
+
       }
 
       m
@@ -218,67 +312,42 @@ draw_markers <- function(lm_obj){
     shiny::observe({
 
       # clearing all the already existing shapes/markers/controls
-      proxy <- leaflet::leafletProxy("mymap", session=session) %>%
-        leaflet::clearShapes() %>%
-        leaflet::clearMarkers() %>%
-        leaflet.minicharts::clearMinicharts()
+      proxy <- leaflet::leafletProxy("mymap", session=session)
 
       # adding the visible shapes
       for (i in 1:length(aes)){
 
+
+        # for each aesthetic, if a sub dataset is given, compute the right taxids
         if (!(is.null(aes[[i]]$taxids))) {
           ancestors <- unique(unlist(df[df$taxid %in% aes[[i]]$taxids[[1]],"ascend"]))
           all_taxids <- c(df[df$taxid %in% aes[[i]]$taxids[[1]],"taxid"], ancestors)
           df_visible = df_zoom_bounds()[df_zoom_bounds()$taxid %in% all_taxids,]
         } else { df_visible = df_zoom_bounds()}
 
-        if (is.lm_markers(aes[[i]])) {
-          proxy <- add_lm_markers(aes = aes[[i]], df = df, df_visible = df_visible, proxy = proxy)
+        # adding markers if aes[[i]] is an lm_markers object
+        if (is.lm_markers(aes[[i]]) && aes[[i]]$display_all == FALSE) {
+          proxy <- leaflet::clearGroup(proxy, group = as.character(i)) %>%
+            add_lm_markers(aes = aes[[i]], df = df,
+                           df_visible = df_visible,
+                           group_info = as.character(i))
 
+          # adding a subtree if aes[[i]] is an lm_branches object
         } else if (is.lm_branches(aes[[i]])) {
-          if (aes[[i]]$color %in% colnames(df)) {
-            make_col <- leaflet::colorNumeric(palette = aes[[i]]$color_pal, domain = df[[aes[[i]]$color]])
-          }
+          proxy <- leaflet::clearGroup(proxy, group = as.character(i)) %>%
+            add_lm_branches(aes = aes[[i]], df = df,
+                            df_visible = df_visible,
+                            df_descendants = df_descendants(),
+                            group_info = as.character(i), all_taxids = all_taxids)
 
-          for (id in df_visible$taxid) {
-            # for each descendant of each taxid
-            for (desc in df_descendants()[df_descendants()$ancestor == id, ]$taxid) {
-              if (aes[[i]]$color %in% colnames(df)) {
-                col_info <- make_col(df_descendants()[df_descendants()$taxid == desc, aes[[i]]$color])
-              } else { col_info <- aes[[i]]$color}
 
-              if (!(is.null(aes[[i]]$taxids))) {
-                descendants_visible <- df_descendants()[df_descendants()$taxid %in% all_taxids, ]
-              } else { descendants_visible = df_descendants() }
 
-              proxy <- leaflet::addPolylines(proxy,
-                                      lng = c(df_visible[df_visible$taxid == id, "lon"],
-                                              descendants_visible[descendants_visible$taxid == desc, "lon"]),
-                                      lat = c(df_visible[df_visible$taxid == id, "lat"],
-                                              descendants_visible[descendants_visible$taxid == desc, "lat"]),
-                                      color = col_info,
-                                      opacity = 0.7)
-            }
-          }
+          # adding charts if aes[[i]] is an lm_discret object
         } else if(is.lm_discret(aes[[i]]) && nrow(df_visible) > 0) {
-          values <- unique(df[df$type == "requested", aes[[i]]$param])
-          # values <- values[!is.na(values)]
-          make_col <- colorFactor(aes[[i]]$pal,values)
-            proxy <- proxy %>%
-              leaflet.minicharts::addMinicharts(
-                lng = df_visible$lon,
-                lat = df_visible$lat,
-                chartdata = df_visible[,values],
-                type = aes[[i]]$type,
-                colorPalette = make_col(values),
-                width = aes[[i]]$width,
-                height = aes[[i]]$height,
-                opacity = aes[[i]]$opacity,
-                showLabels = aes[[i]]$showLabels,
-                transitionTime = 0,
-                legend = aes[[i]]$legend,
-                legendPosition = aes[[i]]$legendPosition
-            )
+          proxy <- leaflet.minicharts::clearMinicharts(proxy) %>%
+            add_lm_discretes(aes = aes[[i]], df = df,
+                                    df_visible = df_visible,
+                                    layer = as.character(i))
 
         }
       }

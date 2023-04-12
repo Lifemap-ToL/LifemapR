@@ -1,10 +1,19 @@
 #' add a layer to a Lifemap object
 #'
+#' @description
+#' Allow to add a layer with circles that can represent data. The parameters that can be used to represent data are the following:
+#' - radius
+#' - fillColor
+#' - stroke
+#' - color
+#'
+#'
+#'
 #' @param data a subdataset to use, if NULL then all of the taxids from the lifemap object given to lifemap will be used
-#' @param radius a numeric vector of radii for the points
-#' @param min the minimal size
-#' @param max the maximal size
-#' @param fillColor fill color
+#' @param radius either a numerical value or a column name of the original dataframe to represent this variable by the size of points
+#' @param min the minimal size of the points
+#' @param max the maximal size of the points
+#' @param fillColor either a color or a column name of the original dataframe to represent this variable by the size of points
 #' @param fillColor_pal the palette to be used if <code>fillColor</code> represent a variable
 #' @param fillOpacity fill opacity
 #' @param stroke whether to draw a border for points
@@ -21,16 +30,16 @@
 #' @return a dataframe containing all aesthetics informations for one serie of markers
 #' @export
 #'
-#' @examples lm_markers(radius = "GC.", fillColor = "Genes", min = 10, max = 80, FUN = "mean", pal = "Accent", legend = TRUE, stroke = TRUE)
+#' @examples lm_markers(radius = "GC.", fillColor = "Genes", min = 10, max = 80, FUN = "mean", fillColor_pal = "Accent", legend = TRUE, stroke = TRUE)
 #'
 #' # to apply it only on a subdataset
 #' lm_markers(data = LM$df[LM$df$Group %in% "Fungi",], radius = "GC.", fillColor = "Genes", min = 10, max = 80, FUN = "mean", pal = "Accent", legend = TRUE, stroke = TRUE)
 lm_markers <- function(data = NULL,
-                       radius,
+                       radius = 30,
                        min = 20,
                        max = 50,
-                       fillColor,
-                       fillColor_pal,
+                       fillColor = "red",
+                       fillColor_pal = "Accent",
                        fillOpacity = 0.8,
                        stroke = FALSE,
                        color = "black",
@@ -41,7 +50,8 @@ lm_markers <- function(data = NULL,
                        legendPosition = c("topright", "bottomright", "bottomleft", "topleft"),
                        legendOrientation = c("vertical", "horizontal"),
                        legendOpacity = 0.5,
-                       FUN = NULL) {
+                       FUN = NULL,
+                       display_all = FALSE) {
   legendPosition <- match.arg(arg = legendPosition, choices = legendPosition)
   legendOrientation <- match.arg(arg = legendOrientation, choices = legendOrientation)
 
@@ -55,7 +65,8 @@ lm_markers <- function(data = NULL,
               opacity = opacity, fillOpacity = fillOpacity,
               fillColor_pal = fillColor_pal, color_pal = color_pal,
               legend = legend, legendPosition = legendPosition,
-              legendOrientation = legendOrientation, legendOpacity = legendOpacity)
+              legendOrientation = legendOrientation, legendOpacity = legendOpacity,
+              display_all = display_all)
   class(res)=c("lifemap_obj", "lm_markers", "list")
   return(res)
 }
