@@ -251,35 +251,49 @@ draw_markers <- function(lm_obj){
 
       for (i in 1:length(aes)) {
 
-        if (is.lm_markers(aes[[i]]) & aes[[i]]$legend == TRUE) {
+        if (is.lm_markers(aes[[i]])) {
 
-          if (aes[[i]]$radius %in% colnames(df)) {
+          if (aes[[i]]$legend == TRUE) {
+
+            if (aes[[i]]$radius %in% colnames(df)) {
+              m <- m %>%
+                leaflegend::addLegendSize(values = min(df[[aes[[i]]$radius]], na.rm = TRUE):max(df[[aes[[i]]$radius]], na.rm = TRUE),
+                                          color = aes[[i]]$color,
+                                          opacity = aes[[i]]$legendOpacity,
+                                          fillOpacity = 0,
+                                          title = aes[[i]]$radius,
+                                          shape = "circle",
+                                          orientation = aes[[i]]$legendOrientation,
+                                          baseSize = (aes[[i]]$min + ((aes[[i]]$max - aes[[i]]$min) / 2)) * 2,
+                                          position = aes[[i]]$legendPosition)
+            }
+            if (aes[[i]]$fillColor %in% colnames(df)) {
+              make_fillColor <- leaflet::colorNumeric(aes[[i]]$fillColor_pal, df[[aes[[i]]$fillColor]])
+
+              m <- m %>% leaflet::addLegend(position = "bottomright",
+                                            title = aes[[i]]$fillColor,
+                                            pal = make_fillColor,
+                                            values = df[[aes[[i]]$fillColor]])
+            }
+            if (aes[[i]]$color %in% colnames(df)) {
+              make_color <- leaflet::colorNumeric(aes[[i]]$color_pal, df[[aes[[i]]$color]])
+
+              m <- m %>% leaflet::addLegend(position = "bottomright",
+                                            title = aes[[i]]$color,
+                                            pal = make_color,
+                                            values = df[[aes[[i]]$color]])
+              }
+          }
+          if (aes[[i]]$display == "requested") {
             m <- m %>%
-              leaflegend::addLegendSize(values = min(df[[aes[[i]]$radius]], na.rm = TRUE):max(df[[aes[[i]]$radius]], na.rm = TRUE),
-                                        color = aes[[i]]$color,
-                                        opacity = aes[[i]]$legendOpacity,
-                                        fillOpacity = 0,
-                                        title = aes[[i]]$radius,
-                                        shape = "circle",
-                                        orientation = aes[[i]]$legendOrientation,
-                                        baseSize = (aes[[i]]$min + ((aes[[i]]$max - aes[[i]]$min) / 2)) * 2,
-                                        position = aes[[i]]$legendPosition)
-          }
-          if (aes[[i]]$fillColor %in% colnames(df)) {
-            make_fillColor <- leaflet::colorNumeric(aes[[i]]$fillColor_pal, df[[aes[[i]]$fillColor]])
-
-            m <- m %>% leaflet::addLegend(position = "bottomright",
-                                          title = aes[[i]]$fillColor,
-                                          pal = make_fillColor,
-                                          values = df[[aes[[i]]$fillColor]])
-          }
-          if (aes[[i]]$color %in% colnames(df)) {
-            make_color <- leaflet::colorNumeric(aes[[i]]$color_pal, df[[aes[[i]]$color]])
-
-            m <- m %>% leaflet::addLegend(position = "bottomright",
-                                          title = aes[[i]]$color,
-                                          pal = make_color,
-                                          values = df[[aes[[i]]$color]])
+              add_lm_markers(aes = aes[[i]], df = df,
+                             df_visible = df[df$type == "requested",],
+                             group_info = as.character(i))
+          } else if (aes[[i]]$display == "all") {
+            m <- m %>%
+              add_lm_markers(aes = aes[[i]], df = df,
+                             df_visible = df,
+                             group_info = as.character(i))
           }
         } else if (is.lm_branches(aes[[i]])) {
           if (aes[[i]]$color %in% colnames(df)) {
@@ -291,17 +305,6 @@ draw_markers <- function(lm_obj){
                                           values = df[[aes[[i]]$color]])
           }
         }
-
-
-        if (is.lm_markers(aes[[i]]) && aes[[i]]$display_all == TRUE) {
-          print(aes[[i]]$display_all)
-          m <- m %>%
-            add_lm_markers(aes = aes[[i]], df = df,
-                           df_visible = df[df$type == "requested",],
-                           group_info = as.character(i))
-
-        }
-
 
       }
 
@@ -326,7 +329,7 @@ draw_markers <- function(lm_obj){
         } else { df_visible = df_zoom_bounds()}
 
         # adding markers if aes[[i]] is an lm_markers object
-        if (is.lm_markers(aes[[i]]) && aes[[i]]$display_all == FALSE) {
+        if (is.lm_markers(aes[[i]]) && aes[[i]]$display == "auto") {
           proxy <- leaflet::clearGroup(proxy, group = as.character(i)) %>%
             add_lm_markers(aes = aes[[i]], df = df,
                            df_visible = df_visible,

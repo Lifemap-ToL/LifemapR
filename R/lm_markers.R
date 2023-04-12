@@ -22,10 +22,16 @@
 #' @param weight stroke width in pixels
 #' @param opacity stroke opacity
 #' @param legend whether to display the legend
-#' @param legendPosition = c("topright", "bottomright", "bottomleft", "topleft"),
-#' @param legendOrientation = c("vertical", "horizontal"),
+#' @param legendPosition c("topright", "bottomright", "bottomleft", "topleft"),
+#' @param legendOrientation c("vertical", "horizontal"),
 #' @param legendOpacity legend's opacity (apply on the shapes in the legend, not the background itself)
 #' @param FUN the function to be applied to the variables if None then the information missing from the parent nodes won't be inferred
+#' @param display a string indicating how to display points :
+#' - "auto" : the markers are displayed depending on the zoom, by default, allow to have a lot of points
+#' - "requested" : only display the requested taxids, but all at the same time
+#' - "all" : display all the taxids including all the ancestors to the root
+#'
+#' (WARNING : "requested" and "auto" shouldn't be used to display more than 1000 markers as it may result in a crash)
 #'
 #' @return a dataframe containing all aesthetics informations for one serie of markers
 #' @export
@@ -51,9 +57,10 @@ lm_markers <- function(data = NULL,
                        legendOrientation = c("vertical", "horizontal"),
                        legendOpacity = 0.5,
                        FUN = NULL,
-                       display_all = FALSE) {
-  legendPosition <- match.arg(arg = legendPosition, choices = legendPosition)
-  legendOrientation <- match.arg(arg = legendOrientation, choices = legendOrientation)
+                       display = c("auto", "requested", "all")) {
+  legendPosition <- match.arg(legendPosition)
+  legendOrientation <- match.arg(legendOrientation)
+  display <- match.arg(display)
 
   if (!(is.null(data))) {
     taxids <- I(list(c(data$taxid)))
@@ -66,7 +73,7 @@ lm_markers <- function(data = NULL,
               fillColor_pal = fillColor_pal, color_pal = color_pal,
               legend = legend, legendPosition = legendPosition,
               legendOrientation = legendOrientation, legendOpacity = legendOpacity,
-              display_all = display_all)
+              display = display)
   class(res)=c("lifemap_obj", "lm_markers", "list")
   return(res)
 }
