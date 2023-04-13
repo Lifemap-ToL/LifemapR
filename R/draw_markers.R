@@ -4,8 +4,8 @@
 #' @param value a vector of values
 #' @param df the full dataframe
 #' @param df2 the dataframe containing visibles taxas
-#' @param min the new range min
-#' @param max the new range max
+#' @param min the new minimum of the range
+#' @param max the new maximum of the range
 #'
 #' @return a vector of values
 create_value_range <- function(value, df, df2, min, max, map){
@@ -28,7 +28,7 @@ create_value_range <- function(value, df, df2, min, max, map){
 #' @param proxy the map to be modified
 #' @param group_info the points' group
 #'
-#' @importFrom leaflet addCircleMarkers
+#' @importFrom leaflet addCircleMarkers colorNumeric
 #'
 #' @return a list of values
 add_lm_markers <- function(proxy, aes, df, df_visible, group_info) {
@@ -82,11 +82,11 @@ add_lm_markers <- function(proxy, aes, df, df_visible, group_info) {
 #' @param aes the dataframe containing the aesthetics informations (must be of lm_markers class)
 #' @param df the full dataframe
 #' @param df_visible the dataframe containing visible taxa
-#' @param df_descendant the dataframe containing all the information on the descendants
+#' @param df_descendant the dataframe containing all the information on the descendants of visible taxa
 #' @param proxy the map to be modified
 #' @param group_info the points' group
 #'
-#' @importFrom leaflet addPolylines
+#' @importFrom leaflet addPolylines colorNumeric
 #'
 #' @return a list of values
 add_lm_branches <- function(proxy, aes, df, df_visible, df_descendants, group_info, all_taxids) {
@@ -126,13 +126,13 @@ add_lm_branches <- function(proxy, aes, df, df_visible, df_descendants, group_in
 #' @param layer the points' group
 #'
 #' @importFrom leaflet.minicharts addMinicharts
+#' @importFrom leaflet colorFactor
 #'
 #' @return a list of values
 add_lm_discretes <- function(proxy, aes, df, df_visible, layer) {
   values <- unique(df[df$type == "requested", aes$param])
   layerId_info <- sapply(X = 1:nrow(df_visible), FUN = function(x){paste(layer,x,collapse="", sep="")})
-  # values <- values[!is.na(values)]
-  make_col <- colorFactor(aes$pal, values)
+  make_col <- leaflet::colorFactor(aes$pal, values)
   proxy <- proxy %>%
     leaflet.minicharts::addMinicharts(
       lng = df_visible$lon,
@@ -186,6 +186,9 @@ draw_markers <- function(lm_obj){
 
   M <- create_matrix(df)
   M_discrete <- create_matrix_discret(df)
+
+  all_ancestors <- unique(unlist(df$ascend))
+  leaves <- df[!(df$taxid %in% all_ancestors),"taxid"]
 
   cat("passing the information to the nodes \n")
   #pass the information to the nodes or not
@@ -294,6 +297,11 @@ draw_markers <- function(lm_obj){
               add_lm_markers(aes = aes[[i]], df = df,
                              df_visible = df,
                              group_info = as.character(i))
+          } else if (aes[[i]]$display == "leaves") {
+            m <- m %>%
+              add_lm_markers(aes = aes[[i]], df = df,
+                             df_visible = df[df$taxid %in% leaves,],
+                             group_info = as.character(i))
           }
         } else if (is.lm_branches(aes[[i]])) {
           if (aes[[i]]$color %in% colnames(df)) {
@@ -322,9 +330,9 @@ draw_markers <- function(lm_obj){
 
 
         # for each aesthetic, if a sub dataset is given, compute the right taxids
+        ancestors <- unique(unlist(df[df$taxid %in% aes[[i]]$taxids[[1]],"ascend"]))
+        all_taxids <- c(df[df$taxid %in% aes[[i]]$taxids[[1]],"taxid"], ancestors)
         if (!(is.null(aes[[i]]$taxids))) {
-          ancestors <- unique(unlist(df[df$taxid %in% aes[[i]]$taxids[[1]],"ascend"]))
-          all_taxids <- c(df[df$taxid %in% aes[[i]]$taxids[[1]],"taxid"], ancestors)
           df_visible = df_zoom_bounds()[df_zoom_bounds()$taxid %in% all_taxids,]
         } else { df_visible = df_zoom_bounds()}
 

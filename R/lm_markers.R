@@ -57,7 +57,7 @@ lm_markers <- function(data = NULL,
                        legendOrientation = c("vertical", "horizontal"),
                        legendOpacity = 0.5,
                        FUN = NULL,
-                       display = c("auto", "requested", "all")) {
+                       display = c("auto", "requested", "all", "leaves")) {
   legendPosition <- match.arg(legendPosition)
   legendOrientation <- match.arg(legendOrientation)
   display <- match.arg(display)
