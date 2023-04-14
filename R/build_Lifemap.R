@@ -96,7 +96,7 @@ get_direct_ancestor <- function(df) {
 
 
 
-#' A function to construct a LidemapR object, usable by other functions
+#' A function to construct a LifemapR object, usable by other functions
 #'
 #' @param df a dataframe containing at least a column named "taxid"
 #' @param basemap the basemap wanted ("fr","ncbi", "base" or "virus")
@@ -154,6 +154,11 @@ build_Lifemap <- function(df, basemap = c("fr","ncbi", "base","virus"), verbose=
       }
     }
   }
+
+  if (0 %in% df$taxid) {
+    not_found <- not_found[not_found != 0]
+  }
+
   if (length(not_found) == 1) {
     warning(sprintf(
       "%s TaxID was not found. The following TaxID was not found in the database : %s",
@@ -172,6 +177,7 @@ build_Lifemap <- function(df, basemap = c("fr","ncbi", "base","virus"), verbose=
   LIN <- request_database(taxids = unique(df_distinct$taxid), basemap, "addi")
   DATA <- merge(COO, LIN, by.x = "taxid", by.y = "taxid")
 
+  # if the root was in the requested taxids, add it now so as not to lose any information
   if (0 %in% df$taxid) {
     LUCA <- data.frame(taxid="0",lon=0, lat=-4.226497,sci_name="Luca",zoom=5)
     DATA <- dplyr::bind_rows(DATA, LUCA)
