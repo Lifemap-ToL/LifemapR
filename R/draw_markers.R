@@ -287,21 +287,22 @@ draw_markers <- function(lm_obj){
                                             values = df[[aes[[i]]$color]])
               }
           }
-          if (aes[[i]]$display == "requested") {
-            m <- m %>%
-              add_lm_markers(aes = aes[[i]], df = df,
-                             df_visible = df[df$type == "requested",],
-                             group_info = as.character(i))
-          } else if (aes[[i]]$display == "all") {
-            m <- m %>%
-              add_lm_markers(aes = aes[[i]], df = df,
-                             df_visible = df,
-                             group_info = as.character(i))
-          } else if (aes[[i]]$display == "leaves") {
-            m <- m %>%
-              add_lm_markers(aes = aes[[i]], df = df,
-                             df_visible = df[df$taxid %in% leaves,],
-                             group_info = as.character(i))
+          if (!(aes[[i]]$display %in% "auto")) {
+            if (aes[[i]]$display == "requested") {
+              df_visible <- df[df$type == "requested",]
+            } else if (aes[[i]]$display == "all") {
+              df_visible <- df
+            } else if (aes[[i]]$display == "leaves") {
+              df_visible <- df[df$taxid %in% leaves,]
+            }
+            if (nrow(df_visible) < 5000) {
+              m <- m %>%
+                add_lm_markers(aes = aes[[i]], df = df,
+                               df_visible = df_visible,
+                               group_info = as.character(i))
+            } else {
+              stop("you are trying to draw to many points at a time, maybe you shoud try other options")
+              }
           }
         } else if (is.lm_branches(aes[[i]])) {
           if (aes[[i]]$color %in% colnames(df)) {
