@@ -9,14 +9,14 @@
 #'
 #'
 #'
-#' @param data a subdataset to use, if NULL then all of the taxids from the lifemap object given to lifemap will be used
+#' @param data a sub dataset to use, if NULL then all of the taxids from the lifemap object given to lifemap() will be used
 #' @param radius either a numerical value or a column name of the original dataframe to represent this variable by the size of points
-#' @param min the minimal size of the points
-#' @param max the maximal size of the points
-#' @param fillColor either a color or a column name of the original dataframe to represent this variable by the size of points
+#' @param min an integer indicating the minimal size of the points if radius represent a variable
+#' @param max an integer indicating the maximal size of the points if radius represent a variable
+#' @param fillColor either a color or a column name of the original dataframe to represent this variable by the color of points
 #' @param fillColor_pal the palette to be used if <code>fillColor</code> represent a variable
-#' @param fillOpacity fill opacity
-#' @param stroke whether to draw a border for points
+#' @param fillOpacity a numeric indicating the fill opacity
+#' @param stroke a logical indicating whether to draw a border for points
 #' @param color stroke color
 #' @param color_pal the palette to be used if <code>color</code> represent a variable
 #' @param weight stroke width in pixels
@@ -28,20 +28,25 @@
 #' @param FUN the function to be applied to the variables if None then the information missing from the parent nodes won't be inferred
 #' @param display a string indicating how to display points :
 #' - "auto" : the markers are displayed depending on the zoom, by default, allow to have a lot of points
-#' - "requested" : only display the requested taxids, but all at the same time
-#' - "all" : display all the taxids including all the ancestors to the root
+#' - "requested" : only display the requested taxa, but all at the same time
+#' - "all" : display all the taxa including all the ancestors to the root
+#' - "leaves" : display only the last (most recent) taxa
 #'
-#' (WARNING : "requested" and "auto" shouldn't be used to display more than 1000 markers as it may result in a crash)
+#' (WARNING : "requested" and "auto" shouldn't be used to display more than 1000 markers as it may result in long computing time)
 #'
-#' @return a dataframe containing all aesthetics informations for one serie of markers
+#' @return a list containing all aesthetics informations for one serie of markers
 #' @export
 #'
-#' @examples lm_markers(radius = "GC.", fillColor = "Genes", min = 10, max = 80, FUN = "mean", fillColor_pal = "Accent", legend = TRUE, stroke = TRUE)
+#' @examples
+#' #to simply put points on all leaves of the tree
+#' lm_markers(display = "leaves")
+#'
+#' lm_markers(radius = "GC.", fillColor = "Genes", min = 10, max = 80, FUN = "mean", fillColor_pal = "Accent", legend = TRUE, stroke = TRUE)
 #'
 #' # to apply it only on a subdataset
 #' lm_markers(data = LM$df[LM$df$Group %in% "Fungi",], radius = "GC.", fillColor = "Genes", min = 10, max = 80, FUN = "mean", pal = "Accent", legend = TRUE, stroke = TRUE)
 lm_markers <- function(data = NULL,
-                       radius = 30,
+                       radius = 20,
                        min = 20,
                        max = 50,
                        fillColor = "red",
