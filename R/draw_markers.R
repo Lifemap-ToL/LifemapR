@@ -60,7 +60,6 @@ add_lm_markers <- function(proxy, aes, df, df_visible, group_info) {
   # fill opacity
   fillOpacity_info <- create_value_range(aes$fillOpacity, df, df_visible, 0.1, 1)
 
-
   proxy <- leaflet::addCircleMarkers(proxy,
                                      lng = df_visible$lon,
                                      lat = df_visible$lat,
@@ -294,6 +293,11 @@ draw_markers <- function(lm_obj){
               df_visible <- df
             } else if (aes[[i]]$display == "leaves") {
               df_visible <- df[df$taxid %in% leaves,]
+            }
+            if (!(is.null(aes[[i]]$taxids))) {
+              ancestors <- unique(unlist(df[df$taxid %in% aes[[i]]$taxids[[1]],"ascend"]))
+              all_taxids <- c(df[df$taxid %in% aes[[i]]$taxids[[1]],"taxid"], ancestors)
+              df_visible = df_visible[df_visible$taxid %in% all_taxids,]
             }
             if (nrow(df_visible) < 5000) {
               m <- m %>%
