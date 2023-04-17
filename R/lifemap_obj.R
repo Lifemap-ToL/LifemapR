@@ -15,7 +15,7 @@ print.lifemap_obj <- function(lm_obj) {
     cat('The dataframe contains', nrow(lm_obj$df),'rows and', ncol(lm_obj$df), 'columns. \n')
     cat('The basemap used is :', lm_obj$basemap,'\n')
   } else {
-    print(draw_markers(lm_obj))
+    print(draw_Lifemap(lm_obj))
   }
 
 }

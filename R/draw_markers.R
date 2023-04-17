@@ -184,7 +184,7 @@ add_lm_discretes <- function(proxy, aes, df, df_visible, layer) {
 #' LM +
 #' lm_markers(radius = "GC.", fillColor = "Size..Mb.", min = 10, max = 80, FUN="mean", fillColor_pal = "Accent", legend = TRUE, stroke = TRUE) +
 #' lm_branches(col = "Genes", FUN = "mean")
-draw_markers <- function(lm_obj){
+draw_Lifemap <- function(lm_obj){
 
   df <- lm_obj$df
   basemap <- lm_obj$basemap
