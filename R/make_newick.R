@@ -4,7 +4,7 @@
 #' - "taxid" containing NCBI format taxids
 #' - "ancestor" containing for each taxid, it's direct ancestor in the phyogeny
 #'
-#' @returna character string
+#' @return a character string
 #' @export
 #'
 #' @examples
