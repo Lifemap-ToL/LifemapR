@@ -60,6 +60,13 @@ add_lm_markers <- function(proxy, aes, df, df_visible, group_info) {
   # fill opacity
   fillOpacity_info <- create_value_range(aes$fillOpacity, df, df_visible, 0.1, 1)
 
+  # my_icons <- makeSymbolIcons(shape="star", color = fillColor_info, width = radius_info, opacity = fillOpacity_info)
+  #
+  # proxy <- leaflet::addMarkers(proxy,
+  #                              lng = df_visible$lon,
+  #                              lat = df_visible$lat,
+  #                              icon = my_icons)
+
   proxy <- leaflet::addCircleMarkers(proxy,
                                      lng = df_visible$lon,
                                      lat = df_visible$lat,
@@ -249,7 +256,7 @@ draw_markers <- function(lm_obj){
 
     # output of the map
     output$mymap <- leaflet::renderLeaflet({
-      m <- display_map(df,map = basemap) %>% leaflet::fitBounds(~min(lon), ~min(lat), ~max(lon), ~max(lat))
+      m <- display_map(df,basemap = basemap) %>% leaflet::fitBounds(~min(lon), ~min(lat), ~max(lon), ~max(lat))
 
       for (i in 1:length(aes)) {
 
