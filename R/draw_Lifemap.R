@@ -139,7 +139,7 @@ add_lm_discretes <- function(proxy, aes, df, df_visible, layer) {
   values <- unique(df[df$type == "requested", aes$param])
   layerId_info <- sapply(X = 1:nrow(df_visible), FUN = function(x){paste(layer,x,collapse="", sep="")})
   make_col <- leaflet::colorFactor(aes$pal, values)
-  proxy <- proxy %>%
+  proxy <- proxy |>
     leaflet.minicharts::addMinicharts(
       lng = df_visible$lon,
       lat = df_visible$lat,
@@ -173,14 +173,14 @@ add_lm_discretes <- function(proxy, aes, df, df_visible, layer) {
 #' @return a shiny application
 #' @export
 #' @importFrom dplyr left_join
-#' @importFrom shiny fluidPage reactive observe shinyApp
+#' @importFrom shiny fluidPage reactive observe shinyApp isolate
 #' @importFrom leaflet leafletOutput renderLeaflet fitBounds leafletProxy addPopups clearMarkers clearShapes clearControls colorNumeric colorFactor clearPopups addPolylines clearGroup
 #' @importFrom leaflegend addLegendSize addSymbolsSize
 #' @importFrom leaflet.minicharts clearMinicharts
 #'
 #' @examples
-#' load("data/eukaryote_1000.RData")
-#' LM <- build_Lifemap(eukaryote_1000, basemap = "fr")
+#' data("eukaryotes_1000")
+#' LM <- build_Lifemap(eukaryotes_1000, basemap = "fr")
 #' LM +
 #' lm_markers(radius = "GC.", fillColor = "Size..Mb.", min = 10, max = 80, FUN="mean", fillColor_pal = "Accent", legend = TRUE, stroke = TRUE) +
 #' lm_branches(col = "Genes", FUN = "mean")
@@ -256,7 +256,7 @@ draw_Lifemap <- function(lm_obj){
 
     # output of the map
     output$mymap <- leaflet::renderLeaflet({
-      m <- display_map(df,basemap = basemap) %>% leaflet::fitBounds(~min(lon), ~min(lat), ~max(lon), ~max(lat))
+      m <- display_map(df,basemap = basemap) |> leaflet::fitBounds(~min(lon), ~min(lat), ~max(lon), ~max(lat))
 
       for (i in 1:length(aes)) {
 
@@ -265,7 +265,7 @@ draw_Lifemap <- function(lm_obj){
           if (aes[[i]]$legend == TRUE) {
 
             if (aes[[i]]$radius %in% colnames(df)) {
-              m <- m %>%
+              m <- m |>
                 leaflegend::addLegendSize(values = min(df[[aes[[i]]$radius]], na.rm = TRUE):max(df[[aes[[i]]$radius]], na.rm = TRUE),
                                           color = aes[[i]]$color,
                                           opacity = aes[[i]]$legendOpacity,
@@ -279,7 +279,7 @@ draw_Lifemap <- function(lm_obj){
             if (aes[[i]]$fillColor %in% colnames(df)) {
               make_fillColor <- leaflet::colorNumeric(aes[[i]]$fillColor_pal, df[[aes[[i]]$fillColor]])
 
-              m <- m %>% leaflet::addLegend(position = "bottomright",
+              m <- m |> leaflet::addLegend(position = "bottomright",
                                             title = aes[[i]]$fillColor,
                                             pal = make_fillColor,
                                             values = df[[aes[[i]]$fillColor]])
@@ -287,7 +287,7 @@ draw_Lifemap <- function(lm_obj){
             if (aes[[i]]$color %in% colnames(df)) {
               make_color <- leaflet::colorNumeric(aes[[i]]$color_pal, df[[aes[[i]]$color]])
 
-              m <- m %>% leaflet::addLegend(position = "bottomright",
+              m <- m |> leaflet::addLegend(position = "bottomright",
                                             title = aes[[i]]$color,
                                             pal = make_color,
                                             values = df[[aes[[i]]$color]])
@@ -307,7 +307,7 @@ draw_Lifemap <- function(lm_obj){
               df_visible = df_visible[df_visible$taxid %in% all_taxids,]
             }
             if (nrow(df_visible) < 5000) {
-              m <- m %>%
+              m <- m |>
                 add_lm_markers(aes = aes[[i]], df = df,
                                df_visible = df_visible,
                                group_info = as.character(i))
@@ -319,7 +319,7 @@ draw_Lifemap <- function(lm_obj){
           if (aes[[i]]$color %in% colnames(df)) {
             make_color <- leaflet::colorNumeric(aes[[i]]$color_pal, df[[aes[[i]]$color]])
 
-            m <- m %>% leaflet::addLegend(position = "bottomright",
+            m <- m |> leaflet::addLegend(position = "bottomright",
                                           title = paste("subtree : ", aes[[i]]$color, sep = "", collapse = ""),
                                           pal = make_color,
                                           values = df[[aes[[i]]$color]])
@@ -350,14 +350,14 @@ draw_Lifemap <- function(lm_obj){
 
         # adding markers if aes[[i]] is an lm_markers object
         if (is.lm_markers(aes[[i]]) && aes[[i]]$display == "auto") {
-          proxy <- leaflet::clearGroup(proxy, group = as.character(i)) %>%
+          proxy <- leaflet::clearGroup(proxy, group = as.character(i)) |>
             add_lm_markers(aes = aes[[i]], df = df,
                            df_visible = df_visible,
                            group_info = as.character(i))
 
           # adding a subtree if aes[[i]] is an lm_branches object
         } else if (is.lm_branches(aes[[i]])) {
-          proxy <- leaflet::clearGroup(proxy, group = as.character(i)) %>%
+          proxy <- leaflet::clearGroup(proxy, group = as.character(i)) |>
             add_lm_branches(aes = aes[[i]], df = df,
                             df_visible = df_visible,
                             df_descendants = df_descendants(),
@@ -367,7 +367,7 @@ draw_Lifemap <- function(lm_obj){
 
           # adding charts if aes[[i]] is an lm_discret object
         } else if(is.lm_discret(aes[[i]]) && nrow(df_visible) > 0) {
-          proxy <- leaflet.minicharts::clearMinicharts(proxy) %>%
+          proxy <- leaflet.minicharts::clearMinicharts(proxy) |>
             add_lm_discretes(aes = aes[[i]], df = df,
                                     df_visible = df_visible,
                                     layer = as.character(i))
@@ -386,17 +386,17 @@ draw_Lifemap <- function(lm_obj){
         new_string <- paste(aes[[i]]$fillColor," : ", selectedId[[aes[[i]]$fillColor]], sep="")
         content <- paste(content,new_string, sep="\n")
       }
-      leafletProxy("mymap") %>% leaflet::addPopups(lng, lat, content)
+      leafletProxy("mymap") |> leaflet::addPopups(lng, lat, content)
     }
 
     # when clicking on a marker, show a popup
     observe({
-      leafletProxy("mymap") %>% leaflet::clearPopups()
+      leafletProxy("mymap") |> leaflet::clearPopups()
       event <- input$mymap_marker_click
       if (is.null(event))
         return()
 
-      isolate({
+      shiny::isolate({
         showSciName(event$id, event$lng, event$lat)
       })
     })

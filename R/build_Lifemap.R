@@ -1,15 +1,17 @@
 #' Check if the URL is working
 #'
-#' @param url_in the url to test
+#' @param basemap_url the url corresponding to the basemap interrogated
 #' @param t the time before timeout
 #'
 #' @return a logical
-valid_url <- function(url_in,t=20){
+url_verification <- function(basemap_url, t = 20){
+  url_in <- paste(basemap_url, "#/taxo/query", sep = "", collapse = "")
   con <- url(url_in)
-  check <- suppressWarnings(try(open.connection(con,open="rt",timeout=t),silent=T)[1])
-  suppressWarnings(try(close.connection(con),silent=T))
-  ifelse(is.null(check),TRUE,FALSE)
+  check <- suppressWarnings(try(open.connection(con, open = "rt", timeout = t), silent = T)[1])
+  suppressWarnings(try(close.connection(con), silent = T))
+  ifelse(is.null(check), TRUE, FALSE)
 }
+
 
 #' Request one of the core of the solr database corresponding to the basemap choosen with TaxIDs wanted
 #'
@@ -28,6 +30,11 @@ request_database <- function(taxids, basemap, core) {
     basemap_url <- "https://lifemap.univ-lyon1.fr/solr/"
   } else if (basemap == "virus") {
     basemap_url <- "http://virusmap.univ-lyon1.fr/solr/"
+  } else {stop(sprintf('%s is not a working url, try c("base", "fr", "ncbi" or "virus")', basemap))}
+
+  if (url_verification(basemap_url = basemap_url) == FALSE) {
+    basemaps <- c("base", "ncbi", "fr", "virus")
+    stop(sprintf("the url you are trying is not working, why not try these one : %s", paste(basemaps[!(basemaps %in% basemap)], collapse = ", ")))
   }
 
   DATA <- NULL
@@ -45,10 +52,6 @@ request_database <- function(taxids, basemap, core) {
     )
 
     # doing the request :
-    if (valid_url(url_in = url) == FALSE) {
-      basemaps <- c("base", "ncbi", "fr", "virus")
-      stop(sprintf("the url you are trying is not working,why not try these one : %s", paste(basemaps[!(basemaps %in% basemap)], collapse = ", ")))
-    }
     data_sub <- jsonlite::fromJSON(url)
     if (data_sub$response$numFound > 0) {
       if (core == "taxo") {
@@ -119,9 +122,9 @@ get_direct_ancestor <- function(df) {
 #' @export
 #'
 #' @examples
-#' df <- read.csv(file="data/eukaryotes_1000.txt", sep="\t", header=TRUE)
+#' data("eukaryotes_1000")
 #'
-#' Lifemap_df <- build_Lifemap(df, "fr")
+#' LM <- build_Lifemap(eukaryotes_1000, "fr")
 build_Lifemap <- function(df, basemap = c("fr","ncbi", "base","virus"), verbose=TRUE) {
   basemap <- match.arg(arg = basemap, choices = basemap)
 
@@ -223,5 +226,4 @@ build_Lifemap <- function(df, basemap = c("fr","ncbi", "base","virus"), verbose=
 
   return(lm_obj)
 }
-
 

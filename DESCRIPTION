@@ -1,12 +1,17 @@
 Package: LifemapR
-Title: What the Package Does (One Line, Title Case)
+Title: Data Visualisation on 'Lifemap' Tree
 Version: 0.0.0.9000
-Authors@R: 
-    person("First", "Last", , "first.last@example.com", role = c("aut", "cre"),
-           comment = c(ORCID = "YOUR-ORCID-ID"))
-Description: What the package does (one paragraph).
-License: `use_mit_license()`, `use_gpl3_license()` or friends to pick a
-    license
+Imports: leaflet, leaflegend, shiny, jsonlite, dplyr, leaflet.minicharts, purrr, stringr
+Authors@R: c(
+    person("Cassandra", "Bompard", role = "aut", email = "cassbomp68@gmail.com"),
+    person("Damien M.", "de Vienne", role = "aut", email = "damien.de-vienne@univ-lyon1.fr"),
+    person("Aurélie", "Siberchicot", role = c("ctb", "cre"), email = "aurelie.siberchicot@univ-lyon1.fr")
+    )
+Description: Allow to visualise datas on the NCBI phylogenetic tree as presented in Lifemap '<http://lifemap.univ-lyon1.fr/>'. It takes an input a dataframe with at least a "taxid" column containing NCBI format TaxIds and allow to draw multiple layers with different visualisation tools.
+License: MIT + file LICENSE
 Encoding: UTF-8
 Roxygen: list(markdown = TRUE)
 RoxygenNote: 7.2.3
+Depends: R (>= 3.5.0)
+Suggests: knitr
+VignetteBuilder: knitr

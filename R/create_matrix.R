@@ -8,7 +8,8 @@
 #'
 #' @return a dataframe filled with TRUE or FALSE
 #'
-#' @examples load("data/taxids_10000.RData")
+#' @examples
+#' data("taxids_10000")
 #' LM <- build_Lifemap(taxids_10000,"fr")
 #' create_matrix(LM$df)
 create_matrix <- function(df) {
@@ -53,9 +54,9 @@ pass_infos <- function(M, values, ancestors, my_func) {
 #'
 #' @return a dataframe filled with TRUE or FALSE
 #'
-#' @examples load("data/taxids_10000.RData")
+#' @examples data("taxids_10000")
 #' LM <- build_Lifemap(taxids_10000,"fr")
-#' create_matrix(LM$df)
+#' create_matrix_discret(LM$df)
 create_matrix_discret <- function(df) {
   all_tax <- df$taxid
   H <- apply(df[df$type == "requested", ], 1, function(x, y) y %in% c(x$taxid,x$ascend), y = all_tax)

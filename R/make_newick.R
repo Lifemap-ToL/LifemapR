@@ -7,6 +7,8 @@
 #' @return a character string
 #' @export
 #'
+#' @importFrom stats complete.cases
+#'
 #' @examples
 #'
 #' LM <- build_Lifemap(eukaryotes_1000)

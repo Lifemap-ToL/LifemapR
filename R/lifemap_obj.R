@@ -10,12 +10,12 @@
 #' @export
 #'
 #' @examples print(LM_df)
-print.lifemap_obj <- function(lm_obj) {
-  if (is.null(lm_obj$aes)) {
-    cat('The dataframe contains', nrow(lm_obj$df),'rows and', ncol(lm_obj$df), 'columns. \n')
-    cat('The basemap used is :', lm_obj$basemap,'\n')
+print.lifemap_obj <- function(x) {
+  if (is.null(x$aes)) {
+    cat('The dataframe contains', nrow(x$df),'rows and', ncol(x$df), 'columns. \n')
+    cat('The basemap used is :', x$basemap,'\n')
   } else {
-    print(draw_Lifemap(lm_obj))
+    print(draw_Lifemap(x))
   }
 
 }

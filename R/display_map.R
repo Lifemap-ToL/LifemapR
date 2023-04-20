@@ -11,7 +11,7 @@
 #'
 #' @return HTML widget object  with graphics layers
 #' @export
-#' @importFrom leaflet leaflet addTiles
+#' @importFrom leaflet leaflet addTiles providerTileOptions
 #'
 #' @examples display_map("fr")
 display_map <- function(df=NULL,basemap = c("fr","ncbi", "base","virus")) {
@@ -25,7 +25,7 @@ display_map <- function(df=NULL,basemap = c("fr","ncbi", "base","virus")) {
   } else if (basemap == "virus"){
     display="http://virusmap.univ-lyon1.fr/osm_tiles/{z}/{x}/{y}.png"
   }
-  m <- leaflet::leaflet(df) %>%
-    leaflet::addTiles(display,options = providerTileOptions(minZoom = 5, maxZoom = 50))
+  m <- leaflet::leaflet(df) |>
+    leaflet::addTiles(display, options = leaflet::providerTileOptions(minZoom = 5, maxZoom = 50))
   return(m)
 }
