@@ -17,9 +17,9 @@
 #' # to apply it on a subdataset
 #' lm_branches(data = LM$df[LM$df$Group %in% "Fungi",], col = "GC.", FUN = "mean")
 lm_branches <- function(data = NULL,
-                        color = "yellow",
+                        color = NULL,
+                        var_color = NULL,
                         FUN = "mean",
-                        pal = "Accent",
                         legend=TRUE,
                         legendPosition = c("topright", "bottomright", "bottomleft", "topleft")) {
 
@@ -30,7 +30,7 @@ lm_branches <- function(data = NULL,
   } else { taxids <- NULL}
 
   res <- list(taxids = taxids, color = color,
-              FUN = FUN, color_pal = pal,
+              FUN = FUN, var_color = var_color,
               legend = legend, legendPosition = legendPosition)
   class(res)=c("lifemap_obj", "lm_branches", "list")
   return(res)

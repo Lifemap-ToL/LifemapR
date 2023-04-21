@@ -102,15 +102,15 @@ add_lm_markers <- function(proxy, aes, df, df_visible, group_info) {
 #'
 #' @return a list of values
 add_lm_branches <- function(proxy, aes, df, df_visible, df_descendants, group_info, all_taxids) {
-  if (aes$color %in% colnames(df)) {
-    make_col <- leaflet::colorNumeric(palette = aes$color_pal, domain = df[[aes$color]])
+  if (!(is.null(aes$var_color))) {
+    make_col <- leaflet::colorNumeric(palette = aes$color, domain = df[[aes$var_color]])
   }
 
   for (id in df_visible$taxid) {
     # for each descendant of each taxid
     for (desc in df_descendants[df_descendants$ancestor == id, ]$taxid) {
-      if (aes$color %in% colnames(df)) {
-        col_info <- make_col(df_descendants[df_descendants$taxid == desc, aes$color])
+      if (!(is.null(aes$var_color))) {
+        col_info <- make_col(df_descendants[df_descendants$taxid == desc, aes$var_color])
       } else { col_info <- aes$color}
 
       if (!(is.null(aes$taxids))) {
@@ -220,13 +220,13 @@ draw_Lifemap <- function(lm_obj){
         }
       }
 
-    } else if (is.lm_branches(aes[[i]]) && aes[[i]]$color %in% colnames(df)) {
+    } else if (is.lm_branches(aes[[i]]) && !(is.null(aes[[i]]$var_color))) {
       new_df <- pass_infos(M = M,
-                           values = as.vector(df[df$type == "requested",aes[[i]]$color]),
+                           values = as.vector(df[df$type == "requested",aes[[i]]$var_color]),
                            ancestors = unique(unlist(df[df$type == "requested","ascend"])),
                            my_func = aes[[i]]$FUN)
       for (id in 1:nrow(new_df)) {
-        df[df$taxid == new_df[id, "ancestors"], aes[[i]]$color]<- new_df[id, ]$value
+        df[df$taxid == new_df[id, "ancestors"], aes[[i]]$var_color]<- new_df[id, ]$value
       }
 
     } else if (is.lm_discret(aes[[i]])) {
@@ -322,13 +322,13 @@ draw_Lifemap <- function(lm_obj){
               }
           }
         } else if (is.lm_branches(aes[[i]])) {
-          if (aes[[i]]$color %in% colnames(df)) {
-            make_color <- leaflet::colorNumeric(aes[[i]]$color_pal, df[[aes[[i]]$color]])
+          if (!(is.null(aes[[i]]$var_color))) {
+            make_color <- leaflet::colorNumeric(aes[[i]]$color, df[[aes[[i]]$var_color]])
 
             m <- m |> leaflet::addLegend(position = "bottomright",
-                                          title = paste("subtree : ", aes[[i]]$color, sep = "", collapse = ""),
+                                          title = paste("subtree : ", aes[[i]]$var_color, sep = "", collapse = ""),
                                           pal = make_color,
-                                          values = df[[aes[[i]]$color]])
+                                          values = df[[aes[[i]]$var_color]])
           }
         }
 

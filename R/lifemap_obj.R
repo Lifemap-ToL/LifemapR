@@ -59,8 +59,18 @@ is.lifemap_obj <- function(x) inherits(x, "lifemap_obj")
         e2[[aes]] <- match.arg(arg = e2[[aes]], choices = colnames(e1$df))
       }
     }
+  } else if (is.lm_branches(e2)){
+    if (is.null(e2$var_color)) {
+      if (is.null(e2$color)){
+        e2$color <- "yellow"
+      }
+    } else {
+      e2$var_color <- match.arg(arg = e2$var_color, choices = colnames(e1$df))
+      if (is.null(e2$color)){
+        e2$color <- "Accent"
+      }
+    }
   }
-  print(e2$var_fillColor)
 
   if(is.null(e1$aes)) {
     e1$aes <- list(e2)
