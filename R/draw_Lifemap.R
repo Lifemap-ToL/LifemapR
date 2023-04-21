@@ -33,22 +33,28 @@ create_value_range <- function(value, df, df2, min, max, map){
 #' @return a list of values
 add_lm_markers <- function(proxy, aes, df, df_visible, group_info) {
 
-  if (aes$fillColor %in% colnames(df)) {
-    make_fillColor <- leaflet::colorNumeric(aes$fillColor_pal, df[[aes$fillColor]])
-    fillColor_info <- make_fillColor(df_visible[[aes$fillColor]])
+  if (!(is.null(aes$var_fillColor))) {
+    make_fillColor <- leaflet::colorNumeric(palette = aes$fillColor, domain = df[[aes$var_fillColor]])
+    fillColor_info <- make_fillColor(df_visible[[aes$var_fillColor]])
   } else { fillColor_info <- aes$fillColor }
+
 
   radius_info <- create_value_range(aes$radius, df, df_visible, aes$min, aes$max)
 
   # stroke presence
   if(aes$stroke %in% colnames(df)) {
     stroke_info <- df_visible[[aes$stroke]]
-  } else { stroke_info <- aes$stroke }
+  } else {
+    if (!(is.null(aes$var_color))) {
+      stroke_info <- TRUE
+    } else {stroke_info <- aes$stroke}
+  }
+
 
   #stroke color
-  if (aes$color %in% colnames(df)) {
-    make_color <- leaflet::colorNumeric(aes$color_pal, df[[aes$color]])
-    color_info <- make_color(df_visible[[aes$color]])
+  if (!(is.null(aes$var_color))) {
+    make_color <- leaflet::colorNumeric(aes$color, df[[aes$var_color]])
+    color_info <- make_color(df_visible[[aes$var_color]])
   } else { color_info <- aes$color }
 
   # stroke opacity

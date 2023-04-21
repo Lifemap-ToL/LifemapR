@@ -13,12 +13,12 @@
 #' @param radius either a numerical value or a column name of the original dataframe to represent this variable by the size of points
 #' @param min an integer indicating the minimal size of the points if radius represent a variable
 #' @param max an integer indicating the maximal size of the points if radius represent a variable
-#' @param fillColor either a color or a column name of the original dataframe to represent this variable by the color of points
-#' @param fillColor_pal the palette to be used if <code>fillColor</code> represent a variable
+#' @param fillColor either a color or a palette if the fillColor is represented by a variable
+#' @param var_fillColor a column name of the original dataframe to represent this variable by the fillColor of points
 #' @param fillOpacity a numeric indicating the fill opacity
 #' @param stroke a logical indicating whether to draw a border for points
-#' @param color stroke color
-#' @param color_pal the palette to be used if <code>color</code> represent a variable
+#' @param color the stroke color. Either a color or a palette if the stroke color is represented by a variable
+#' @param var_color a column name of the original dataframe to represent this variable by the stroke color of points
 #' @param weight stroke width in pixels
 #' @param opacity stroke opacity
 #' @param legend whether to display the legend
@@ -49,13 +49,13 @@ lm_markers <- function(data = NULL,
                        radius = 20,
                        min = 20,
                        max = 50,
-                       fillColor = "red",
-                       fillColor_pal = "Accent",
+                       fillColor = NULL,
+                       var_fillColor = NULL,
                        fillOpacity = 0.8,
                        stroke = FALSE,
-                       color = "black",
-                       color_pal = "viridis",
-                       weight = 0,
+                       color = NULL,
+                       var_color = NULL,
+                       weight = 3,
                        opacity = 0.8,
                        legend = TRUE,
                        legendPosition = c("topright", "bottomright", "bottomleft", "topleft"),
@@ -75,7 +75,7 @@ lm_markers <- function(data = NULL,
               max = max,FUN = FUN, stroke = stroke,
               color = color, weight = weight,
               opacity = opacity, fillOpacity = fillOpacity,
-              fillColor_pal = fillColor_pal, color_pal = color_pal,
+              var_fillColor = var_fillColor, var_color = var_color,
               legend = legend, legendPosition = legendPosition,
               legendOrientation = legendOrientation, legendOpacity = legendOpacity,
               display = display)
