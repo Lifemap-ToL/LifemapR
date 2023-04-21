@@ -38,13 +38,13 @@
 #' @export
 #'
 #' @examples
+#'
+#' data("eukaryotes_1000")
+#' LM <- build_Lifemap(eukaryotes_1000, basemap = "fr")
+#'
 #' #to simply put points on all leaves of the tree
 #' lm_markers(display = "leaves")
 #'
-#' lm_markers(radius = "GC.", fillColor = "Genes", min = 10, max = 80, FUN = "mean", fillColor_pal = "Accent", legend = TRUE, stroke = TRUE)
-#'
-#' # to apply it only on a subdataset
-#' lm_markers(data = LM$df[LM$df$Group %in% "Fungi",], radius = "GC.", fillColor = "Genes", min = 10, max = 80, FUN = "mean", pal = "Accent", legend = TRUE, stroke = TRUE)
 lm_markers <- function(data = NULL,
                        radius = 20,
                        min = 20,

@@ -13,13 +13,17 @@
 #' @return a lifemap object
 #' @export
 #'
-#' @examples lm_discret(param="Status")
+#' @examples
+#' data("eukaryotes_1000")
+#' LM <- build_Lifemap(eukaryotes_1000, basemap = "fr")
+#'
+#' lm_discret(param="Status")
 #'
 #' # to apply it only on a subdataset
 #' lm_discret(data = LM$df[LM$df$Group %in% "Fungi",], param = "Status")
 lm_discret <- function(data = NULL,
                        param,
-                       type = c("pie","bar", "polar-area","polar-radius", "auto"),
+                       type = c("pie","bar", "polar-area", "polar-radius", "auto"),
                        width = 30,
                        height = 30,
                        opacity = 1,

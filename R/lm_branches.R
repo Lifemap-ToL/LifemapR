@@ -1,21 +1,21 @@
 #' add a layer to a Lifemap object
 #'
-#' @param col either a color for the branches or a variable that will be represented by the branches' color
+#' @param data a sub dataset to use, if NULL then all of the taxids from the lifemap object given to lifemap() will be used
+#' @param color either a color for the branches or a palette if a variable is used to rperesent branches' color
+#' @param var_color a column name of the original dataframe to represent this variable by the color of branches
 #' @param FUN the function to be applied if col represent a variable
-#' @param pal the branches' palette
+#' @param legend a logical indicating whether or not to display the legend
+#' @param legendPosition c("topright", "bottomright", "bottomleft", "topleft"), the position of the legend
 #'
 #' @return a lifemap object
 #' @export
 #'
 #' @examples
+#' data("eukaryotes_1000")
+#' LM <- build_Lifemap(eukaryotes_1000, basemap = "fr")
+#'
 #' # a unique color for all the branches
 #' lm_branches(col = "red")
-#'
-#' # branches are colored according to the average GC rate
-#' lm_branches(col = "GC.", FUN = "mean")
-#'
-#' # to apply it on a subdataset
-#' lm_branches(data = LM$df[LM$df$Group %in% "Fungi",], col = "GC.", FUN = "mean")
 lm_branches <- function(data = NULL,
                         color = NULL,
                         var_color = NULL,

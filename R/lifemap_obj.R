@@ -1,16 +1,21 @@
 #' print lifemap_obj objects
 #'
-#'
 #' @description When the LifemapR object is just created, give the number of columns and rows
 #' as well as the basemap used to get the datas form the database
 #'
-#' @param lm_obj
+#' @param x an lm_obj
 #'
 #' @return NA
 #' @export
 #'
-#' @examples print(LM_df)
-print.lifemap_obj <- function(x) {
+#' @examples
+#' data("eukaryotes_1000")
+#' LM <- build_Lifemap(eukaryotes_1000, basemap = "fr")
+#'
+#' print(LM)
+#'
+#' LM
+print.lifemap_obj <- function(x,...) {
   if (is.null(x$aes)) {
     cat('The dataframe contains', nrow(x$df),'rows and', ncol(x$df), 'columns. \n')
     cat('The basemap used is :', x$basemap,'\n')
@@ -31,7 +36,12 @@ is.lifemap_obj <- function(x) inherits(x, "lifemap_obj")
 #' @export
 #' @return a lm_obj object
 #'
-#' @examples LM_df + lm_markers(radius="GC.", fillColor="Genes", min=10, max=80, FUN="mean", pal="Accent", legend=TRUE, stroke = TRUE, weight="Size..Mb.")
+#' @examples
+#' data("eukaryotes_1000")
+#' LM <- build_Lifemap(eukaryotes_1000, basemap = "fr")
+#'
+#' lifemap(LM) + lm_markers()
+#' lifemap(LM) + lm_branches() + lm_discret() + lm_markers()
 "+.lifemap_obj" <- function(e1,e2) {
   if (is.lm_markers(e2)){
     if (is.null(e2$var_fillColor)) {

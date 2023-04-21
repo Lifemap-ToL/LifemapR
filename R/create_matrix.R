@@ -9,8 +9,8 @@
 #' @return a dataframe filled with TRUE or FALSE
 #'
 #' @examples
-#' data("taxids_10000")
-#' LM <- build_Lifemap(taxids_10000,"fr")
+#' data("eukaryotes_1000")
+#' LM <- build_Lifemap(eukaryotes_1000, "fr")
 #' create_matrix(LM$df)
 create_matrix <- function(df) {
   all_ancestors <- unique(unlist(df[df$type == "requested", ]$ascend))
@@ -22,8 +22,9 @@ create_matrix <- function(df) {
 #' pass the information to nodes
 #'
 #' @param M the boolean matrix
-#' @param func the function to be applied
-#' @param value a vector of the values
+#' @param my_func the function to be applied
+#' @param values a vector of the values
+#' @param ancestors a vector of all the ancestors
 #'
 #' @return a dataframe
 #' @export
