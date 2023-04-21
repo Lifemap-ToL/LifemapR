@@ -70,6 +70,8 @@ is.lifemap_obj <- function(x) inherits(x, "lifemap_obj")
         e2$color <- "Accent"
       }
     }
+  } else if (is.lm_discret(e2)) {
+    e2$param <- match.arg(arg = e2$param, choices = colnames(e1$df))
   }
 
   if(is.null(e1$aes)) {
