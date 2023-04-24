@@ -4,6 +4,7 @@
 #' as well as the basemap used to get the datas form the database
 #'
 #' @param x an lm_obj
+#' @param ... further arguments passed to or from other methods.
 #'
 #' @return NA
 #' @export

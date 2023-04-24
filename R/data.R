@@ -19,7 +19,7 @@
 #'   \item{Genes}{Number of Genes annotated in the assembly}
 #'   \item{Proteins}{Number of Proteins annotated in the assembly}
 #'   \item{Release.Date}{First public sequence release for the project}
-#'   \item{Odify.Date}{Sequence modification date for the project}
+#'   \item{Modify.Date}{Sequence modification date for the project}
 #'   \item{Status}{Highest level of assembly: <br> Chromosomes: one or more chromosomes are assembled<br> Scaffolds or contigs: sequence assembled but no chromosomes}
 #'   \item{Center}{Origin of the sample}
 #'   \item{BioSample.Accession}{BioSample Accession number}

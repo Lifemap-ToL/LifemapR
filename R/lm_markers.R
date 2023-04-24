@@ -25,7 +25,7 @@
 #' @param legendPosition c("topright", "bottomright", "bottomleft", "topleft"),
 #' @param legendOrientation c("vertical", "horizontal"),
 #' @param legendOpacity legend's opacity (apply on the shapes in the legend, not the background itself)
-#' @param FUN the function to be applied to the variables if None then the information missing from the parent nodes won't be inferred
+#' @param FUN the function to be applied to the variables if NULL then the information missing from the parent nodes won't be inferred
 #' @param display a string indicating how to display points :
 #' - "auto" : the markers are displayed depending on the zoom, by default, allow to have a lot of points
 #' - "requested" : only display the requested taxa, but all at the same time
@@ -72,7 +72,7 @@ lm_markers <- function(data = NULL,
   } else { taxids <- NULL}
   res <- list(taxids = taxids, radius = radius,
               fillColor = fillColor, min = min,
-              max = max,FUN = FUN, stroke = stroke,
+              max = max, FUN = FUN, stroke = stroke,
               color = color, weight = weight,
               opacity = opacity, fillOpacity = fillOpacity,
               var_fillColor = var_fillColor, var_color = var_color,

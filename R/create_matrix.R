@@ -29,7 +29,7 @@ create_matrix <- function(df) {
 #' @return a dataframe
 #' @export
 pass_infos <- function(M, values, ancestors, my_func) {
-  my_func <- match.fun(my_func)
+  # my_func <- match.fun(my_func)
   inferred_values <- apply(X = M, MARGIN = 1, FUN = function(x){
     trues <- which(x == TRUE)
     trues <- as.vector(trues)
@@ -67,8 +67,8 @@ create_matrix_discret <- function(df) {
 #' pass the information to nodes
 #'
 #' @param M the boolean matrix
-#' @param func the function to be applied
-#' @param value a vector of the values
+#' @param values a vector of the values
+#' @param tax a vector of all the taxids
 #'
 #' @return a dataframe
 #' @export
@@ -85,9 +85,9 @@ pass_infos_discret <- function(M, values, tax) {
     val <- values[trues]
     val <- val[!is.na(val)]
     count <- data.frame(table(val))
-    count <- merge(df_uniques, count, by="val", all=TRUE)
+    count <- merge(df_uniques, count, by = "val", all = TRUE)
     count[is.na(count)] <- 0
-    paste(count$Freq, sep="", collapse = ",")
+    paste(count$Freq, sep = "", collapse = ",")
   })
   new_vals <- str_split_fixed(inferred_values, ",", 4)
   df_values <- data.frame(tax,new_vals)

@@ -1,5 +1,6 @@
 #' add a layer to a Lifemap object
 #'
+#' @param data a sub dataset to use, if NULL then all of the taxids from the lifemap object given to lifemap() will be used
 #' @param param the discret variable to be represented
 #' @param type the type of chart to draw
 #' @param width the maximal width of the charts

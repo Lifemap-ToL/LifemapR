@@ -3,7 +3,8 @@
 #' @description This function create a blank Leaflet map using the leaflet function from the leaflet package.
 #' if a dataframe is provided, it will be used for the creation of the map object
 #'
-#' @param map The base choose to display, either \itemize{
+#' @param df a dataframe, if given, the columns can be easily accessed with "~" (eg. ~GC.)
+#' @param basemap The base choose to display, either \itemize{
 #' - 'fr' for \url{https://lifemap-fr.univ-lyon1.fr/}
 #' - 'ncbi' for \url{https://lifemap-ncbi.univ-lyon1.fr/}
 #' - 'base' for \url{https://lifemap.univ-lyon1.fr/}
@@ -14,7 +15,7 @@
 #' @importFrom leaflet leaflet addTiles providerTileOptions
 #'
 #' @examples display_map("fr")
-display_map <- function(df=NULL,basemap = c("fr","ncbi", "base","virus")) {
+display_map <- function(df = NULL,basemap = c("fr","ncbi", "base","virus")) {
   basemap <- match.arg(basemap)
   if (basemap == "fr"){
     display="http://lifemap-fr.univ-lyon1.fr/osm_tiles/{z}/{x}/{y}.png"

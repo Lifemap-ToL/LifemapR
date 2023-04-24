@@ -8,7 +8,7 @@
 #' @param max the new maximum of the range
 #'
 #' @return a vector of values
-create_value_range <- function(value, df, df2, min, max, map){
+create_value_range <- function(value, df, df2, min, max){
   if (value %in% colnames(df)) {
     old_min <- min(df[[value]], na.rm = TRUE)
     old_max <- max(df[[value]], na.rm = TRUE)
@@ -91,12 +91,13 @@ add_lm_markers <- function(proxy, aes, df, df_visible, group_info) {
 
 #' compute the aes for a subtree
 #'
+#' @param proxy the map to be modified
 #' @param aes the dataframe containing the aesthetics informations (must be of lm_markers class)
 #' @param df the full dataframe
 #' @param df_visible the dataframe containing visible taxa
-#' @param df_descendant the dataframe containing all the information on the descendants of visible taxa
-#' @param proxy the map to be modified
+#' @param df_descendants the dataframe containing all the information on the descendants of visible taxa
 #' @param group_info the points' group
+#' @param all_taxids a vector with all the visible taxids and their direct descendants
 #'
 #' @importFrom leaflet addPolylines colorNumeric
 #'
@@ -207,7 +208,7 @@ draw_Lifemap <- function(lm_obj){
     if (is.lm_markers(aes[[i]]) && !(is.null(aes[[i]]$FUN))) {
       for (parameter in aes[[i]]) {
 
-        if (!(is.null(parameter)) && parameter %in% colnames(df)) {
+        if (!(is.null(parameter)) && is.character(parameter) && parameter %in% colnames(df)) {
           new_df <- pass_infos(M = M,
                                values = as.vector(df[df$type == "requested", parameter]),
                                ancestors = unique(unlist(df[df$type == "requested", "ascend"])),
