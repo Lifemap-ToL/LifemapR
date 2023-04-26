@@ -192,6 +192,7 @@ draw_Lifemap <- function(lm_obj){
   basemap <- lm_obj$basemap
   aes <- lm_obj$aes
 
+  print("making matrixes")
   M <- create_matrix(df)
   M_discrete <- create_matrix_discret(df)
 

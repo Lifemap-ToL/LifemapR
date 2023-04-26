@@ -75,5 +75,6 @@ is.lifemap_obj <- function(x) inherits(x, "lifemap_obj")
   } else {
     e1$aes <- append(e1$aes, list(e2))
   }
+  print("doing a +")
   return(e1)
 }
