@@ -194,7 +194,10 @@ draw_Lifemap <- function(lm_obj){
 
   print("making matrixes")
   M <- create_matrix(df)
-  M_discrete <- create_matrix_discret(df)
+  M_discrete <- M
+
+  # M_discrete <- create_matrix_discret(df)
+  print("done")
 
   all_ancestors <- unique(unlist(df$ascend))
   leaves <- df[!(df$taxid %in% all_ancestors),"taxid"]
