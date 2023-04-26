@@ -164,12 +164,6 @@ add_lm_discretes <- function(proxy, aes, df, df_visible, layer) {
   proxy
 }
 
-
-
-
-
-
-
 #' Represent continuous datas on a Lifemap background
 #'
 #' @description
@@ -186,9 +180,12 @@ add_lm_discretes <- function(proxy, aes, df, df_visible, layer) {
 #' @importFrom leaflet.minicharts clearMinicharts
 #'
 #' @examples
-#' data("eukaryotes_1000")
-#' LM <- build_Lifemap(eukaryotes_1000, basemap = "fr")
-#' LM + lm_markers()
+#' ## Only run examples in interactive R sessions
+#' if (interactive()) {
+#' data(LM_eukaryotes)
+#' lifemap(LM_eukaryotes) + lm_markers()
+#' }
+
 draw_Lifemap <- function(lm_obj){
 
   df <- lm_obj$df

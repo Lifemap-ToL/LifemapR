@@ -13,8 +13,6 @@
 #' @return HTML widget object  with graphics layers
 #' @export
 #' @importFrom leaflet leaflet addTiles providerTileOptions
-#'
-#' @examples display_map("fr")
 display_map <- function(df = NULL,basemap = c("fr","ncbi", "base","virus")) {
   basemap <- match.arg(basemap)
   if (basemap == "fr"){

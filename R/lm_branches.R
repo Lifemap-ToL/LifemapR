@@ -9,17 +9,10 @@
 #'
 #' @return a lifemap object
 #' @export
-#'
-#' @examples
-#' data("eukaryotes_1000")
-#' LM <- build_Lifemap(eukaryotes_1000, basemap = "fr")
-#'
-#' # a unique color for all the branches
-#' lm_branches(col = "red")
 lm_branches <- function(data = NULL,
                         color = NULL,
                         var_color = NULL,
-                        FUN = "mean",
+                        FUN = mean,
                         legend=TRUE,
                         legendPosition = c("topright", "bottomright", "bottomleft", "topleft")) {
 

@@ -8,8 +8,6 @@
 #'
 #' @return a lifemap object
 #' @export
-#'
-#' @examples lifemap(LM)
 lifemap <- function(lm_obj) {
   return(lm_obj)
 }

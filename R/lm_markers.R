@@ -26,7 +26,7 @@
 #' @param legendOrientation c("vertical", "horizontal"),
 #' @param legendOpacity legend's opacity (apply on the shapes in the legend, not the background itself)
 #' @param FUN the function to be applied to the variables if NULL then the information missing from the parent nodes won't be inferred
-#' @param display a string indicating how to display points :
+#' @param display c("auto", "requested", "all", "leaves"), a string indicating how to display points :
 #' - "auto" : the markers are displayed depending on the zoom, by default, allow to have a lot of points
 #' - "requested" : only display the requested taxa, but all at the same time
 #' - "all" : display all the taxa including all the ancestors to the root
@@ -36,15 +36,6 @@
 #'
 #' @return a list containing all aesthetics informations for one serie of markers
 #' @export
-#'
-#' @examples
-#'
-#' data("eukaryotes_1000")
-#' LM <- build_Lifemap(eukaryotes_1000, basemap = "fr")
-#'
-#' #to simply put points on all leaves of the tree
-#' lm_markers(display = "leaves")
-#'
 lm_markers <- function(data = NULL,
                        radius = 20,
                        min = 20,

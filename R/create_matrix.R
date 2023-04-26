@@ -7,11 +7,6 @@
 #' @export
 #'
 #' @return a dataframe filled with TRUE or FALSE
-#'
-#' @examples
-#' data("eukaryotes_1000")
-#' LM <- build_Lifemap(eukaryotes_1000, "fr")
-#' create_matrix(LM$df)
 create_matrix <- function(df) {
   all_ancestors <- unique(unlist(df[df$type == "requested", ]$ascend))
   H <- apply(df[df$type == "requested", ], 1, function(x, y) y %in% x$ascend, y = all_ancestors)
@@ -54,10 +49,6 @@ pass_infos <- function(M, values, ancestors, my_func) {
 #' @importFrom stringr str_split_fixed
 #'
 #' @return a dataframe filled with TRUE or FALSE
-#'
-#' @examples data("taxids_10000")
-#' LM <- build_Lifemap(taxids_10000,"fr")
-#' create_matrix_discret(LM$df)
 create_matrix_discret <- function(df) {
   all_tax <- df$taxid
   H <- apply(df[df$type == "requested", ], 1, function(x, y) y %in% c(x$taxid,x$ascend), y = all_tax)

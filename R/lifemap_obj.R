@@ -8,14 +8,6 @@
 #'
 #' @return NA
 #' @export
-#'
-#' @examples
-#' data("eukaryotes_1000")
-#' LM <- build_Lifemap(eukaryotes_1000, basemap = "fr")
-#'
-#' print(LM)
-#'
-#' LM
 print.lifemap_obj <- function(x,...) {
   if (is.null(x$aes)) {
     cat('The dataframe contains', nrow(x$df),'rows and', ncol(x$df), 'columns. \n')
@@ -36,13 +28,6 @@ is.lifemap_obj <- function(x) inherits(x, "lifemap_obj")
 #' @param e2 a description of the graphical features wanted for a set of points (eg. markers, subtree, popups, ...)
 #' @export
 #' @return a lm_obj object
-#'
-#' @examples
-#' data("eukaryotes_1000")
-#' LM <- build_Lifemap(eukaryotes_1000, basemap = "fr")
-#'
-#' lifemap(LM) + lm_markers()
-#' lifemap(LM) + lm_branches() + lm_discret() + lm_markers()
 "+.lifemap_obj" <- function(e1,e2) {
   if (is.lm_markers(e2)){
     if (is.null(e2$var_fillColor)) {

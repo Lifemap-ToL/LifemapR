@@ -8,11 +8,6 @@
 #' @export
 #'
 #' @importFrom stats complete.cases
-#'
-#' @examples
-#'
-#' LM <- build_Lifemap(eukaryotes_1000)
-#' make_newick(LM$df)
 make_newick<-function(df) { #df must contain, a minima, a column "taxid" and a column "ancestor"
   mat<-cbind(df$ancestor, df$taxid)
 

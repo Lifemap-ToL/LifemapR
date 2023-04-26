@@ -120,9 +120,8 @@ get_direct_ancestor <- function(df) {
 #' @importFrom dplyr bind_rows distinct
 #'
 #' @export
-#'
-#' @examples
-#' data("eukaryotes_1000")
+#' @example
+#' data(eukaryotes_1000)
 #' LM <- build_Lifemap(eukaryotes_1000, "fr")
 build_Lifemap <- function(df, basemap = c("fr","ncbi", "base","virus"), verbose=TRUE) {
   basemap <- match.arg(arg = basemap, choices = basemap)
