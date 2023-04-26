@@ -233,6 +233,7 @@ draw_Lifemap <- function(lm_obj){
       df <- merge(df, new_df, by.x = "taxid", by.y = "tax")
     }
   }
+  print("information has been successfully passed")
 
   ui <- shiny::fluidPage(
     shiny::tags$style(type = "text/css", "html, body {width:100%;height:100%}"),
@@ -259,6 +260,7 @@ draw_Lifemap <- function(lm_obj){
 
     # output of the map
     output$mymap <- leaflet::renderLeaflet({
+      print("rendering basemap")
       m <- display_map(df,basemap = basemap) |> leaflet::fitBounds(~min(lon), ~min(lat), ~max(lon), ~max(lat))
 
       for (i in 1:length(aes)) {
@@ -336,6 +338,8 @@ draw_Lifemap <- function(lm_obj){
 
     # modification of the map to display the rights markers
     shiny::observe({
+
+      print("adding new markers")
 
       # clearing all the already existing shapes/markers/controls
       proxy <- leaflet::leafletProxy("mymap", session=session)
