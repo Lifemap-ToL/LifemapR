@@ -4,12 +4,18 @@
 \name{LifemapR-package}
 \alias{LifemapR}
 \alias{LifemapR-package}
-\title{LifemapR: What the Package Does (One Line, Title Case)}
+\title{LifemapR: Data Visualisation on 'Lifemap' Tree}
 \description{
-What the package does (one paragraph).
+Allow to visualise datas on the NCBI phylogenetic tree as presented in Lifemap '\url{http://lifemap.univ-lyon1.fr/}'. It takes an input a dataframe with at least a "taxid" column containing NCBI format TaxIds and allow to draw multiple layers with different visualisation tools.
 }
 \author{
-\strong{Maintainer}: First Last \email{first.last@example.com} (\href{https://orcid.org/YOUR-ORCID-ID}{ORCID})
+\strong{Maintainer}: Aurélie Siberchicot \email{aurelie.siberchicot@univ-lyon1.fr} [contributor]
+
+Authors:
+\itemize{
+  \item Cassandra Bompard \email{cassbomp68@gmail.com}
+  \item Damien M. de Vienne \email{damien.de-vienne@univ-lyon1.fr}
+}
 
 }
 \keyword{internal}

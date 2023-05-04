@@ -192,15 +192,19 @@ draw_Lifemap <- function(lm_obj){
   basemap <- lm_obj$basemap
   aes <- lm_obj$aes
 
-  print("making matrixes")
-  M <- create_matrix(df)
-  M_discrete <- M
+  variables <- c()
+  for (i in 1:length(aes)){
+    for (param in aes[[i]]){
+      if ((is.character(param)) && param %in% colnames(df)){
+        variables <- append(variables, param)
+      }
+    }
+  }
+  variables <- unique(variables)
 
-  # M_discrete <- create_matrix_discret(df)
-  print("done")
-
-  all_ancestors <- unique(unlist(df$ascend))
-  leaves <- df[!(df$taxid %in% all_ancestors),"taxid"]
+  if (length(variables) > 0) {
+    M <- create_matrix(df, variables)
+  }
 
   cat("passing the information to the nodes \n")
   #pass the information to the nodes or not
@@ -211,32 +215,33 @@ draw_Lifemap <- function(lm_obj){
 
         if (!(is.null(parameter)) && is.character(parameter) && parameter %in% colnames(df)) {
           new_df <- pass_infos(M = M,
-                               values = as.vector(df[df$type == "requested", parameter]),
-                               ancestors = unique(unlist(df[df$type == "requested", "ascend"])),
-                               my_func = aes[[i]]$FUN)
-          for (id in 1:nrow(new_df)) {
-            df[df$taxid == new_df[id, "ancestors"], parameter]<- new_df[id, ]$value
+                               FUN = aes[[i]]$FUN,
+                               value = parameter)
+          for (id in names(new_df)) {
+            df[df$taxid == id, parameter] <- new_df[id]
           }
         }
       }
-
     } else if (is.lm_branches(aes[[i]]) && !(is.null(aes[[i]]$var_color))) {
       new_df <- pass_infos(M = M,
-                           values = as.vector(df[df$type == "requested",aes[[i]]$var_color]),
-                           ancestors = unique(unlist(df[df$type == "requested","ascend"])),
-                           my_func = aes[[i]]$FUN)
-      for (id in 1:nrow(new_df)) {
-        df[df$taxid == new_df[id, "ancestors"], aes[[i]]$var_color]<- new_df[id, ]$value
+                           FUN = aes[[i]]$FUN,
+                           value = aes[[i]]$var_color)
+      for (id in names(new_df)) {
+        df[df$taxid == id, aes[[i]]$var_color] <- new_df[id]
       }
 
-    } else if (is.lm_discret(aes[[i]])) {
-      new_df <- pass_infos_discret(M = M_discrete,
-                                   values = df[df$type == "requested", aes[[i]]$param],
-                                   tax = df$taxid)
-      df <- merge(df, new_df, by.x = "taxid", by.y = "tax")
     }
+    # else if (is.lm_discret(aes[[i]])) {
+    #   new_df <- pass_infos_discret(M = M_discrete,
+    #                                values = df[df$type == "requested", aes[[i]]$param],
+    #                                tax = df$taxid)
+    #   df <- merge(df, new_df, by.x = "taxid", by.y = "tax")
+    # }
   }
-  print("information has been successfully passed")
+
+
+
+
 
   ui <- shiny::fluidPage(
     shiny::tags$style(type = "text/css", "html, body {width:100%;height:100%}"),
@@ -263,44 +268,13 @@ draw_Lifemap <- function(lm_obj){
 
     # output of the map
     output$mymap <- leaflet::renderLeaflet({
-      print("rendering basemap")
       m <- display_map(df,basemap = basemap) |> leaflet::fitBounds(~min(lon), ~min(lat), ~max(lon), ~max(lat))
 
+      # adding legends if needed
       for (i in 1:length(aes)) {
 
         if (is.lm_markers(aes[[i]])) {
 
-          if (aes[[i]]$legend == TRUE) {
-
-            if (aes[[i]]$radius %in% colnames(df)) {
-              m <- m |>
-                leaflegend::addLegendSize(values = min(df[[aes[[i]]$radius]], na.rm = TRUE):max(df[[aes[[i]]$radius]], na.rm = TRUE),
-                                          color = aes[[i]]$color,
-                                          opacity = aes[[i]]$legendOpacity,
-                                          fillOpacity = 0,
-                                          title = aes[[i]]$radius,
-                                          shape = "circle",
-                                          orientation = aes[[i]]$legendOrientation,
-                                          baseSize = (aes[[i]]$min + ((aes[[i]]$max - aes[[i]]$min) / 2)) * 2,
-                                          position = aes[[i]]$legendPosition)
-            }
-            if (aes[[i]]$fillColor %in% colnames(df)) {
-              make_fillColor <- leaflet::colorNumeric(aes[[i]]$fillColor_pal, df[[aes[[i]]$fillColor]])
-
-              m <- m |> leaflet::addLegend(position = "bottomright",
-                                            title = aes[[i]]$fillColor,
-                                            pal = make_fillColor,
-                                            values = df[[aes[[i]]$fillColor]])
-            }
-            if (aes[[i]]$color %in% colnames(df)) {
-              make_color <- leaflet::colorNumeric(aes[[i]]$color_pal, df[[aes[[i]]$color]])
-
-              m <- m |> leaflet::addLegend(position = "bottomright",
-                                            title = aes[[i]]$color,
-                                            pal = make_color,
-                                            values = df[[aes[[i]]$color]])
-              }
-          }
           if (!(aes[[i]]$display %in% "auto")) {
             if (aes[[i]]$display == "requested") {
               df_visible <- df[df$type == "requested",]
@@ -323,6 +297,38 @@ draw_Lifemap <- function(lm_obj){
               stop("you are trying to draw to many points at a time, maybe you shoud try other options")
               }
           }
+
+          if (aes[[i]]$legend == TRUE) {
+
+            if (aes[[i]]$radius %in% colnames(df)) {
+              m <- m |>
+                leaflegend::addLegendSize(values = min(df[[aes[[i]]$radius]], na.rm = TRUE):max(df[[aes[[i]]$radius]], na.rm = TRUE),
+                                          color = aes[[i]]$color,
+                                          opacity = aes[[i]]$legendOpacity,
+                                          fillOpacity = 0,
+                                          title = aes[[i]]$radius,
+                                          shape = "circle",
+                                          orientation = aes[[i]]$legendOrientation,
+                                          baseSize = (aes[[i]]$min + ((aes[[i]]$max - aes[[i]]$min) / 2)) * 2,
+                                          position = aes[[i]]$legendPosition)
+            }
+            if ((!is.null(aes[[i]]$var_fillColor)) && aes[[i]]$var_fillColor %in% colnames(df)) {
+              make_fillColor <- leaflet::colorNumeric(aes[[i]]$fillColor, df[[aes[[i]]$var_fillColor]])
+
+              m <- m |> leaflet::addLegend(position = "bottomright",
+                                            title = aes[[i]]$var_fillColor,
+                                            pal = make_fillColor,
+                                            values = df[[aes[[i]]$var_fillColor]])
+            }
+            if ((!is.null(aes[[i]]$var_color)) && aes[[i]]$var_color %in% colnames(df)) {
+              make_color <- leaflet::colorNumeric(aes[[i]]$color, df[[aes[[i]]$var_color]])
+
+              m <- m |> leaflet::addLegend(position = "bottomright",
+                                            title = aes[[i]]$var_color,
+                                            pal = make_color,
+                                            values = df[[aes[[i]]$var_color]])
+              }
+          }
         } else if (is.lm_branches(aes[[i]])) {
           if (!(is.null(aes[[i]]$var_color))) {
             make_color <- leaflet::colorNumeric(aes[[i]]$color, df[[aes[[i]]$var_color]])
@@ -341,8 +347,6 @@ draw_Lifemap <- function(lm_obj){
 
     # modification of the map to display the rights markers
     shiny::observe({
-
-      print("adding new markers")
 
       # clearing all the already existing shapes/markers/controls
       proxy <- leaflet::leafletProxy("mymap", session=session)
