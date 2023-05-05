@@ -164,6 +164,52 @@ add_lm_discretes <- function(proxy, aes, df, df_visible, layer) {
   proxy
 }
 
+
+
+display_option <- function(m, aes, df, type, leaves, i){
+
+  if (aes$display == "requested") {
+    df_visible <- df[df$type == "requested",]
+  } else if (aes$display == "all") {
+    df_visible <- df
+  } else if (aes$display == "leaves") {
+    df_visible <- df[df$taxid %in% leaves,]
+  }
+  ancestors <- unique(unlist(df[df$taxid %in% aes$taxids[[1]],"ascend"]))
+  all_taxids <- c(df[df$taxid %in% aes$taxids[[1]],"taxid"], ancestors)
+  if (!(is.null(aes$taxids))) {
+    df_visible = df_visible[df_visible$taxid %in% all_taxids,]
+  }
+  if (nrow(df_visible) < 5000){
+
+    if (type == "markers") {
+      m <- m |>
+        add_lm_markers(aes = aes, df = df,
+                       df_visible = df_visible,
+                       group_info = as.character(i))
+    } else if (type == "discret") {
+      m <- m |>
+        add_lm_discretes(aes = aes, df = df,
+                       df_visible = df_visible,
+                       layer = as.character(i))
+    }
+  } else {
+    stop("you are trying to draw to many points at a time, maybe you shoud try another options")
+  }
+  return(m)
+}
+
+
+
+
+
+
+
+
+
+
+
+
 #' Represent continuous datas on a Lifemap background
 #'
 #' @description
@@ -191,6 +237,9 @@ draw_Lifemap <- function(lm_obj){
   df <- lm_obj$df
   basemap <- lm_obj$basemap
   aes <- lm_obj$aes
+
+  all_ancestors <- unique(unlist(df$ascend))
+  leaves <- df[!(df$taxid %in% all_ancestors), "taxid"]
 
   variables <- c()
   for (i in 1:length(aes)){
@@ -266,36 +315,18 @@ draw_Lifemap <- function(lm_obj){
 
     # output of the map
     output$mymap <- leaflet::renderLeaflet({
-      m <- display_map(df,basemap = basemap) |> leaflet::fitBounds(~min(lon), ~min(lat), ~max(lon), ~max(lat))
+      m <- display_map(df, basemap = basemap) |> leaflet::fitBounds(~min(lon), ~min(lat), ~max(lon), ~max(lat))
 
-      # adding legends if needed
       for (i in 1:length(aes)) {
 
         if (is.lm_markers(aes[[i]])) {
 
+          # if particular display option, it is drawn now
           if (!(aes[[i]]$display %in% "auto")) {
-            if (aes[[i]]$display == "requested") {
-              df_visible <- df[df$type == "requested",]
-            } else if (aes[[i]]$display == "all") {
-              df_visible <- df
-            } else if (aes[[i]]$display == "leaves") {
-              df_visible <- df[df$taxid %in% leaves,]
-            }
-            if (!(is.null(aes[[i]]$taxids))) {
-              ancestors <- unique(unlist(df[df$taxid %in% aes[[i]]$taxids[[1]],"ascend"]))
-              all_taxids <- c(df[df$taxid %in% aes[[i]]$taxids[[1]],"taxid"], ancestors)
-              df_visible = df_visible[df_visible$taxid %in% all_taxids,]
-            }
-            if (nrow(df_visible) < 5000) {
-              m <- m |>
-                add_lm_markers(aes = aes[[i]], df = df,
-                               df_visible = df_visible,
-                               group_info = as.character(i))
-            } else {
-              stop("you are trying to draw to many points at a time, maybe you shoud try other options")
-              }
+            m <- display_option(m = m, aes = aes[[i]], df = df, type = "markers", leaves = leaves, i = i)
           }
 
+          # ading legend if necessary
           if (aes[[i]]$legend == TRUE) {
 
             if (aes[[i]]$radius %in% colnames(df)) {
@@ -336,6 +367,10 @@ draw_Lifemap <- function(lm_obj){
                                           pal = make_color,
                                           values = df[[aes[[i]]$var_color]])
           }
+        } else if (is.lm_discret(aes[[i]])){
+          if (!(aes[[i]]$display %in% "auto")) {
+            m <- display_option(m = m, aes = aes[[i]], df = df, type = "discret", leaves = leaves, i = i)
+          }
         }
 
       }
@@ -353,7 +388,7 @@ draw_Lifemap <- function(lm_obj){
       for (i in 1:length(aes)){
 
 
-        # for each aesthetic, if a sub dataset is given, compute the right taxids
+        # for each aesthetic, if a sub dataset is given, compute the right taxids to be used
         ancestors <- unique(unlist(df[df$taxid %in% aes[[i]]$taxids[[1]],"ascend"]))
         all_taxids <- c(df[df$taxid %in% aes[[i]]$taxids[[1]],"taxid"], ancestors)
         if (!(is.null(aes[[i]]$taxids))) {
@@ -373,12 +408,13 @@ draw_Lifemap <- function(lm_obj){
             add_lm_branches(aes = aes[[i]], df = df,
                             df_visible = df_visible,
                             df_descendants = df_descendants(),
-                            group_info = as.character(i), all_taxids = all_taxids)
+                            group_info = as.character(i),
+                            all_taxids = all_taxids)
 
 
 
           # adding charts if aes[[i]] is an lm_discret object
-        } else if(is.lm_discret(aes[[i]]) && nrow(df_visible) > 0) {
+        } else if(is.lm_discret(aes[[i]]) && nrow(df_visible) > 0 && aes[[i]]$display %in% "auto") {
           proxy <- leaflet.minicharts::clearMinicharts(proxy) |>
             add_lm_discretes(aes = aes[[i]], df = df,
                                     df_visible = df_visible,

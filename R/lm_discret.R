@@ -22,9 +22,11 @@ lm_discret <- function(data = NULL,
                        showLabels = FALSE,
                        pal = "Accent",
                        legend = TRUE,
-                       legendPosition = c("topright", "bottomright", "bottomleft", "topleft")) {
+                       legendPosition = c("topright", "bottomright", "bottomleft", "topleft"),
+                       display = c("auto", "requested", "all", "leaves")) {
   type <- match.arg(arg = type, choices = type)
   legendPosition <- match.arg(arg = legendPosition, choices = legendPosition)
+  display <- match.arg(display)
 
   if (!(is.null(data))) {
     taxids <- I(list(c(data$taxid)))
@@ -33,7 +35,7 @@ lm_discret <- function(data = NULL,
   res <- list(taxids = taxids, param = param,
               type = type, width = width, opacity = opacity,
               showLabels = showLabels, pal = pal,
-              legend = legend, legendPosition = legendPosition)
+              legend = legend, legendPosition = legendPosition, display = display)
   class(res)=c("lifemap_obj", "lm_discret", "list")
   return(res)
 }
