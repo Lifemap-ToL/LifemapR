@@ -230,13 +230,11 @@ draw_Lifemap <- function(lm_obj){
         df[df$taxid == id, aes[[i]]$var_color] <- new_df[id]
       }
 
+    } else if (is.lm_discret(aes[[i]])) {
+      new_df <- pass_infos_discret(M = M,
+                                   value = aes[[i]]$param)
+      df <- merge(df, new_df, by.x = "taxid", by.y = "taxid")
     }
-    # else if (is.lm_discret(aes[[i]])) {
-    #   new_df <- pass_infos_discret(M = M_discrete,
-    #                                values = df[df$type == "requested", aes[[i]]$param],
-    #                                tax = df$taxid)
-    #   df <- merge(df, new_df, by.x = "taxid", by.y = "tax")
-    # }
   }
 
 

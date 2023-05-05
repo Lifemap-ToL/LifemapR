@@ -21,7 +21,7 @@ lm_discret <- function(data = NULL,
                        opacity = 1,
                        showLabels = FALSE,
                        pal = "Accent",
-                       legend=TRUE,
+                       legend = TRUE,
                        legendPosition = c("topright", "bottomright", "bottomleft", "topleft")) {
   type <- match.arg(arg = type, choices = type)
   legendPosition <- match.arg(arg = legendPosition, choices = legendPosition)
