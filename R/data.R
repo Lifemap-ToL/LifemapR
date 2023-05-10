@@ -26,4 +26,5 @@
 #'
 #'
 #' }
+#' @usage data(eukaryotes_1000)
 "eukaryotes_1000"
