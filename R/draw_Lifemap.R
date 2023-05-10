@@ -166,6 +166,16 @@ add_lm_discretes <- function(proxy, aes, df, df_visible, layer) {
 
 
 
+#' compute the different display options
+#'
+#' @param m a map
+#' @param aes the aesthetics
+#' @param df a dataframe containing all the taxids
+#' @param type c("markers", "discret")
+#' @param leaves vector of all terminal taxids
+#' @param i index of the aesthetics
+#'
+#' @return a map
 display_option <- function(m, aes, df, type, leaves, i){
 
   if (aes$display == "requested") {
@@ -229,9 +239,8 @@ display_option <- function(m, aes, df, type, leaves, i){
 #' ## Only run examples in interactive R sessions
 #' if (interactive()) {
 #' data(LM_eukaryotes)
-#' lifemap(LM_eukaryotes) + lm_markers()
+#' lifemap(LM_eukaryotes) + lm_markers() + lm_branches()
 #' }
-
 draw_Lifemap <- function(lm_obj){
 
   df <- lm_obj$df

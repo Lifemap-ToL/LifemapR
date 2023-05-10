@@ -36,6 +36,14 @@
 #'
 #' @return a list containing all aesthetics informations for one serie of markers
 #' @export
+#'
+#' @examples
+#' data(LM_eukaryotes)
+#'
+#' lm_markers(data = LM_eukaryotes$df[LM_eukaryotes$df$Group %in% "Plants", ])
+#'
+#' lm_markers(radius = "GC.", var_fillColor = "Genes")
+#'
 lm_markers <- function(data = NULL,
                        radius = 20,
                        min = 20,

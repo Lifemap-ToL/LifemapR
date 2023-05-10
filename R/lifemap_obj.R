@@ -8,10 +8,19 @@
 #'
 #' @return NA
 #' @export
+#' @examples
+#' ## Only run examples in interactive R sessions
+#' if (interactive()) {
+#' data(LM_eukaryotes)
+#' print(LM_eukaryotes)
+#' }
 print.lifemap_obj <- function(x,...) {
-  if (is.null(x$aes)) {
+  if (is.null(x$aes) && !is.null(x$df)) {
     cat('The dataframe contains', nrow(x$df),'rows and', ncol(x$df), 'columns. \n')
     cat('The basemap used is :', x$basemap,'\n')
+  } else if (is.null(x$df)){
+    class(x) <- "list"
+    print(x)
   } else {
     print(draw_Lifemap(x))
   }
@@ -21,6 +30,14 @@ print.lifemap_obj <- function(x,...) {
 #' Reports whether x is a lm_obj object
 #' @param x the object to test
 #' @export
+#'
+#' @examples
+#' ## Only run examples in interactive R sessions
+#' if (interactive()) {
+#' data(LM_eukaryotes)
+#' is.lifemap_obj(LM_eukaryotes)
+#' }
+#'
 is.lifemap_obj <- function(x) inherits(x, "lifemap_obj")
 
 #' Add a graphical element to a tree visualisation
@@ -28,6 +45,14 @@ is.lifemap_obj <- function(x) inherits(x, "lifemap_obj")
 #' @param e2 a description of the graphical features wanted for a set of points (eg. markers, subtree, popups, ...)
 #' @export
 #' @return a lm_obj object
+#'
+#' @examples
+#' ## Only run examples in interactive R sessions
+#' if (interactive()) {
+#' data(LM_eukaryotes)
+#' LM_obj <- lifemap(LM_eukaryotes) + lm_markers() + lm_branches()
+#' }
+#'
 "+.lifemap_obj" <- function(e1,e2) {
   if (is.lm_markers(e2)){
     if (is.null(e2$var_fillColor)) {

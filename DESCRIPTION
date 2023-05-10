@@ -1,7 +1,7 @@
 Package: LifemapR
 Title: Data Visualisation on 'Lifemap' Tree
 Version: 0.0.0.9000
-Imports: leaflet, leaflegend, shiny, jsonlite, dplyr, leaflet.minicharts, purrr, stringr
+Imports: leaflet, leaflegend, shiny, jsonlite, dplyr, leaflet.minicharts, purrr
 Authors@R: c(
     person("Cassandra", "Bompard", role = "aut", email = "cassbomp68@gmail.com"),
     person("Damien M.", "de Vienne", role = "aut", email = "damien.de-vienne@univ-lyon1.fr"),

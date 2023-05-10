@@ -17,7 +17,6 @@ url_verification <- function(basemap_url, t = 20){
 #'
 #' @param taxids a vector of TaxIDs to be requested
 #' @param basemap the name of the basemap wanted to represent the datas on (can be "ncbi", "fr" ...)
-#' @param core The core to be requested either "taxo" (for position informations) or "addi" (ascendance informations)
 #'
 #' @return a dataframe containing all the informations requested from the database
 request_database_new <- function(taxids, basemap) {
@@ -71,26 +70,6 @@ request_database_new <- function(taxids, basemap) {
 }
 
 
-#' Add the direct ancestor for each taxa of the dataframe
-#'
-#' @param df a dataframe with requested taxid and the full ascendance information
-#'
-#' @return a dataframe with the direct ancestor for each taxa
-#'
-#' @importFrom purrr reduce
-get_direct_ancestor <- function(df) {
-  df_ancestry <- apply(df[df$type=="requested",],1,function(x) {
-    vec <- c(as.numeric(x$taxid), unlist(x$ascend))
-    cbind(vec[-length(vec)], vec[-1])
-  })
-  df_ancestry <- purrr::reduce(df_ancestry, rbind, by = colnames(df_ancestry)[2])
-  df_ancestry <- unique(df_ancestry)
-  colnames(df_ancestry) <- c("descendant", "ancestor")
-  df_tot <- merge(df, df_ancestry, by.x = "taxid", by.y = "descendant")
-}
-
-
-
 #' A function to construct a LifemapR object, usable by other functions
 #'
 #' @param df a dataframe containing at least a column named "taxid"
@@ -112,10 +91,10 @@ get_direct_ancestor <- function(df) {
 #' @importFrom dplyr bind_rows distinct
 #'
 #' @export
-#' @example
+#' @examples
 #' data(eukaryotes_1000)
-#' LM <- build_Lifemap(eukaryotes_1000, "fr")
-build_Lifemap_new <- function(df, basemap = c("fr","ncbi", "base","virus"), verbose=TRUE) {
+#' LM <- build_Lifemap_new(eukaryotes_1000, "ncbi")
+build_Lifemap_new <- function(df, basemap = c("ncbi","fr", "base","virus"), verbose=TRUE) {
   basemap <- match.arg(arg = basemap, choices = basemap)
 
   if (is.null(df$taxid)) {

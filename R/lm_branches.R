@@ -9,6 +9,14 @@
 #'
 #' @return a lifemap object
 #' @export
+#'
+#' @examples
+#' data(LM_eukaryotes)
+#'
+#' lm_branches(var_color = "GC.", color = "Accent")
+#'
+#' lm_branches(data = LM_eukaryotes$df[LM_eukaryotes$df$Group %in% "Plants",])
+#'
 lm_branches <- function(data = NULL,
                         color = NULL,
                         var_color = NULL,

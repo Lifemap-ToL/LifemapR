@@ -1,7 +1,7 @@
 #' add a layer to a Lifemap object
 #'
 #' @param data a sub dataset to use, if NULL then all of the taxids from the lifemap object given to lifemap() will be used
-#' @param param the discret variable to be represented
+#' @param param a string indicating the discret variable to be represented
 #' @param type the type of chart to draw
 #' @param width the maximal width of the charts
 #' @param height the maximal height of the charts
@@ -10,9 +10,22 @@
 #' @param pal the palette to be used for the charts
 #' @param legend whether to draw the legend or not
 #' @param legendPosition where should the legend be placed
+#' @param display c("auto", "requested", "all", "leaves"), a string indicating how to display points :
+#' - "auto" : the markers are displayed depending on the zoom, by default, allow to have a lot of points
+#' - "requested" : only display the requested taxa, but all at the same time
+#' - "all" : display all the taxa including all the ancestors to the root
+#' - "leaves" : display only the last (most recent) taxa
 #'
 #' @return a lifemap object
 #' @export
+#'
+#' @examples
+#' data(LM_eukaryotes)
+#'
+#' lm_discret(param = "Status")
+#'
+#' lm_discret(data = LM_eukaryotes$df[LM_eukaryotes$df$Group %in% "Plants", ], param = "Status")
+#'
 lm_discret <- function(data = NULL,
                        param,
                        type = c("pie","bar", "polar-area", "polar-radius", "auto"),
