@@ -142,7 +142,7 @@ add_lm_branches <- function(proxy, aes, df, df_visible, df_descendants, group_in
 #' @importFrom leaflet colorFactor
 #'
 #' @return a list of values
-add_lm_discretes <- function(proxy, aes, df, df_visible, layer) {
+add_lm_piecharts <- function(proxy, aes, df, df_visible, layer) {
   values <- unique(df[df$type == "requested", aes$param])
   layerId_info <- sapply(X = 1:nrow(df_visible), FUN = function(x){paste(layer,x,collapse="", sep="")})
   make_col <- leaflet::colorFactor(aes$pal, values)
@@ -199,7 +199,7 @@ display_option <- function(m, aes, df, type, leaves, i){
                        group_info = as.character(i))
     } else if (type == "discret") {
       m <- m |>
-        add_lm_discretes(aes = aes, df = df,
+        add_lm_piecharts(aes = aes, df = df,
                        df_visible = df_visible,
                        layer = as.character(i))
     }
@@ -288,7 +288,7 @@ draw_Lifemap <- function(lm_obj){
         df[df$taxid == id, aes[[i]]$var_color] <- new_df[id]
       }
 
-    } else if (is.lm_discret(aes[[i]])) {
+    } else if (is.lm_piecharts(aes[[i]])) {
       new_df <- pass_infos_discret(M = M,
                                    value = aes[[i]]$param)
       df <- merge(df, new_df, by.x = "taxid", by.y = "taxid")
@@ -376,7 +376,7 @@ draw_Lifemap <- function(lm_obj){
                                           pal = make_color,
                                           values = df[[aes[[i]]$var_color]])
           }
-        } else if (is.lm_discret(aes[[i]])){
+        } else if (is.lm_piecharts(aes[[i]])){
           if (!(aes[[i]]$display %in% "auto")) {
             m <- display_option(m = m, aes = aes[[i]], df = df, type = "discret", leaves = leaves, i = i)
           }
@@ -422,10 +422,10 @@ draw_Lifemap <- function(lm_obj){
 
 
 
-          # adding charts if aes[[i]] is an lm_discret object
-        } else if(is.lm_discret(aes[[i]]) && nrow(df_visible) > 0 && aes[[i]]$display %in% "auto") {
+          # adding charts if aes[[i]] is an lm_piecharts object
+        } else if(is.lm_piecharts(aes[[i]]) && nrow(df_visible) > 0 && aes[[i]]$display %in% "auto") {
           proxy <- leaflet.minicharts::clearMinicharts(proxy) |>
-            add_lm_discretes(aes = aes[[i]], df = df,
+            add_lm_piecharts(aes = aes[[i]], df = df,
                                     df_visible = df_visible,
                                     layer = as.character(i))
 

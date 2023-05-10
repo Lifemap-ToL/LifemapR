@@ -22,11 +22,11 @@
 #' @examples
 #' data(LM_eukaryotes)
 #'
-#' lm_discret(param = "Status")
+#' lm_piecharts(param = "Status")
 #'
-#' lm_discret(data = LM_eukaryotes$df[LM_eukaryotes$df$Group %in% "Plants", ], param = "Status")
+#' lm_piecharts(data = LM_eukaryotes$df[LM_eukaryotes$df$Group %in% "Plants", ], param = "Status")
 #'
-lm_discret <- function(data = NULL,
+lm_piecharts <- function(data = NULL,
                        param,
                        type = c("pie","bar", "polar-area", "polar-radius", "auto"),
                        width = 30,
@@ -49,11 +49,11 @@ lm_discret <- function(data = NULL,
               type = type, width = width, opacity = opacity,
               showLabels = showLabels, pal = pal,
               legend = legend, legendPosition = legendPosition, display = display)
-  class(res)=c("lifemap_obj", "lm_discret", "list")
+  class(res)=c("lifemap_obj", "lm_piecharts", "list")
   return(res)
 }
 
 #' Reports whether x is a lm_branches object
 #' @param x the object to test
 #' @export
-is.lm_discret <- function(x) {inherits(x, "lm_discret")}
+is.lm_piecharts <- function(x) {inherits(x, "lm_piecharts")}
