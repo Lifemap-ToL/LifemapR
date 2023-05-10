@@ -63,14 +63,10 @@ LifemapR::lm_branches(col = "Genes", FUN = "mean")
 
 ## Development
 
-Functions : 
-- [x] Display The Lifemap base (choice between 'fr' and 'ncbi') -> display_map()
-- [x] Transform the given dataframe to a format usable by future functions -> construct_dataframe() 
-- [x] Display the trace between TaxIDs 
-    - \+ [ ] generate a Newick subtree
-- [x] Represent continuous datas (like GC-content) with Shiny -> add_Lifemap_markers()
-- [x] Passing information along the branches -> pass_infos()
-- [ ] Represent discret datas (like Status in the NCBI data format)
+To do list : 
+- [ ] Implement popups and labels
+- [ ] black background on leaflet
+- [ ] repair the size legend
 
 
 ### How to use during development
