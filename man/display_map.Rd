@@ -4,13 +4,17 @@
 \alias{display_map}
 \title{Create a Lifemap base}
 \usage{
-display_map(df = NULL, map)
+display_map(df = NULL, basemap = c("fr", "ncbi", "base", "virus"))
 }
 \arguments{
-\item{map}{The base choose to display, either \itemize{
+\item{df}{a dataframe, if given, the columns can be easily accessed with "~" (eg. ~GC.)}
+
+\item{basemap}{The base choose to display, either \itemize{
 \itemize{
 \item 'fr' for \url{https://lifemap-fr.univ-lyon1.fr/}
-\item 'ncbi' for \url{https://lifemap-ncbi.univ-lyon1.fr/} }
+\item 'ncbi' for \url{https://lifemap-ncbi.univ-lyon1.fr/}
+\item 'base' for \url{https://lifemap.univ-lyon1.fr/}
+\item 'virus' for \url{https://virusmap.univ-lyon1.fr/} }
 }}
 }
 \value{
@@ -21,5 +25,5 @@ This function create a blank Leaflet map using the leaflet function from the lea
 if a dataframe is provided, it will be used for the creation of the map object
 }
 \examples{
-display_map("fr")
+display_map()
 }
