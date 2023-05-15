@@ -34,7 +34,7 @@ create_value_range <- function(value, df, df2, min, max){
 add_lm_markers <- function(proxy, aes, df, df_visible, group_info) {
 
   if (!(is.null(aes$var_fillColor))) {
-    make_fillColor <- leaflet::colorNumeric(palette = aes$fillColor, domain = df[[aes$var_fillColor]])
+    make_fillColor <- leaflet::colorNumeric(palette = aes$fillColor, domain = df[[aes$var_fillColor]], reverse = TRUE)
     fillColor_info <- make_fillColor(df_visible[[aes$var_fillColor]])
   } else { fillColor_info <- aes$fillColor }
 
@@ -66,12 +66,6 @@ add_lm_markers <- function(proxy, aes, df, df_visible, group_info) {
   # fill opacity
   fillOpacity_info <- create_value_range(aes$fillOpacity, df, df_visible, 0.1, 1)
 
-  # my_icons <- makeSymbolIcons(shape="star", color = fillColor_info, width = radius_info, opacity = fillOpacity_info)
-  #
-  # proxy <- leaflet::addMarkers(proxy,
-  #                              lng = df_visible$lon,
-  #                              lat = df_visible$lat,
-  #                              icon = my_icons)
 
   proxy <- leaflet::addCircleMarkers(proxy,
                                      lng = df_visible$lon,
@@ -351,7 +345,7 @@ draw_Lifemap <- function(lm_obj){
                                           position = aes[[i]]$legendPosition)
             }
             if ((!is.null(aes[[i]]$var_fillColor)) && aes[[i]]$var_fillColor %in% colnames(df)) {
-              make_fillColor <- leaflet::colorNumeric(aes[[i]]$fillColor, df[[aes[[i]]$var_fillColor]])
+              make_fillColor <- leaflet::colorNumeric(aes[[i]]$fillColor, df[[aes[[i]]$var_fillColor]], reverse = TRUE)
 
               m <- m |> leaflet::addLegend(position = "bottomright",
                                             title = aes[[i]]$var_fillColor,
@@ -436,14 +430,14 @@ draw_Lifemap <- function(lm_obj){
     })
 
     # functions to add popups
-    showSciName <- function(taxid, lng, lat) {
-      selectedId <- df[round(df$lon, digits=6) == round(lng,digits=6) & round(df$lat, digits=6) == round(lat, digits = 6),]
-      content <- as.character(selectedId$taxid)
-      for (i in 1:length(aes)) {
-        new_string <- paste(aes[[i]]$fillColor," : ", selectedId[[aes[[i]]$fillColor]], sep="")
-        content <- paste(content,new_string, sep="\n")
+    showSciName_popup <- function(group, lng, lat) {
+      if(!is.null(aes[[as.numeric(group)]]$popup)){
+        selectedId <- df[round(df$lon, digits=6) == round(lng,digits=6) & round(df$lat, digits=6) == round(lat, digits = 6),]
+        content <- as.character(selectedId$taxid)
+        content <- paste(content, ",", aes[[as.numeric(group)]]$popup, ":", selectedId[[aes[[as.numeric(group)]]$popup]])
+        leafletProxy("mymap") |> leaflet::addPopups(lng, lat, content)
+
       }
-      leafletProxy("mymap") |> leaflet::addPopups(lng, lat, content)
     }
 
     # when clicking on a marker, show a popup
@@ -454,7 +448,7 @@ draw_Lifemap <- function(lm_obj){
         return()
 
       shiny::isolate({
-        showSciName(event$id, event$lng, event$lat)
+        showSciName_popup(event$group, event$lng, event$lat)
       })
     })
 

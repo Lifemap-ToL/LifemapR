@@ -46,8 +46,8 @@
 #'
 lm_markers <- function(data = NULL,
                        radius = 20,
-                       min = 20,
-                       max = 50,
+                       min = 10,
+                       max = 40,
                        fillColor = NULL,
                        var_fillColor = NULL,
                        fillOpacity = 0.8,
@@ -61,7 +61,9 @@ lm_markers <- function(data = NULL,
                        legendOrientation = c("vertical", "horizontal"),
                        legendOpacity = 0.5,
                        FUN = NULL,
-                       display = c("auto", "requested", "all", "leaves")) {
+                       display = c("auto", "requested", "all", "leaves"),
+                       popup = NULL,
+                       label = NULL) {
   legendPosition <- match.arg(legendPosition)
   legendOrientation <- match.arg(legendOrientation)
   display <- match.arg(display)
@@ -77,7 +79,7 @@ lm_markers <- function(data = NULL,
               var_fillColor = var_fillColor, var_color = var_color,
               legend = legend, legendPosition = legendPosition,
               legendOrientation = legendOrientation, legendOpacity = legendOpacity,
-              display = display)
+              display = display, popup = popup, label = label)
   class(res)=c("lifemap_obj", "lm_markers", "list")
   return(res)
 }

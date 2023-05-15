@@ -62,7 +62,7 @@ is.lifemap_obj <- function(x) inherits(x, "lifemap_obj")
     } else {
       e2$var_fillColor <- match.arg(arg = e2$var_fillColor, choices = colnames(e1$df))
       if (is.null(e2$fillColor)){
-        e2$fillColor <- "Accent"
+        e2$fillColor <- "RdBu"
       }
     }
     if (is.null(e2$var_color)) {
@@ -72,7 +72,7 @@ is.lifemap_obj <- function(x) inherits(x, "lifemap_obj")
     } else {
       e2$var_color <- match.arg(arg = e2$var_color, choices = colnames(e1$df))
       if (is.null(e2$color)){
-        e2$color <- "viridis"
+        e2$color <- "RdBu"
       }
     }
     for (aes in c("radius", "opacity", "weight", "fillOpacity")){
@@ -88,7 +88,7 @@ is.lifemap_obj <- function(x) inherits(x, "lifemap_obj")
     } else {
       e2$var_color <- match.arg(arg = e2$var_color, choices = colnames(e1$df))
       if (is.null(e2$color)){
-        e2$color <- "Accent"
+        e2$color <- "RdBu"
       }
     }
   } else if (is.lm_piecharts(e2)) {
