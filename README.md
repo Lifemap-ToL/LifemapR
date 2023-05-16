@@ -70,6 +70,8 @@ To do list :
 - [ ] Repair the size legend
 - [ ] Improve make_newick function
 - [ ] Improve create_matrix function to remove dplyr dependance 
+- [ ] New protocole to fetch the datas on the solr database
+- [ ] Shiny application
 
 ### How to use during development
 
