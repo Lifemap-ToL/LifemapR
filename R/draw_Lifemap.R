@@ -66,19 +66,35 @@ add_lm_markers <- function(proxy, aes, df, df_visible, group_info) {
   # fill opacity
   fillOpacity_info <- create_value_range(aes$fillOpacity, df, df_visible, 0.1, 1)
 
-
-  proxy <- leaflet::addCircleMarkers(proxy,
-                                     lng = df_visible$lon,
-                                     lat = df_visible$lat,
-                                     radius = radius_info,
-                                     fillColor = fillColor_info,
-                                     fillOpacity = fillOpacity_info,
-                                     stroke = stroke_info,
-                                     color = color_info,
-                                     opacity = opacity_info,
-                                     weight = weight_info,
-                                     group =group_info
-  )
+  ### to improve ###
+  if (is.null(aes$label)) {
+    proxy <- leaflet::addCircleMarkers(proxy,
+                                       lng = df_visible$lon,
+                                       lat = df_visible$lat,
+                                       radius = radius_info,
+                                       fillColor = fillColor_info,
+                                       fillOpacity = fillOpacity_info,
+                                       stroke = stroke_info,
+                                       color = color_info,
+                                       opacity = opacity_info,
+                                       weight = weight_info,
+                                       group = group_info
+    )
+  } else if (length(df_visible[[aes$label]]) > 0){
+    proxy <- leaflet::addCircleMarkers(proxy,
+                                       lng = df_visible$lon,
+                                       lat = df_visible$lat,
+                                       radius = radius_info,
+                                       fillColor = fillColor_info,
+                                       fillOpacity = fillOpacity_info,
+                                       stroke = stroke_info,
+                                       color = color_info,
+                                       opacity = opacity_info,
+                                       weight = weight_info,
+                                       group = group_info,
+                                       label = df_visible[[aes$label]]
+    )
+  }
   proxy
 
 }
@@ -204,16 +220,6 @@ display_option <- function(m, aes, df, type, leaves, i){
 }
 
 
-
-
-
-
-
-
-
-
-
-
 #' Represent continuous datas on a Lifemap background
 #'
 #' @description
@@ -294,6 +300,16 @@ draw_Lifemap <- function(lm_obj){
 
 
   ui <- shiny::fluidPage(
+    tags$head(
+      tags$style(
+        HTML(".leaflet-container {
+             background: #000000;
+             outline: 0;
+            }
+           ")
+      )),
+
+
     shiny::tags$style(type = "text/css", "html, body {width:100%;height:100%}"),
     leaflet::leafletOutput("mymap", width = "100%", height = "1000px"),
     shiny::p()
@@ -451,6 +467,8 @@ draw_Lifemap <- function(lm_obj){
         showSciName_popup(event$group, event$lng, event$lat)
       })
     })
+
+
 
   }
 

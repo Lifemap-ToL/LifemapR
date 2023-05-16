@@ -64,14 +64,15 @@ LifemapR::lm_branches(col = "Genes", FUN = "mean")
 ## Development
 
 To do list : 
-- [x] Implement popups 
-- [ ] Implement labels
-- [ ] Black background on leaflet
+- [x] Implement popups and labels for markers
+- [ ] Implement popups and labels for polylines
+- [x] Black background on leaflet
 - [ ] Repair the size legend
 - [ ] Improve make_newick function
 - [ ] Improve create_matrix function to remove dplyr dependance 
 - [ ] New protocole to fetch the datas on the solr database
 - [ ] Shiny application
+- [ ] Option to thicker the line depending on a variable
 
 ### How to use during development
 
