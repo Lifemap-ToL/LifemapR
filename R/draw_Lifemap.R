@@ -236,7 +236,8 @@ display_option <- function(m, aes, df, type, leaves, i){
 #' @export
 #' @importFrom dplyr left_join
 #' @importFrom shiny fluidPage reactive observe shinyApp isolate
-#' @importFrom leaflet leafletOutput renderLeaflet fitBounds leafletProxy addPopups clearMarkers clearShapes clearControls colorNumeric colorFactor clearPopups addPolylines clearGroup
+#' @importFrom htmltools tags HTML
+#' @importFrom leaflet leafletOutput renderLeaflet fitBounds leafletProxy addPopups clearMarkers clearShapes clearControls colorNumeric colorFactor clearPopups addPolylines clearGroup addLegend
 #' @importFrom leaflegend addLegendSize addSymbolsSize
 #' @importFrom leaflet.minicharts clearMinicharts
 #'

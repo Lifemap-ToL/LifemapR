@@ -4,7 +4,7 @@
 \alias{lifemap}
 \title{create a new Lifemap visualisation}
 \usage{
-lifemap(lm_obj)
+lifemap(lm_obj, zoom = 4)
 }
 \arguments{
 \item{lm_obj}{Lifemap object used for data visualisation}
