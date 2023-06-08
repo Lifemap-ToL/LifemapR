@@ -45,7 +45,7 @@
 #' lm_markers(radius = "GC.", var_fillColor = "Genes")
 #'
 lm_markers <- function(data = NULL,
-                       radius = 20,
+                       radius = 10,
                        min = 10,
                        max = 40,
                        fillColor = NULL,
@@ -54,7 +54,7 @@ lm_markers <- function(data = NULL,
                        stroke = FALSE,
                        color = NULL,
                        var_color = NULL,
-                       weight = 3,
+                       weight = 1,
                        opacity = 0.8,
                        legend = TRUE,
                        legendPosition = c("topright", "bottomright", "bottomleft", "topleft"),

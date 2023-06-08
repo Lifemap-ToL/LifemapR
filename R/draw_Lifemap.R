@@ -34,10 +34,14 @@ create_value_range <- function(value, df, df2, min, max){
 add_lm_markers <- function(proxy, aes, df, df_visible, group_info) {
 
   if (!(is.null(aes$var_fillColor))) {
-    make_fillColor <- leaflet::colorNumeric(palette = aes$fillColor, domain = df[[aes$var_fillColor]], reverse = TRUE)
-    fillColor_info <- make_fillColor(df_visible[[aes$var_fillColor]])
+    if (is.numeric(df[[aes$var_fillColor]])){
+      make_fillColor <- leaflet::colorNumeric(palette = aes$fillColor, domain = df[[aes$var_fillColor]], reverse = TRUE)
+      fillColor_info <- make_fillColor(df_visible[[aes$var_fillColor]])
+    } else {
+      make_fillColor <- leaflet::colorFactor(palette = aes$fillColor, domain = df[[aes$var_fillColor]], reverse = TRUE)
+      fillColor_info <- make_fillColor(df_visible[[aes$var_fillColor]])
+    }
   } else { fillColor_info <- aes$fillColor }
-
 
   radius_info <- create_value_range(aes$radius, df, df_visible, aes$min, aes$max)
 
@@ -114,7 +118,7 @@ add_lm_markers <- function(proxy, aes, df, df_visible, group_info) {
 #' @return a list of values
 add_lm_branches <- function(proxy, aes, df, df_visible, df_descendants, group_info, all_taxids) {
   if (!(is.null(aes$var_color))) {
-    make_col <- leaflet::colorNumeric(palette = aes$color, domain = df[[aes$var_color]])
+    make_col <- leaflet::colorNumeric(palette = aes$color, domain = df[[aes$var_color]], reverse = TRUE)
   }
 
   for (id in df_visible$taxid) {
@@ -134,8 +138,9 @@ add_lm_branches <- function(proxy, aes, df, df_visible, df_descendants, group_in
                                      lat = c(df_visible[df_visible$taxid == id, "lat"],
                                              descendants_visible[descendants_visible$taxid == desc, "lat"]),
                                      color = col_info,
-                                     opacity = 0.7,
-                                     group = group_info)
+                                     opacity = 0.5,
+                                     group = group_info,
+                                     weight = 3)
     }
   }
   proxy
@@ -246,6 +251,7 @@ draw_Lifemap <- function(lm_obj){
   df <- lm_obj$df
   basemap <- lm_obj$basemap
   aes <- lm_obj$aes
+  zoom_level <- lm_obj$options$zoom
 
   all_ancestors <- unique(unlist(df$ascend))
   leaves <- df[!(df$taxid %in% all_ancestors), "taxid"]
@@ -319,7 +325,7 @@ draw_Lifemap <- function(lm_obj){
 
     # define the zone visible by the users
     df_zoom_bounds <- shiny::reactive(
-      df[df$zoom <= (input$mymap_zoom + 4) &
+      df[df$zoom <= (input$mymap_zoom + zoom_level) &
            df$lat > input$mymap_bounds$south &
            df$lat < input$mymap_bounds$north &
            df$lon > input$mymap_bounds$west &
@@ -331,6 +337,25 @@ draw_Lifemap <- function(lm_obj){
       visibles <- df_zoom_bounds()$taxid
       df[df$ancestor %in% visibles,]
     })
+
+    addLegendCustom <- function(map, colors, labels, sizes, shapes, borders, opacity = 0.5, title, position){
+
+      make_shapes <- function(colors, sizes, borders, shapes) {
+        shapes <- gsub("circle", "50%", shapes)
+        shapes <- gsub("square", "0%", shapes)
+        paste0(colors, "; width:", sizes, "px; height:", sizes, "px; border:3px solid ", borders, "; border-radius:", shapes)
+      }
+      make_labels <- function(sizes, labels) {
+        paste0("<div style='display: inline-block;height: ",
+               sizes, "px;margin-top: 4px;line-height: ",
+               sizes, "px;'>", labels, "</div>")
+      }
+
+      legend_colors <- make_shapes(colors, sizes, borders, shapes)
+      legend_labels <- make_labels(sizes, labels)
+
+      return(addLegend(map, colors = legend_colors, labels = legend_labels, opacity = opacity, title = title, position = position))
+    }
 
     # output of the map
     output$mymap <- leaflet::renderLeaflet({
@@ -349,19 +374,35 @@ draw_Lifemap <- function(lm_obj){
           if (aes[[i]]$legend == TRUE) {
 
             if (aes[[i]]$radius %in% colnames(df)) {
-              m <- m |>
-                leaflegend::addLegendSize(values = min(df[[aes[[i]]$radius]], na.rm = TRUE):max(df[[aes[[i]]$radius]], na.rm = TRUE),
-                                          color = aes[[i]]$color,
-                                          opacity = aes[[i]]$legendOpacity,
-                                          fillOpacity = 0,
-                                          title = aes[[i]]$radius,
-                                          shape = "circle",
-                                          orientation = aes[[i]]$legendOrientation,
-                                          baseSize = (aes[[i]]$min + ((aes[[i]]$max - aes[[i]]$min) / 2)) * 2,
-                                          position = aes[[i]]$legendPosition)
+              part = (max(df[[aes[[i]]$radius]], na.rm = TRUE) - min(df[[aes[[i]]$radius]], na.rm = TRUE)) / 4
+              part_vector <- c(min(df[[aes[[i]]$radius]], na.rm = TRUE),
+                               min(df[[aes[[i]]$radius]], na.rm = TRUE) + part,
+                               min(df[[aes[[i]]$radius]], na.rm = TRUE) + part * 2,
+                               min(df[[aes[[i]]$radius]], na.rm = TRUE) + part * 3,
+                               max(df[[aes[[i]]$radius]], na.rm = TRUE))
+
+              old_min <- min(df[[aes[[i]]$radius]], na.rm = TRUE)
+              old_max <- max(df[[aes[[i]]$radius]], na.rm = TRUE)
+              old_range <- old_max - old_min
+              new_range <- aes[[i]]$max - aes[[i]]$min
+
+              colors <- c("white", "white", "white", "white", "white")
+              labels <- as.character(part_vector)
+              sizes <- sapply(part_vector, FUN = function(x){(((x - old_min) * new_range) / old_range) + aes[[i]]$min})
+              sizes <- sizes * 2
+              shapes <- c("circle", "circle", "circle", "circle", "circle")
+              borders <- c("black", "black", "black", "black", "black")
+
+              m <- m |> addLegendCustom(colors, labels, sizes, shapes, borders,
+                                        title = as.character(aes[[i]]$radius),
+                                        position = aes[[i]]$legendPosition)
             }
             if ((!is.null(aes[[i]]$var_fillColor)) && aes[[i]]$var_fillColor %in% colnames(df)) {
-              make_fillColor <- leaflet::colorNumeric(aes[[i]]$fillColor, df[[aes[[i]]$var_fillColor]], reverse = TRUE)
+              if (is.numeric(df[[aes[[i]]$var_fillColor]])){
+                make_fillColor <- leaflet::colorNumeric(palette = aes[[i]]$fillColor, domain = df[[aes[[i]]$var_fillColor]], reverse = TRUE)
+              } else {
+                make_fillColor <- leaflet::colorFactor(palette = aes[[i]]$fillColor, domain = df[[aes[[i]]$var_fillColor]], reverse = TRUE)
+              }
 
               m <- m |> leaflet::addLegend(position = "bottomright",
                                             title = aes[[i]]$var_fillColor,
@@ -379,7 +420,7 @@ draw_Lifemap <- function(lm_obj){
           }
         } else if (is.lm_branches(aes[[i]])) {
           if (!(is.null(aes[[i]]$var_color))) {
-            make_color <- leaflet::colorNumeric(aes[[i]]$color, df[[aes[[i]]$var_color]])
+            make_color <- leaflet::colorNumeric(aes[[i]]$color, df[[aes[[i]]$var_color]], reverse = TRUE)
 
             m <- m |> leaflet::addLegend(position = "bottomright",
                                           title = paste("subtree : ", aes[[i]]$var_color, sep = "", collapse = ""),

@@ -8,6 +8,8 @@
 #'
 #' @return a lifemap object
 #' @export
-lifemap <- function(lm_obj) {
+lifemap <- function(lm_obj,
+                    zoom = 4) {
+  lm_obj$options <- list(zoom = zoom)
   return(lm_obj)
 }

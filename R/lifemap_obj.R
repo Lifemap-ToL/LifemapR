@@ -67,7 +67,7 @@ is.lifemap_obj <- function(x) inherits(x, "lifemap_obj")
     }
     if (is.null(e2$var_color)) {
       if (is.null(e2$color)){
-        e2$color <- "blue"
+        e2$color <- "black"
       }
     } else {
       e2$var_color <- match.arg(arg = e2$var_color, choices = colnames(e1$df))
