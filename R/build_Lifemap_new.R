@@ -117,33 +117,26 @@ build_Lifemap_new <- function(df, basemap = c("ncbi","fr", "base","virus"), verb
     stop("None of the TaxIDs given were found in the database")
   }
 
-  not_found <- c()
-  if (nrow(df_distinct) != nrow(DATA_REQUEST)) {
-    not_found <- c()
-    for (id in df_distinct$taxid) {
-      if (!(id %in% DATA_REQUEST$taxid)) {
-        not_found <- append(not_found, id)
-      }
-    }
-  }
-
-  # if the root was in the requested taxids, add it now so as not to lose any information
+  # if the root was in the requested taxids, re add it now so as not to lose any information
   if (0 %in% df$taxid) {
-    not_found <- not_found[not_found != 0]
-    LUCA <- data.frame(taxid = "0", lon = 0, lat = -4.226497, sci_name = "Luca", zoom = 5)
+    # not_found <- not_found[not_found != 0]
+    LUCA <- data.frame(taxid = "0", lon = 0, lat = -4.226497, zoom = 5)
     DATA_REQUEST <- dplyr::bind_rows(DATA_REQUEST, LUCA)
   }
 
-  if (length(not_found) == 1) {
-    warning(sprintf(
-      "%s TaxID was not found. The following TaxID was not found in the database : %s",
-      length(not_found), paste(not_found, collapse = ",")
-    ))
-  } else if (length(not_found) > 0) {
-    warning(sprintf(
-      "%s TaxIDs were not found. The following TaxIDs were not found in the database : %s",
-      length(not_found), paste(not_found, collapse = ",")
-    ))
+  if (nrow(df_distinct) != nrow(DATA_REQUEST)) {
+    not_found <- setdiff(df_distinct$taxid, DATA_REQUEST$taxid)
+    if (length(not_found) == 1) {
+      warning(sprintf(
+        "%s TaxID was not found. The following TaxID was not found in the database : %s",
+        length(not_found), paste(not_found, collapse = ",")
+      ))
+    } else if (length(not_found) > 0) {
+      warning(sprintf(
+        "%s TaxIDs were not found. The following TaxIDs were not found in the database : %s",
+        length(not_found), paste(not_found, collapse = ",")
+      ))
+    }
   }
 
   INFOS_DATA <- merge(df_distinct, DATA_REQUEST, by.x = "taxid", by.y = "taxid")
@@ -169,15 +162,21 @@ build_Lifemap_new <- function(df, basemap = c("ncbi","fr", "base","virus"), verb
   INFOS_DATA <- dplyr::bind_rows(INFOS_DATA, ANCESTORS)
   LUCA <- INFOS_DATA[INFOS_DATA$taxid == "0",]
 
-  INFOS_DATA$ancestor <- sapply(INFOS_DATA$ascend, "[[", 1)
+
 
   if (!(0 %in% df$taxid)) {
-    LUCA <- data.frame(taxid="0",lon=0, lat=-4.226497,sci_name="Luca",zoom=5, type="ancestor")
+    INFOS_DATA$ancestor <- sapply(INFOS_DATA$ascend, "[[", 1)
+    LUCA <- data.frame(taxid = "0", lon = 0, lat = -4.226497, zoom = 5, type = "ancestor", ancestor = NA)
+    INFOS_DATA <- dplyr::bind_rows(INFOS_DATA, LUCA)
+  } else {
+    INFOS_DATA <- INFOS_DATA[order(INFOS_DATA$taxid),]
+    INFOS_DATA$ancestor <- sapply(INFOS_DATA$ascend, "[[", 1)
+    INFOS_DATA$ancestor <- c(NA, unlist(INFOS_DATA$ancestor))
   }
 
-  FINAL_DATA <- dplyr::bind_rows(INFOS_DATA, LUCA)
+  # FINAL_DATA <- dplyr::bind_rows(INFOS_DATA, LUCA)
 
-  lm_obj <- list(df = FINAL_DATA, basemap = basemap)
+  lm_obj <- list(df = INFOS_DATA, basemap = basemap)
   class(lm_obj) <- c("lifemap_obj", "list")
 
   return(lm_obj)
