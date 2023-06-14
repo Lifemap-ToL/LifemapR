@@ -8,7 +8,10 @@ lm_branches(
   data = NULL,
   color = NULL,
   var_color = NULL,
-  FUN = mean,
+  size = 5,
+  min = 2,
+  max = 20,
+  FUN = NULL,
   legend = TRUE,
   legendPosition = c("topright", "bottomright", "bottomleft", "topleft")
 )
@@ -20,7 +23,13 @@ lm_branches(
 
 \item{var_color}{a column name of the original dataframe to represent this variable by the color of branches}
 
-\item{FUN}{the function to be applied if col represent a variable}
+\item{size}{either a numeric for the branche's thickness or a variable to be représented by the branche's thickness}
+
+\item{min}{an integer indicating the minimal thickness of the branches if the size represent a variable}
+
+\item{max}{an integer indicating the maximal thickness of the branches if the size represent a variable}
+
+\item{FUN}{the function to be applied to infer values}
 
 \item{legend}{a logical indicating whether or not to display the legend}
 

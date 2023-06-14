@@ -121,16 +121,28 @@ add_lm_branches <- function(proxy, aes, df, df_visible, df_descendants, group_in
     make_col <- leaflet::colorNumeric(palette = aes$color, domain = df[[aes$var_color]], reverse = TRUE)
   }
 
+  if (aes$size %in% colnames(df)) {
+    old_min <- min(df[[aes$size]], na.rm = TRUE)
+    old_max <- max(df[[aes$size]], na.rm = TRUE)
+    old_range <- old_max - old_min
+    new_range <- aes$max - aes$min
+  }
+
+  if (!(is.null(aes$taxids))) {
+    descendants_visible <- df_descendants[df_descendants$taxid %in% all_taxids, ]
+  } else { descendants_visible = df_descendants }
+
   for (id in df_visible$taxid) {
     # for each descendant of each taxid
-    for (desc in df_descendants[df_descendants$ancestor == id, ]$taxid) {
+
+    for (desc in descendants_visible[descendants_visible$ancestor == id, ]$taxid) {
       if (!(is.null(aes$var_color))) {
-        col_info <- make_col(df_descendants[df_descendants$taxid == desc, aes$var_color])
+        col_info <- make_col(descendants_visible[descendants_visible$taxid == desc, aes$var_color])
       } else { col_info <- aes$color}
 
-      if (!(is.null(aes$taxids))) {
-        descendants_visible <- df_descendants[df_descendants$taxid %in% all_taxids, ]
-      } else { descendants_visible = df_descendants }
+      if (aes$size %in% colnames(df)){
+        size_info <- (((descendants_visible[descendants_visible$taxid == desc, aes$size] - old_min) * new_range) / old_range) + aes$min
+      }
 
       proxy <- leaflet::addPolylines(proxy,
                                      lng = c(df_visible[df_visible$taxid == id, "lon"],
@@ -139,8 +151,9 @@ add_lm_branches <- function(proxy, aes, df, df_visible, df_descendants, group_in
                                              descendants_visible[descendants_visible$taxid == desc, "lat"]),
                                      color = col_info,
                                      opacity = 0.5,
+                                     fillOpacity = 0.5,
                                      group = group_info,
-                                     weight = 3)
+                                     weight = size_info)
     }
   }
   proxy
@@ -287,14 +300,17 @@ draw_Lifemap <- function(lm_obj){
           }
         }
       }
-    } else if (is.lm_branches(aes[[i]]) && !(is.null(aes[[i]]$var_color))) {
-      new_df <- pass_infos(M = M,
-                           FUN = aes[[i]]$FUN,
-                           value = aes[[i]]$var_color)
-      for (id in names(new_df)) {
-        df[df$taxid == id, aes[[i]]$var_color] <- new_df[id]
+    } else if (is.lm_branches(aes[[i]]) && !(is.null(aes[[i]]$FUN))) {
+      for (parameter in aes[[i]]){
+        if (!(is.null(parameter)) && is.character(parameter) && parameter %in% colnames(df)) {
+          new_df <- pass_infos(M = M,
+                               FUN = aes[[i]]$FUN,
+                               value = parameter)
+          for (id in names(new_df)) {
+            df[df$taxid == id, parameter] <- new_df[id]
+          }
+        }
       }
-
     } else if (is.lm_piecharts(aes[[i]])) {
       new_df <- pass_infos_discret(M = M,
                                    value = aes[[i]]$param)
