@@ -4,11 +4,11 @@
 #' if a dataframe is provided, it will be used for the creation of the map object
 #'
 #' @param df a dataframe, if given, the columns can be easily accessed with "~" (eg. ~GC.)
-#' @param basemap The base choose to display, either \itemize{
+#' @param basemap The base choose to display, either 
 #' - 'fr' for \url{https://lifemap-fr.univ-lyon1.fr/}
 #' - 'ncbi' for \url{https://lifemap-ncbi.univ-lyon1.fr/}
 #' - 'base' for \url{https://lifemap.univ-lyon1.fr/}
-#' - 'virus' for \url{https://virusmap.univ-lyon1.fr/} }
+#' - 'virus' for \url{http://virusmap.univ-lyon1.fr/}
 #'
 #' @return HTML widget object  with graphics layers
 #' @export

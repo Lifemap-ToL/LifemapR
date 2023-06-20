@@ -9,12 +9,12 @@ display_map(df = NULL, basemap = c("fr", "ncbi", "base", "virus"))
 \arguments{
 \item{df}{a dataframe, if given, the columns can be easily accessed with "~" (eg. ~GC.)}
 
-\item{basemap}{The base choose to display, either \itemize{
+\item{basemap}{The base choose to display, either
 \itemize{
 \item 'fr' for \url{https://lifemap-fr.univ-lyon1.fr/}
 \item 'ncbi' for \url{https://lifemap-ncbi.univ-lyon1.fr/}
 \item 'base' for \url{https://lifemap.univ-lyon1.fr/}
-\item 'virus' for \url{https://virusmap.univ-lyon1.fr/} }
+\item 'virus' for \url{http://virusmap.univ-lyon1.fr/}
 }}
 }
 \value{
