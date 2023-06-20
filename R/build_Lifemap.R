@@ -118,6 +118,7 @@ get_direct_ancestor <- function(df) {
 #'
 #' @importFrom jsonlite fromJSON
 #' @importFrom dplyr bind_rows distinct
+#' @importFrom rlang .data
 #'
 #' @export
 #' @examples
@@ -130,7 +131,7 @@ build_Lifemap <- function(df, basemap = c("fr","ncbi", "base","virus"), verbose=
     stop('The dataframe must at least contain a "taxid" column')
   }
 
-  df_distinct <- dplyr::distinct(df, taxid, .keep_all = TRUE)
+  df_distinct <- dplyr::distinct(df, .data$taxid, .keep_all = TRUE)
   if (!(nrow(df_distinct) == nrow(df))) {
     warning(sprintf("%s duplicated TaxIDs were removed \n",nrow(df)-nrow(df_distinct)))
   }

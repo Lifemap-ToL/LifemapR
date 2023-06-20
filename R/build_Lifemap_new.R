@@ -89,6 +89,7 @@ request_database_new <- function(taxids, basemap) {
 #'
 #' @importFrom jsonlite fromJSON
 #' @importFrom dplyr bind_rows distinct
+#' @importFrom rlang .data
 #'
 #' @export
 #' @examples
@@ -101,7 +102,7 @@ build_Lifemap_new <- function(df, basemap = c("ncbi","fr", "base","virus"), verb
     stop('The dataframe must at least contain a "taxid" column')
   }
 
-  df_distinct <- dplyr::distinct(df,taxid, .keep_all = TRUE)
+  df_distinct <- dplyr::distinct(df, .data$taxid, .keep_all = TRUE)
   if (!(nrow(df_distinct) == nrow(df))) {
     warning(sprintf("%s duplicated TaxIDs were removed \n",nrow(df)-nrow(df_distinct)))
   }
