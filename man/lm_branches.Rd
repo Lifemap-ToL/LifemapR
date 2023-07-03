@@ -11,6 +11,7 @@ lm_branches(
   size = 5,
   min = 2,
   max = 20,
+  opacity = 0.5,
   FUN = NULL,
   legend = TRUE,
   legendPosition = c("topright", "bottomright", "bottomleft", "topleft")
@@ -28,6 +29,8 @@ lm_branches(
 \item{min}{an integer indicating the minimal thickness of the branches if the size represent a variable}
 
 \item{max}{an integer indicating the maximal thickness of the branches if the size represent a variable}
+
+\item{opacity}{an integer indicating branche's opacity}
 
 \item{FUN}{the function to be applied to infer values}
 
