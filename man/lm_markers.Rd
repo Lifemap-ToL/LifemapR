@@ -71,6 +71,10 @@ lm_markers(
 }
 
 (WARNING : "requested" and "auto" shouldn't be used to display more than 1000 markers as it may result in long computing time)}
+
+\item{popup}{a column name indicating what to display when clicking on a node}
+
+\item{label}{a column name indiacting what to display when hovering on a node}
 }
 \value{
 a list containing all aesthetics informations for one serie of markers

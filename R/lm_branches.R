@@ -6,6 +6,7 @@
 #' @param size either a numeric for the branche's thickness or a variable to be représented by the branche's thickness
 #' @param min an integer indicating the minimal thickness of the branches if the size represent a variable
 #' @param max an integer indicating the maximal thickness of the branches if the size represent a variable
+#' @param opacity an integer indicating branche's opacity
 #' @param FUN the function to be applied to infer values
 #' @param legend a logical indicating whether or not to display the legend
 #' @param legendPosition c("topright", "bottomright", "bottomleft", "topleft"), the position of the legend
@@ -26,6 +27,7 @@ lm_branches <- function(data = NULL,
                         size = 5,
                         min = 2,
                         max = 20,
+                        opacity = 0.5,
                         FUN = NULL,
                         legend=TRUE,
                         legendPosition = c("topright", "bottomright", "bottomleft", "topleft")) {
@@ -36,9 +38,29 @@ lm_branches <- function(data = NULL,
     taxids <- I(list(c(data$taxid)))
   } else { taxids <- NULL}
 
-  res <- list(taxids = taxids, color = color,
-              FUN = FUN, var_color = var_color,
-              size = size, min = min, max = max,
+  if (is.null(var_color)){
+    var_color <- "default"
+  }
+  palette <- NULL
+  if (var_color %in% "default") {
+    if (is.null(color)) {
+      color <- "yellow"
+    }
+  } else {
+    if (is.null(color)) {
+      palette <- "RdBu"
+    } else { palette <- color }
+  }
+
+  value <- NULL
+  if (is.numeric(size)){
+    value <- size
+    size <- "default"
+  }
+
+  res <- list(taxids = taxids, color = color, palette = palette,
+              FUN = FUN, var_color = var_color, value = value,
+              size = size, min = min, max = max, opacity = opacity,
               legend = legend, legendPosition = legendPosition)
   class(res)=c("lifemap_obj", "lm_branches", "list")
   return(res)

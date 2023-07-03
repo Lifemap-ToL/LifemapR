@@ -55,40 +55,16 @@ is.lifemap_obj <- function(x) inherits(x, "lifemap_obj")
 #'
 "+.lifemap_obj" <- function(e1,e2) {
   if (is.lm_markers(e2)){
-    if (is.null(e2$var_fillColor)) {
-      if (is.null(e2$fillColor)){
-        e2$fillColor <- "red"
-      }
-    } else {
-      e2$var_fillColor <- match.arg(arg = e2$var_fillColor, choices = colnames(e1$df))
-      if (is.null(e2$fillColor)){
-        e2$fillColor <- "RdBu"
-      }
-    }
-    if (is.null(e2$var_color)) {
-      if (is.null(e2$color)){
-        e2$color <- "black"
-      }
-    } else {
-      e2$var_color <- match.arg(arg = e2$var_color, choices = colnames(e1$df))
-      if (is.null(e2$color)){
-        e2$color <- "RdBu"
-      }
-    }
-    for (aes in c("radius", "opacity", "weight", "fillOpacity")){
-      if (is.character(e2[[aes]])) {
+    for (aes in c("radius", "var_fillColor", "var_color", "fillOpacity")){
+      if (is.character(e2[[aes]]) && !(e2[[aes]] %in% "default")) {
         e2[[aes]] <- match.arg(arg = e2[[aes]], choices = colnames(e1$df))
       }
     }
+
   } else if (is.lm_branches(e2)){
-    if (is.null(e2$var_color)) {
-      if (is.null(e2$color)){
-        e2$color <- "yellow"
-      }
-    } else {
-      e2$var_color <- match.arg(arg = e2$var_color, choices = colnames(e1$df))
-      if (is.null(e2$color)){
-        e2$color <- "RdBu"
+    for (aes in c("var_color", "size")){
+      if (is.character(e2[[aes]]) && !(e2[[aes]] %in% "default")) {
+        e2[[aes]] <- match.arg(arg = e2[[aes]], choices = colnames(e1$df))
       }
     }
   } else if (is.lm_piecharts(e2)) {

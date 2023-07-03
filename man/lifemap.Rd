@@ -8,6 +8,8 @@ lifemap(lm_obj, zoom = 4)
 }
 \arguments{
 \item{lm_obj}{Lifemap object used for data visualisation}
+
+\item{zoom}{the level of zoom for which values are displayed (if zoom = 0 only the nodes at the current zoom level or lower can have their values displayed)}
 }
 \value{
 a lifemap object

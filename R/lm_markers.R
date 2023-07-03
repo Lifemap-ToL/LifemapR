@@ -34,6 +34,9 @@
 #'
 #' (WARNING : "requested" and "auto" shouldn't be used to display more than 1000 markers as it may result in long computing time)
 #'
+#' @param popup a column name indicating what to display when clicking on a node
+#' @param label a column name indiacting what to display when hovering on a node
+#'
 #' @return a list containing all aesthetics informations for one serie of markers
 #' @export
 #'
@@ -71,10 +74,45 @@ lm_markers <- function(data = NULL,
   if (!(is.null(data))) {
     taxids <- I(list(c(data$taxid)))
   } else { taxids <- NULL}
-  res <- list(taxids = taxids, radius = radius,
-              fillColor = fillColor, min = min,
+
+  if (is.null(var_fillColor)){
+    var_fillColor <- "default"
+  }
+  fillPalette <- NULL
+  if (var_fillColor %in% "default") {
+    if (is.null(fillColor)) {
+      fillColor <- "red"
+    }
+  } else {
+    if (is.null(fillColor)) {
+      fillPalette <- "RdBu"
+    } else { fillPalette <- fillColor }
+  }
+
+  if (is.null(var_color)){
+    var_color <- "default"
+  }
+  palette <- NULL
+  if (var_color %in% "default") {
+    if (is.null(color)) {
+      color <- "black"
+    }
+  } else {
+    if (is.null(color)) {
+      palette <- "RdBu"
+    } else { palette <- color }
+  }
+
+  value <- NULL
+  if (is.numeric(radius)){
+    value <- radius
+    radius <- "default"
+  }
+
+  res <- list(taxids = taxids, radius = radius, value = value,
+              fillColor = fillColor, fillPalette = fillPalette, min = min,
               max = max, FUN = FUN, stroke = stroke,
-              color = color, weight = weight,
+              color = color, palette = palette, weight = weight,
               opacity = opacity, fillOpacity = fillOpacity,
               var_fillColor = var_fillColor, var_color = var_color,
               legend = legend, legendPosition = legendPosition,
