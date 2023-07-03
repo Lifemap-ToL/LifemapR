@@ -26,7 +26,7 @@ create_matrix <- function(df, cols){
   colnames(new_df) <- c("descendant", "ancestor")
   if (!is.null(cols)) {
     for (var in cols) {
-      new_df <- dplyr::full_join(new_df, df[,c("taxid", var)], by = dplyr::join_by(descendant == taxid))
+      new_df <- dplyr::full_join(new_df, df[,c("taxid", var)], by = dplyr::join_by("descendant" == "taxid"))
     }
 
   }
