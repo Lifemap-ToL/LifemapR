@@ -11,6 +11,7 @@ lm_branches(
   size = 5,
   min = 2,
   max = 20,
+  opacity = 0.5,
   FUN = NULL,
   legend = TRUE,
   legendPosition = c("topright", "bottomright", "bottomleft", "topleft")
@@ -23,11 +24,13 @@ lm_branches(
 
 \item{var_color}{a column name of the original dataframe to represent this variable by the color of branches}
 
-\item{size}{either a numeric for the branche's thickness or a variable to be représented by the branche's thickness}
+\item{size}{either a numeric for the branche's thickness or a variable to be represented by the branche's thickness}
 
 \item{min}{an integer indicating the minimal thickness of the branches if the size represent a variable}
 
 \item{max}{an integer indicating the maximal thickness of the branches if the size represent a variable}
+
+\item{opacity}{an integer indicating branche's opacity}
 
 \item{FUN}{the function to be applied to infer values}
 

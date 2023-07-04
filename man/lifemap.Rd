@@ -15,5 +15,6 @@ lifemap(lm_obj, zoom = 4)
 a lifemap object
 }
 \description{
-initialise a lifemap object. It can be used to describe aesthetics like legend's properties ...
+Initialise a lifemap object.
+It can be used to describe aesthetics like the zoom level at which taxids becomes visible...
 }

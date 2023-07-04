@@ -35,7 +35,7 @@
 #' (WARNING : "requested" and "auto" shouldn't be used to display more than 1000 markers as it may result in long computing time)
 #'
 #' @param popup a column name indicating what to display when clicking on a node
-#' @param label a column name indiacting what to display when hovering on a node
+#' @param label a column name indicating what to display when hovering on a node
 #'
 #' @return a list containing all aesthetics informations for one serie of markers
 #' @export

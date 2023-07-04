@@ -3,7 +3,7 @@
 #' @param data a sub dataset to use, if NULL then all of the taxids from the lifemap object given to lifemap() will be used
 #' @param color either a color for the branches or a palette if a variable is used to rperesent branches' color
 #' @param var_color a column name of the original dataframe to represent this variable by the color of branches
-#' @param size either a numeric for the branche's thickness or a variable to be représented by the branche's thickness
+#' @param size either a numeric for the branche's thickness or a variable to be represented by the branche's thickness
 #' @param min an integer indicating the minimal thickness of the branches if the size represent a variable
 #' @param max an integer indicating the maximal thickness of the branches if the size represent a variable
 #' @param opacity an integer indicating branche's opacity

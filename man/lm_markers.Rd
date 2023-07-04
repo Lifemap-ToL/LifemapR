@@ -74,7 +74,7 @@ lm_markers(
 
 \item{popup}{a column name indicating what to display when clicking on a node}
 
-\item{label}{a column name indiacting what to display when hovering on a node}
+\item{label}{a column name indicating what to display when hovering on a node}
 }
 \value{
 a list containing all aesthetics informations for one serie of markers
