@@ -31,7 +31,7 @@
 #'
 #' A dataset containing NCBI informations of 1000 eukaryotes. The variables are as follows:
 #'
-#' @format A data frame with 1000 rows and 19 variables:
+#' @format A lifemap object - a list containing the basemap used to fetch datas and df, a data frame with 2760 rows and 26 variables:
 #' \describe{
 #'   \item{X.Organism.Name}{Organism name at the species level}
 #'   \item{taxid}{NCBI taxid}
@@ -67,7 +67,7 @@
 #'
 #' A dataset containing NCBI informations of 1000 eukaryotes. The variables are as follows:
 #'
-#' @format A data frame with 1000 rows and 19 variables:
+#' @format A data frame with 4427 rows and 6 variables:
 #' \describe{
 #'   \item{coverage_percent}{Percentage of fragments covered by the clade rooted at this taxon}
 #'   \item{coverage_number}{Number of fragments covered by the clade rooted at this taxon}
@@ -78,3 +78,17 @@
 #' }
 #' @usage data(kraken_res)
 "kraken_res"
+
+
+#' Genomic results
+#'
+#' A dataset containing informations on Genome size and TE content for 808 taxids
+#'
+#' @format A data frame with 808 rows and 3 variables:
+#' \describe{
+#'   \item{taxid}{NCBI taxid}
+#'   \item{Genome_size}{the Genome size in pb}
+#'   \item{TEcontent_bp}{the transposable element content in pb}
+#' }
+#' @usage data(gen_res)
+"gen_res"

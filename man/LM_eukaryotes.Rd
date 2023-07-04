@@ -5,7 +5,7 @@
 \alias{LM_eukaryotes}
 \title{Transformation in a LifemapR format of NCBI informations for 1000 eukaryotes}
 \format{
-A data frame with 1000 rows and 19 variables:
+A lifemap object - a list containing the basemap used to fetch datas and df, a data frame with 2760 rows and 26 variables:
 \describe{
 \item{X.Organism.Name}{Organism name at the species level}
 \item{taxid}{NCBI taxid}

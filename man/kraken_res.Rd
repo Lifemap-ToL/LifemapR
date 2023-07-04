@@ -5,7 +5,7 @@
 \alias{kraken_res}
 \title{Kraken results}
 \format{
-A data frame with 1000 rows and 19 variables:
+A data frame with 4427 rows and 6 variables:
 \describe{
 \item{coverage_percent}{Percentage of fragments covered by the clade rooted at this taxon}
 \item{coverage_number}{Number of fragments covered by the clade rooted at this taxon}
