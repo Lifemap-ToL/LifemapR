@@ -1,10 +1,10 @@
-#' Create a newick for the given dataset
+#' Create a newick for the given dataset.
 #'
-#' @param df a dataframe either enriched with by the build_Lifemap function or containing at least two columns :
+#' @param df A dataframe either enriched with by the build_Lifemap function or containing at least two columns :
 #' - "taxid" containing NCBI format taxids
-#' - "ancestor" containing for each taxid, it's direct ancestor in the phyogeny
+#' - "ancestor" containing for each taxid, it's direct ancestor in the phylogeny
 #'
-#' @return a character string
+#' @return A character string.
 #' @export
 #'
 #' @importFrom stats complete.cases

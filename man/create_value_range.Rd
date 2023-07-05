@@ -2,24 +2,24 @@
 % Please edit documentation in R/draw_Lifemap.R
 \name{create_value_range}
 \alias{create_value_range}
-\title{compute a new scale for a value}
+\title{Compute a new scale for a value}
 \usage{
 create_value_range(value, df, df2, min, max)
 }
 \arguments{
-\item{value}{a vector of values}
+\item{value}{A vector of values.}
 
-\item{df}{the full dataframe}
+\item{df}{The full dataframe.}
 
-\item{df2}{the dataframe containing visibles taxas}
+\item{df2}{The dataframe containing visibles taxa.}
 
-\item{min}{the new minimum of the range}
+\item{min}{The new minimum of the range.}
 
-\item{max}{the new maximum of the range}
+\item{max}{The new maximum of the range.}
 }
 \value{
-a vector of values
+A vector of values.
 }
 \description{
-compute a new scale for a value
+Compute a new scale for a value
 }

@@ -1,43 +1,41 @@
-#' add a layer to a Lifemap object
+#' add a "markers" layer to a lifemap_obj object.
 #'
 #' @description
 #' Allow to add a layer with circles that can represent data. The parameters that can be used to represent data are the following:
 #' - radius
 #' - fillColor
-#' - stroke
 #' - color
 #'
 #'
-#'
-#' @param data a sub dataset to use, if NULL then all of the taxids from the lifemap object given to lifemap() will be used
-#' @param radius either a numerical value or a column name of the original dataframe to represent this variable by the size of points
-#' @param min an integer indicating the minimal size of the points if radius represent a variable
-#' @param max an integer indicating the maximal size of the points if radius represent a variable
-#' @param fillColor either a color or a palette if the fillColor is represented by a variable
-#' @param var_fillColor a column name of the original dataframe to represent this variable by the fillColor of points
-#' @param fillOpacity a numeric indicating the fill opacity
-#' @param stroke a logical indicating whether to draw a border for points
-#' @param color the stroke color. Either a color or a palette if the stroke color is represented by a variable
-#' @param var_color a column name of the original dataframe to represent this variable by the stroke color of points
-#' @param weight stroke width in pixels
-#' @param opacity stroke opacity
-#' @param legend whether to display the legend
-#' @param legendPosition c("topright", "bottomright", "bottomleft", "topleft"),
-#' @param legendOrientation c("vertical", "horizontal"),
-#' @param legendOpacity legend's opacity (apply on the shapes in the legend, not the background itself)
-#' @param FUN the function to be applied to the variables if NULL then the information missing from the parent nodes won't be inferred
+#' @param data A sub dataset to use, if NULL then all of the taxids from the lifemap object given to lifemap() will be used.
+#' @param radius Either a numerical value or a column name of the original dataframe to represent this variable by the size of points.
+#' @param min An integer indicating the minimal size of the points if radius is a column name.
+#' @param max An integer indicating the maximal size of the points if radius is a column name.
+#' @param fillColor Either a color or a palette if the fillColor is represented by a variable.
+#' @param var_fillColor A column name of the original dataframe to represent this variable by the fillColor of points.
+#' @param fillOpacity A numeric indicating the fill opacity.
+#' @param stroke A logical indicating whether to draw a border for points.
+#' @param color The stroke color. Either a color or a palette if the stroke color is represented by a variable.
+#' @param var_color A column name of the original dataframe to represent this variable by the stroke color.
+#' @param weight The stroke width in pixels.
+#' @param opacity The stroke opacity.
+#' @param legend Whether to display the legend or not.
+#' @param legendPosition c("topright", "bottomright", "bottomleft", "topleft").
+#' @param legendOrientation c("vertical", "horizontal").
+#' @param legendOpacity Legend opacity (apply on the shapes in the legend, not the background itself).
+#' @param FUN The function to be applied to infer values. If NULL then the information missing from the parent nodes won't be inferred.
 #' @param display c("auto", "requested", "all", "leaves"), a string indicating how to display points :
 #' - "auto" : the markers are displayed depending on the zoom, by default, allow to have a lot of points
 #' - "requested" : only display the requested taxa, but all at the same time
 #' - "all" : display all the taxa including all the ancestors to the root
 #' - "leaves" : display only the last (most recent) taxa
 #'
-#' (WARNING : "requested" and "auto" shouldn't be used to display more than 1000 markers as it may result in long computing time)
+#' (WARNING : "requested", "leaves" and "auto" shouldn't be used to display more than 2000 markers as it may result in long computing time).
 #'
-#' @param popup a column name indicating what to display when clicking on a node
-#' @param label a column name indicating what to display when hovering on a node
+#' @param popup A column name indicating what to display when clicking on a node.
+#' @param label A column name indicating what to display when hovering on a node.
 #'
-#' @return a list containing all aesthetics informations for one serie of markers
+#' @return A list containing all aesthetics informations for one serie of markers.
 #' @export
 #'
 #' @examples
@@ -122,7 +120,7 @@ lm_markers <- function(data = NULL,
   return(res)
 }
 
-#' Reports whether x is a lm_markers object
-#' @param x the object to test
+#' Reports whether x is a lm_markers object.
+#' @param x The object to test.
 #' @export
 is.lm_markers <- function(x) {inherits(x, "lm_markers")}

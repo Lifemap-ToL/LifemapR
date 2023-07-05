@@ -2,7 +2,7 @@
 % Please edit documentation in R/lm_markers.R
 \name{lm_markers}
 \alias{lm_markers}
-\title{add a layer to a Lifemap object}
+\title{add a "markers" layer to a lifemap_obj object.}
 \usage{
 lm_markers(
   data = NULL,
@@ -28,39 +28,39 @@ lm_markers(
 )
 }
 \arguments{
-\item{data}{a sub dataset to use, if NULL then all of the taxids from the lifemap object given to lifemap() will be used}
+\item{data}{A sub dataset to use, if NULL then all of the taxids from the lifemap object given to lifemap() will be used.}
 
-\item{radius}{either a numerical value or a column name of the original dataframe to represent this variable by the size of points}
+\item{radius}{Either a numerical value or a column name of the original dataframe to represent this variable by the size of points.}
 
-\item{min}{an integer indicating the minimal size of the points if radius represent a variable}
+\item{min}{An integer indicating the minimal size of the points if radius is a column name.}
 
-\item{max}{an integer indicating the maximal size of the points if radius represent a variable}
+\item{max}{An integer indicating the maximal size of the points if radius is a column name.}
 
-\item{fillColor}{either a color or a palette if the fillColor is represented by a variable}
+\item{fillColor}{Either a color or a palette if the fillColor is represented by a variable.}
 
-\item{var_fillColor}{a column name of the original dataframe to represent this variable by the fillColor of points}
+\item{var_fillColor}{A column name of the original dataframe to represent this variable by the fillColor of points.}
 
-\item{fillOpacity}{a numeric indicating the fill opacity}
+\item{fillOpacity}{A numeric indicating the fill opacity.}
 
-\item{stroke}{a logical indicating whether to draw a border for points}
+\item{stroke}{A logical indicating whether to draw a border for points.}
 
-\item{color}{the stroke color. Either a color or a palette if the stroke color is represented by a variable}
+\item{color}{The stroke color. Either a color or a palette if the stroke color is represented by a variable.}
 
-\item{var_color}{a column name of the original dataframe to represent this variable by the stroke color of points}
+\item{var_color}{A column name of the original dataframe to represent this variable by the stroke color.}
 
-\item{weight}{stroke width in pixels}
+\item{weight}{The stroke width in pixels.}
 
-\item{opacity}{stroke opacity}
+\item{opacity}{The stroke opacity.}
 
-\item{legend}{whether to display the legend}
+\item{legend}{Whether to display the legend or not.}
 
-\item{legendPosition}{c("topright", "bottomright", "bottomleft", "topleft"),}
+\item{legendPosition}{c("topright", "bottomright", "bottomleft", "topleft").}
 
-\item{legendOrientation}{c("vertical", "horizontal"),}
+\item{legendOrientation}{c("vertical", "horizontal").}
 
-\item{legendOpacity}{legend's opacity (apply on the shapes in the legend, not the background itself)}
+\item{legendOpacity}{Legend opacity (apply on the shapes in the legend, not the background itself).}
 
-\item{FUN}{the function to be applied to the variables if NULL then the information missing from the parent nodes won't be inferred}
+\item{FUN}{The function to be applied to infer values. If NULL then the information missing from the parent nodes won't be inferred.}
 
 \item{display}{c("auto", "requested", "all", "leaves"), a string indicating how to display points :
 \itemize{
@@ -70,21 +70,20 @@ lm_markers(
 \item "leaves" : display only the last (most recent) taxa
 }
 
-(WARNING : "requested" and "auto" shouldn't be used to display more than 1000 markers as it may result in long computing time)}
+(WARNING : "requested", "leaves" and "auto" shouldn't be used to display more than 2000 markers as it may result in long computing time).}
 
-\item{popup}{a column name indicating what to display when clicking on a node}
+\item{popup}{A column name indicating what to display when clicking on a node.}
 
-\item{label}{a column name indicating what to display when hovering on a node}
+\item{label}{A column name indicating what to display when hovering on a node.}
 }
 \value{
-a list containing all aesthetics informations for one serie of markers
+A list containing all aesthetics informations for one serie of markers.
 }
 \description{
 Allow to add a layer with circles that can represent data. The parameters that can be used to represent data are the following:
 \itemize{
 \item radius
 \item fillColor
-\item stroke
 \item color
 }
 }

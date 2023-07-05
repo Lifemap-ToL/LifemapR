@@ -2,14 +2,14 @@
 % Please edit documentation in R/display_map.R
 \name{display_map}
 \alias{display_map}
-\title{Create a Lifemap base}
+\title{Create a Lifemap base.}
 \usage{
 display_map(df = NULL, basemap = c("fr", "ncbi", "base", "virus"))
 }
 \arguments{
-\item{df}{a dataframe, if given, the columns can be easily accessed with "~" (eg. ~GC.)}
+\item{df}{A dataframe, if given, the columns can be easily accessed with "~" (eg. ~GC.).}
 
-\item{basemap}{The base choose to display, either
+\item{basemap}{The basemap choose to display. Either
 \itemize{
 \item 'fr' for \url{https://lifemap-fr.univ-lyon1.fr/}
 \item 'ncbi' for \url{https://lifemap-ncbi.univ-lyon1.fr/}
@@ -18,11 +18,11 @@ display_map(df = NULL, basemap = c("fr", "ncbi", "base", "virus"))
 }}
 }
 \value{
-HTML widget object  with graphics layers
+HTML widget object  with graphics layers.
 }
 \description{
 This function create a blank Leaflet map using the leaflet function from the leaflet package.
-if a dataframe is provided, it will be used for the creation of the map object
+if a dataframe is provided, it will be used for the creation of the map object.
 }
 \examples{
 display_map()

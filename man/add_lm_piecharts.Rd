@@ -2,24 +2,24 @@
 % Please edit documentation in R/draw_Lifemap.R
 \name{add_lm_piecharts}
 \alias{add_lm_piecharts}
-\title{compute the aes for discret values}
+\title{Compute the aes for discret values.}
 \usage{
 add_lm_piecharts(proxy, aes, df, df_visible, layer)
 }
 \arguments{
-\item{proxy}{the map to be modified}
+\item{proxy}{The map to be modified.}
 
-\item{aes}{the dataframe containing the aesthetics informations (must be of lm_markers class)}
+\item{aes}{The dataframe containing the aesthetics informations (must be of lm_piecharts class).}
 
-\item{df}{the full dataframe}
+\item{df}{The full dataframe.}
 
-\item{df_visible}{the dataframe containing visible taxa}
+\item{df_visible}{The dataframe containing visible taxa.}
 
-\item{layer}{the points' group}
+\item{layer}{The points' group.}
 }
 \value{
-a list of values
+A list of values.
 }
 \description{
-compute the aes for discret values
+Compute the aes for discret values.
 }

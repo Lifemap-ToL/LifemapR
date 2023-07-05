@@ -2,13 +2,13 @@
 % Please edit documentation in R/lm_piecharts.R
 \name{is.lm_piecharts}
 \alias{is.lm_piecharts}
-\title{Reports whether x is a lm_branches object}
+\title{Reports whether x is a lm_branches object.}
 \usage{
 is.lm_piecharts(x)
 }
 \arguments{
-\item{x}{the object to test}
+\item{x}{The object to test.}
 }
 \description{
-Reports whether x is a lm_branches object
+Reports whether x is a lm_branches object.
 }

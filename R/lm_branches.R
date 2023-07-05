@@ -1,17 +1,17 @@
-#' add a layer to a Lifemap object
+#' Add a "branches" layer to a lifemap_obj object.
 #'
-#' @param data a sub dataset to use, if NULL then all of the taxids from the lifemap object given to lifemap() will be used
-#' @param color either a color for the branches or a palette if a variable is used to rperesent branches' color
-#' @param var_color a column name of the original dataframe to represent this variable by the color of branches
-#' @param size either a numeric for the branche's thickness or a variable to be represented by the branche's thickness
-#' @param min an integer indicating the minimal thickness of the branches if the size represent a variable
-#' @param max an integer indicating the maximal thickness of the branches if the size represent a variable
-#' @param opacity an integer indicating branche's opacity
-#' @param FUN the function to be applied to infer values
-#' @param legend a logical indicating whether or not to display the legend
-#' @param legendPosition c("topright", "bottomright", "bottomleft", "topleft"), the position of the legend
+#' @param data A sub dataset to use, if NULL then all of the taxids from the lifemap object given to lifemap() will be used.
+#' @param color Either a color for the branches or a palette if a variable is used to represent branches' color.
+#' @param var_color A column name of the original dataframe to represent this variable by the color of branches.
+#' @param size Either a numeric for the branche's thickness or a variable to be represented by the branche's thickness.
+#' @param min An integer indicating the minimal thickness of the branches if the size is a column name.
+#' @param max An integer indicating the maximal thickness of the branches if the size is a column name.
+#' @param opacity An integer indicating branche's opacity.
+#' @param FUN The function to be applied to infer values.
+#' @param legend A logical indicating whether or not to display the legend.
+#' @param legendPosition c("topright", "bottomright", "bottomleft", "topleft"), the position of the legend.
 #'
-#' @return a lifemap object
+#' @return A lifemap_obj object.
 #' @export
 #'
 #' @examples
@@ -66,7 +66,7 @@ lm_branches <- function(data = NULL,
   return(res)
 }
 
-#' Reports whether x is a lm_branches object
-#' @param x the object to test
+#' Reports whether x is a lm_branches object.
+#' @param x The object to test.
 #' @export
 is.lm_branches <- function(x) {inherits(x, "lm_branches")}

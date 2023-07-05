@@ -2,20 +2,20 @@
 % Please edit documentation in R/build_Lifemap.R
 \name{request_database}
 \alias{request_database}
-\title{Request one of the core of the solr database corresponding to the basemap choosen with TaxIDs wanted}
+\title{Request one of the core of the solr database corresponding to the basemap choosen with TaxIDs wanted.}
 \usage{
 request_database(taxids, basemap, core)
 }
 \arguments{
-\item{taxids}{a vector of TaxIDs to be requested}
+\item{taxids}{A vector of TaxIDs to be requested.}
 
-\item{basemap}{the name of the basemap wanted to represent the datas on (can be "ncbi", "fr" ...)}
+\item{basemap}{The name of the basemap wanted to represent the datas on (can be "ncbi", "fr", "base" or "virus").}
 
-\item{core}{The core to be requested either "taxo" (for position informations) or "addi" (ascendance informations)}
+\item{core}{The core to be requested either "taxo" (for position informations) or "addi" (for ascendance informations).}
 }
 \value{
-a dataframe containing all the informations requested from the database
+A dataframe containing all the informations requested from the database.
 }
 \description{
-Request one of the core of the solr database corresponding to the basemap choosen with TaxIDs wanted
+Request one of the core of the solr database corresponding to the basemap choosen with TaxIDs wanted.
 }

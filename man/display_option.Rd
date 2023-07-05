@@ -2,26 +2,26 @@
 % Please edit documentation in R/draw_Lifemap.R
 \name{display_option}
 \alias{display_option}
-\title{compute the different display options}
+\title{Compute the different display options.}
 \usage{
 display_option(m, aes, df, type, leaves, i)
 }
 \arguments{
-\item{m}{a map}
+\item{m}{A map to be modified.}
 
-\item{aes}{the aesthetics}
+\item{aes}{The dataframe containing the aesthetics informations}
 
-\item{df}{a dataframe containing all the taxids}
+\item{df}{The full dataframe.}
 
-\item{type}{c("markers", "discret")}
+\item{type}{A string indicating the type of representation, either "markers" or "discret"}
 
-\item{leaves}{vector of all terminal taxids}
+\item{leaves}{Vector of all the terminal taxids.}
 
-\item{i}{index of the aesthetics}
+\item{i}{The index of the aesthetics.}
 }
 \value{
-a map
+A map.
 }
 \description{
-compute the different display options
+Compute the different display options.
 }

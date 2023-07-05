@@ -1,22 +1,22 @@
-#' add a layer to a Lifemap object
+#' Add a "piecharts" layer to a lifemap_obj object.
 #'
-#' @param data a sub dataset to use, if NULL then all of the taxids from the lifemap object given to lifemap() will be used
-#' @param param a string indicating the discret variable to be represented
-#' @param type the type of chart to draw
-#' @param width the maximal width of the charts
-#' @param height the maximal height of the charts
-#' @param opacity the chart's opacity
-#' @param showLabels a boolean indicating whether to display the values directly on the chart or not
-#' @param pal the palette to be used for the charts
-#' @param legend whether to draw the legend or not
-#' @param legendPosition where should the legend be placed
+#' @param data A sub dataset to use, if NULL then all of the taxids from the lifemap object given to lifemap() will be used.
+#' @param param A string indicating the discret variable to be represented.
+#' @param type The type of chart to draw.
+#' @param width The maximal width of the charts.
+#' @param height The maximal height of the charts.
+#' @param opacity The chart's opacity.
+#' @param showLabels A boolean indicating whether to display the values directly on the chart or not.
+#' @param pal The palette to be used for the charts.
+#' @param legend Whether to draw the legend or not.
+#' @param legendPosition c("topright", "bottomright", "bottomleft", "topleft"). Where should the legend be placed.
 #' @param display c("auto", "requested", "all", "leaves"), a string indicating how to display points :
 #' - "auto" : the markers are displayed depending on the zoom, by default, allow to have a lot of points
 #' - "requested" : only display the requested taxa, but all at the same time
 #' - "all" : display all the taxa including all the ancestors to the root
 #' - "leaves" : display only the last (most recent) taxa
 #'
-#' @return a lifemap object
+#' @return A lifemap object.
 #' @export
 #'
 #' @examples
@@ -53,7 +53,7 @@ lm_piecharts <- function(data = NULL,
   return(res)
 }
 
-#' Reports whether x is a lm_branches object
-#' @param x the object to test
+#' Reports whether x is a lm_branches object.
+#' @param x The object to test.
 #' @export
 is.lm_piecharts <- function(x) {inherits(x, "lm_piecharts")}

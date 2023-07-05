@@ -2,35 +2,35 @@
 % Please edit documentation in R/build_Lifemap.R
 \name{build_Lifemap}
 \alias{build_Lifemap}
-\title{A function to construct a LifemapR object, usable by other functions}
+\title{A function to construct a LifemapR object, usable by the other functions of the package.}
 \usage{
 build_Lifemap(df, basemap = c("fr", "ncbi", "base", "virus"), verbose = TRUE)
 }
 \arguments{
-\item{df}{a dataframe containing at least a column named "taxid"}
+\item{df}{A dataframe containing at least a column named "taxid" containing NCBI format TaxIDs and that can contain characteristics associated with those TaxIDs.}
 
-\item{basemap}{the basemap wanted ("fr","ncbi", "base" or "virus")}
+\item{basemap}{The basemap wanted ("fr","ncbi", "base" or "virus").}
 
-\item{verbose}{if TRUE, will write informations in the terminal}
+\item{verbose}{If TRUE, will write informations on the status of the operation in the terminal.}
 }
 \value{
-a lifemap object with :
+A lifemap object with :
 \itemize{
 \item df : a dataframe containing at least :
 \itemize{
-\item the taxids (taxid)
-\item the longitude (long)
-\item the latitude (lat)
-\item the scientific nam (sci_name)
-\item the zoom at which the taxa can be seen (zoom)
-\item the ascendants of requested taxids (ascend)
-\item the type of each taxid ("requested" or "ancestor")
+\item The taxids (taxid)
+\item The longitude (long)
+\item The latitude (lat)
+\item The scientific nam (sci_name)
+\item The zoom at which the taxa can be seen (zoom)
+\item The ascendants of requested taxids (ascend)
+\item The type of each taxid ("requested" or "ancestor")
 }
 \item basemap : the basemap used to get taxa's informations
 }
 }
 \description{
-A function to construct a LifemapR object, usable by other functions
+A function to construct a LifemapR object, usable by the other functions of the package.
 }
 \examples{
 data(eukaryotes_1000)

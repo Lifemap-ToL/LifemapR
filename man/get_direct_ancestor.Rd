@@ -2,16 +2,16 @@
 % Please edit documentation in R/build_Lifemap.R
 \name{get_direct_ancestor}
 \alias{get_direct_ancestor}
-\title{Add the direct ancestor for each taxa of the dataframe}
+\title{Add the direct ancestor for each taxa of the dataframe.}
 \usage{
 get_direct_ancestor(df)
 }
 \arguments{
-\item{df}{a dataframe with requested taxid and the full ascendance information}
+\item{df}{A dataframe with requested taxid and the full ascendance informations.}
 }
 \value{
-a dataframe with the direct ancestor for each taxa
+A dataframe with the direct ancestor for each taxa.
 }
 \description{
-Add the direct ancestor for each taxa of the dataframe
+Add the direct ancestor for each taxa of the dataframe.
 }

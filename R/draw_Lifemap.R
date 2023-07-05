@@ -1,13 +1,13 @@
 
-#' compute a new scale for a value
+#' Compute a new scale for a value
 #'
-#' @param value a vector of values
-#' @param df the full dataframe
-#' @param df2 the dataframe containing visibles taxas
-#' @param min the new minimum of the range
-#' @param max the new maximum of the range
+#' @param value A vector of values.
+#' @param df The full dataframe.
+#' @param df2 The dataframe containing visibles taxa.
+#' @param min The new minimum of the range.
+#' @param max The new maximum of the range.
 #'
-#' @return a vector of values
+#' @return A vector of values.
 create_value_range <- function(value, df, df2, min, max){
   if (value %in% colnames(df)) {
     old_min <- min(df[[value]], na.rm = TRUE)
@@ -22,17 +22,17 @@ create_value_range <- function(value, df, df2, min, max){
 }
 
 
-#' compute the aes for a set of points
+#' Compute the aes for a set of points.
 #'
-#' @param aes the dataframe containing the aesthetics informations (must be of lm_markers class)
-#' @param df the full dataframe
-#' @param df_visible the dataframe containing visible taxa
-#' @param proxy the map to be modified
-#' @param group_info the points' group
+#' @param aes The dataframe containing the aesthetics informations (must be of lm_markers class).
+#' @param df The full dataframe.
+#' @param df_visible The dataframe containing visible taxa.
+#' @param proxy The map to be modified.
+#' @param group_info The points' group / layerID.
 #'
 #' @importFrom leaflet addCircleMarkers colorNumeric
 #'
-#' @return a list of values
+#' @return A list of values.
 add_lm_markers <- function(proxy, aes, df, df_visible, group_info) {
 
   if (!(aes$var_fillColor %in% "default")) {
@@ -108,19 +108,19 @@ add_lm_markers <- function(proxy, aes, df, df_visible, group_info) {
 
 }
 
-#' compute the aes for a subtree
+#' Compute the aes for a subtree.
 #'
-#' @param proxy the map to be modified
-#' @param aes the dataframe containing the aesthetics informations (must be of lm_markers class)
-#' @param df the full dataframe
-#' @param df_visible the dataframe containing visible taxa
-#' @param df_descendants the dataframe containing all the information on the descendants of visible taxa
-#' @param group_info the points' group
-#' @param all_taxids a vector with all the visible taxids and their direct descendants
+#' @param proxy The map to be modified.
+#' @param aes The dataframe containing the aesthetics informations (must be of lm_branches class).
+#' @param df The full dataframe.
+#' @param df_visible The dataframe containing visible taxa.
+#' @param df_descendants The dataframe containing all the information on the descendants of visible taxa.
+#' @param group_info The points' group.
+#' @param all_taxids A vector with all the visible taxids and their direct descendants.
 #'
 #' @importFrom leaflet addPolylines colorNumeric
 #'
-#' @return a list of values
+#' @return A list of values.
 add_lm_branches <- function(proxy, aes, df, df_visible, df_descendants, group_info, all_taxids) {
   if (!(aes$var_color %in% "default")) {
     make_col <- leaflet::colorNumeric(palette = aes$palette, domain = df[[aes$var_color]], reverse = TRUE)
@@ -163,18 +163,18 @@ add_lm_branches <- function(proxy, aes, df, df_visible, df_descendants, group_in
   }
   proxy
 }
-#' compute the aes for discret values
+#' Compute the aes for discret values.
 #'
-#' @param aes the dataframe containing the aesthetics informations (must be of lm_markers class)
-#' @param df the full dataframe
-#' @param df_visible the dataframe containing visible taxa
-#' @param proxy the map to be modified
-#' @param layer the points' group
+#' @param aes The dataframe containing the aesthetics informations (must be of lm_piecharts class).
+#' @param df The full dataframe.
+#' @param df_visible The dataframe containing visible taxa.
+#' @param proxy The map to be modified.
+#' @param layer The points' group.
 #'
 #' @importFrom leaflet.minicharts addMinicharts
 #' @importFrom leaflet colorFactor
 #'
-#' @return a list of values
+#' @return A list of values.
 add_lm_piecharts <- function(proxy, aes, df, df_visible, layer) {
   values <- unique(df[df$type == "requested", aes$param])
   layerId_info <- sapply(X = 1:nrow(df_visible), FUN = function(x){paste(layer,x,collapse="", sep="")})
@@ -200,16 +200,16 @@ add_lm_piecharts <- function(proxy, aes, df, df_visible, layer) {
 
 
 
-#' compute the different display options
+#' Compute the different display options.
 #'
-#' @param m a map
-#' @param aes the aesthetics
-#' @param df a dataframe containing all the taxids
-#' @param type c("markers", "discret")
-#' @param leaves vector of all terminal taxids
-#' @param i index of the aesthetics
+#' @param m A map to be modified.
+#' @param aes The dataframe containing the aesthetics informations
+#' @param df The full dataframe.
+#' @param type A string indicating the type of representation, either "markers" or "discret"
+#' @param leaves Vector of all the terminal taxids.
+#' @param i The index of the aesthetics.
 #'
-#' @return a map
+#' @return A map.
 display_option <- function(m, aes, df, type, leaves, i){
 
   if (aes$display == "requested") {
@@ -244,14 +244,15 @@ display_option <- function(m, aes, df, type, leaves, i){
 }
 
 
-#' Represent continuous datas on a Lifemap background
+#' Represent datas on a Lifemap basemap.
 #'
 #' @description
-#' draw a map and all the aesthetics in the order you put them, the last one will be on top of the others
+#' Draw a map and all the aesthetics in the order you put them, the last one will be on top of the others.
 #'
-#' @param lm_obj a Lifemap object filled with aesthetics
+#' @param lm_obj A Lifemap object filled with aesthetics.
 #'
-#' @return a shiny application
+#' @return A shiny application
+#'
 #' @export
 #' @importFrom dplyr left_join
 #' @importFrom shiny fluidPage reactive observe shinyApp isolate

@@ -2,20 +2,20 @@
 % Please edit documentation in R/create_matrix.R
 \name{pass_infos_discret}
 \alias{pass_infos_discret}
-\title{pass discret informations to nodes}
+\title{Pass discret informations to nodes}
 \usage{
 pass_infos_discret(M, value)
 }
 \arguments{
-\item{M}{the boolean matrix}
+\item{M}{The dataframe returned by create_matrix.}
 
-\item{value}{the variable concerned}
+\item{value}{The column name to which the function applies.}
 }
 \value{
-a dataframe
+A dataframe.
 }
 \description{
-pass discret informations to nodes
+Pass discret informations to nodes
 }
 \examples{
 data(LM_eukaryotes)

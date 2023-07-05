@@ -1,10 +1,8 @@
-#' print lifemap_obj objects
+#' Method to print lifemap_obj objects.
 #'
-#' @description When the LifemapR object is just created, give the number of columns and rows
-#' as well as the basemap used to get the datas form the database
 #'
-#' @param x an lm_obj
-#' @param ... further arguments passed to or from other methods.
+#' @param x An lifemap_obj.
+#' @param ... Further arguments passed to or from other methods.
 #'
 #' @return NA
 #' @export
@@ -27,8 +25,8 @@ print.lifemap_obj <- function(x,...) {
 
 }
 
-#' Reports whether x is a lm_obj object
-#' @param x the object to test
+#' Reports whether x is a lifemap_obj object.
+#' @param x The object to test.
 #' @export
 #'
 #' @examples
@@ -40,11 +38,11 @@ print.lifemap_obj <- function(x,...) {
 #'
 is.lifemap_obj <- function(x) inherits(x, "lifemap_obj")
 
-#' Add a graphical element to a tree visualisation
-#' @param e1 an object of class lm_obj that contains at least $df, a dataframe, and $basemap, the map used to get the coordinates
-#' @param e2 a description of the graphical features wanted for a set of points (eg. markers, subtree, popups, ...)
+#' Add a graphical element to a tree visualisation.
+#' @param e1 An object of class lifemap_obj that contains at least $df, a dataframe, and $basemap, the map used to get the coordinates.
+#' @param e2 A description of the graphical features wanted for a set of points (eg. markers, subtree, piecharts, ...).
 #' @export
-#' @return a lm_obj object
+#' @return An lifemap_obj object.
 #'
 #' @examples
 #' ## Only run examples in interactive R sessions

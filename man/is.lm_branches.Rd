@@ -2,13 +2,13 @@
 % Please edit documentation in R/lm_branches.R
 \name{is.lm_branches}
 \alias{is.lm_branches}
-\title{Reports whether x is a lm_branches object}
+\title{Reports whether x is a lm_branches object.}
 \usage{
 is.lm_branches(x)
 }
 \arguments{
-\item{x}{the object to test}
+\item{x}{The object to test.}
 }
 \description{
-Reports whether x is a lm_branches object
+Reports whether x is a lm_branches object.
 }

@@ -2,7 +2,7 @@
 % Please edit documentation in R/lm_branches.R
 \name{lm_branches}
 \alias{lm_branches}
-\title{add a layer to a Lifemap object}
+\title{Add a "branches" layer to a lifemap_obj object.}
 \usage{
 lm_branches(
   data = NULL,
@@ -18,31 +18,31 @@ lm_branches(
 )
 }
 \arguments{
-\item{data}{a sub dataset to use, if NULL then all of the taxids from the lifemap object given to lifemap() will be used}
+\item{data}{A sub dataset to use, if NULL then all of the taxids from the lifemap object given to lifemap() will be used.}
 
-\item{color}{either a color for the branches or a palette if a variable is used to rperesent branches' color}
+\item{color}{Either a color for the branches or a palette if a variable is used to represent branches' color.}
 
-\item{var_color}{a column name of the original dataframe to represent this variable by the color of branches}
+\item{var_color}{A column name of the original dataframe to represent this variable by the color of branches.}
 
-\item{size}{either a numeric for the branche's thickness or a variable to be represented by the branche's thickness}
+\item{size}{Either a numeric for the branche's thickness or a variable to be represented by the branche's thickness.}
 
-\item{min}{an integer indicating the minimal thickness of the branches if the size represent a variable}
+\item{min}{An integer indicating the minimal thickness of the branches if the size is a column name.}
 
-\item{max}{an integer indicating the maximal thickness of the branches if the size represent a variable}
+\item{max}{An integer indicating the maximal thickness of the branches if the size is a column name.}
 
-\item{opacity}{an integer indicating branche's opacity}
+\item{opacity}{An integer indicating branche's opacity.}
 
-\item{FUN}{the function to be applied to infer values}
+\item{FUN}{The function to be applied to infer values.}
 
-\item{legend}{a logical indicating whether or not to display the legend}
+\item{legend}{A logical indicating whether or not to display the legend.}
 
-\item{legendPosition}{c("topright", "bottomright", "bottomleft", "topleft"), the position of the legend}
+\item{legendPosition}{c("topright", "bottomright", "bottomleft", "topleft"), the position of the legend.}
 }
 \value{
-a lifemap object
+A lifemap_obj object.
 }
 \description{
-add a layer to a Lifemap object
+Add a "branches" layer to a lifemap_obj object.
 }
 \examples{
 data(LM_eukaryotes)

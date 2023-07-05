@@ -2,18 +2,18 @@
 % Please edit documentation in R/draw_Lifemap.R
 \name{draw_Lifemap}
 \alias{draw_Lifemap}
-\title{Represent continuous datas on a Lifemap background}
+\title{Represent datas on a Lifemap basemap.}
 \usage{
 draw_Lifemap(lm_obj)
 }
 \arguments{
-\item{lm_obj}{a Lifemap object filled with aesthetics}
+\item{lm_obj}{A Lifemap object filled with aesthetics.}
 }
 \value{
-a shiny application
+A shiny application
 }
 \description{
-draw a map and all the aesthetics in the order you put them, the last one will be on top of the others
+Draw a map and all the aesthetics in the order you put them, the last one will be on top of the others.
 }
 \examples{
 ## Only run examples in interactive R sessions

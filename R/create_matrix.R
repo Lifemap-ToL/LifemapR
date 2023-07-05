@@ -1,13 +1,13 @@
-#' Create a dataframe for the ancestry
+#' Create a dataframe for the ancestry.
 #'
 #' @description
-#' Create a dataframe with couples of taxids, each taxid is associated with each
-#' one of it's ancestors, values are also associated with the taxids
+#' Create a dataframe with couples of taxids, each taxid and their corresponding values are associated with each
+#' one of the taxid's ancestors.
 #'
-#' @param df a dataframe containing taxids and values
-#' @param cols the columns that contains the values
+#' @param df A dataframe containing taxids and values.
+#' @param cols The columns that contains the values which needs to be inferred.
 #'
-#' @return a dataframe
+#' @return A dataframe.
 #' @export
 #' @importFrom dplyr full_join join_by
 #'
@@ -33,13 +33,13 @@ create_matrix <- function(df, cols){
   return (new_df)
 }
 
-#' Infer values to nodes
+#' Infer numerical values to nodes.
 #'
-#' @param M the dataframe returned by create_matrix
-#' @param FUN the function to be applied when passing the info
-#' @param value the column to which the function apply
+#' @param M The dataframe returned by create_matrix.
+#' @param FUN The function to be applied when inferring the values.
+#' @param value The column name to which the function applies.
 #'
-#' @return an array of values
+#' @return An array of values.
 #' @export
 #'
 #' @examples
@@ -55,12 +55,12 @@ pass_infos <- function(M, FUN, value){
 }
 
 
-#' pass discret informations to nodes
+#' Pass discret informations to nodes
 #'
-#' @param M the boolean matrix
-#' @param value the variable concerned
+#' @param M The dataframe returned by create_matrix.
+#' @param value The column name to which the function applies.
 #'
-#' @return a dataframe
+#' @return A dataframe.
 #' @export
 #' @importFrom dplyr bind_rows
 #'

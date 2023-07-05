@@ -2,15 +2,15 @@
 % Please edit documentation in R/lifemap_obj.R
 \name{is.lifemap_obj}
 \alias{is.lifemap_obj}
-\title{Reports whether x is a lm_obj object}
+\title{Reports whether x is a lifemap_obj object.}
 \usage{
 is.lifemap_obj(x)
 }
 \arguments{
-\item{x}{the object to test}
+\item{x}{The object to test.}
 }
 \description{
-Reports whether x is a lm_obj object
+Reports whether x is a lifemap_obj object.
 }
 \examples{
 ## Only run examples in interactive R sessions

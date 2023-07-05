@@ -2,22 +2,22 @@
 % Please edit documentation in R/create_matrix.R
 \name{pass_infos}
 \alias{pass_infos}
-\title{Infer values to nodes}
+\title{Infer numerical values to nodes.}
 \usage{
 pass_infos(M, FUN, value)
 }
 \arguments{
-\item{M}{the dataframe returned by create_matrix}
+\item{M}{The dataframe returned by create_matrix.}
 
-\item{FUN}{the function to be applied when passing the info}
+\item{FUN}{The function to be applied when inferring the values.}
 
-\item{value}{the column to which the function apply}
+\item{value}{The column name to which the function applies.}
 }
 \value{
-an array of values
+An array of values.
 }
 \description{
-Infer values to nodes
+Infer numerical values to nodes.
 }
 \examples{
 data(LM_eukaryotes)

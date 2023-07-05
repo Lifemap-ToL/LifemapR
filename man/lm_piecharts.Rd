@@ -2,7 +2,7 @@
 % Please edit documentation in R/lm_piecharts.R
 \name{lm_piecharts}
 \alias{lm_piecharts}
-\title{add a layer to a Lifemap object}
+\title{Add a "piecharts" layer to a lifemap_obj object.}
 \usage{
 lm_piecharts(
   data = NULL,
@@ -19,25 +19,25 @@ lm_piecharts(
 )
 }
 \arguments{
-\item{data}{a sub dataset to use, if NULL then all of the taxids from the lifemap object given to lifemap() will be used}
+\item{data}{A sub dataset to use, if NULL then all of the taxids from the lifemap object given to lifemap() will be used.}
 
-\item{param}{a string indicating the discret variable to be represented}
+\item{param}{A string indicating the discret variable to be represented.}
 
-\item{type}{the type of chart to draw}
+\item{type}{The type of chart to draw.}
 
-\item{width}{the maximal width of the charts}
+\item{width}{The maximal width of the charts.}
 
-\item{height}{the maximal height of the charts}
+\item{height}{The maximal height of the charts.}
 
-\item{opacity}{the chart's opacity}
+\item{opacity}{The chart's opacity.}
 
-\item{showLabels}{a boolean indicating whether to display the values directly on the chart or not}
+\item{showLabels}{A boolean indicating whether to display the values directly on the chart or not.}
 
-\item{pal}{the palette to be used for the charts}
+\item{pal}{The palette to be used for the charts.}
 
-\item{legend}{whether to draw the legend or not}
+\item{legend}{Whether to draw the legend or not.}
 
-\item{legendPosition}{where should the legend be placed}
+\item{legendPosition}{c("topright", "bottomright", "bottomleft", "topleft"). Where should the legend be placed.}
 
 \item{display}{c("auto", "requested", "all", "leaves"), a string indicating how to display points :
 \itemize{
@@ -48,10 +48,10 @@ lm_piecharts(
 }}
 }
 \value{
-a lifemap object
+A lifemap object.
 }
 \description{
-add a layer to a Lifemap object
+Add a "piecharts" layer to a lifemap_obj object.
 }
 \examples{
 data(LM_eukaryotes)

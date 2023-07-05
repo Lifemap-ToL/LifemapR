@@ -1,9 +1,9 @@
 #' Check if the URL is working
 #'
-#' @param basemap_url the url corresponding to the basemap interrogated
-#' @param t the time before timeout
+#' @param basemap_url The url corresponding to the basemap interrogated.
+#' @param t The time before timeout.
 #'
-#' @return a logical
+#' @return A logical.
 url_verification <- function(basemap_url, t = 20){
   url_in <- paste(basemap_url, "#/taxo/query", sep = "", collapse = "")
   con <- url(url_in)
@@ -13,13 +13,13 @@ url_verification <- function(basemap_url, t = 20){
 }
 
 
-#' Request one of the core of the solr database corresponding to the basemap choosen with TaxIDs wanted
+#' Request one of the core of the solr database corresponding to the basemap choosen with TaxIDs wanted.
 #'
-#' @param taxids a vector of TaxIDs to be requested
-#' @param basemap the name of the basemap wanted to represent the datas on (can be "ncbi", "fr" ...)
-#' @param core The core to be requested either "taxo" (for position informations) or "addi" (ascendance informations)
+#' @param taxids A vector of TaxIDs to be requested.
+#' @param basemap The name of the basemap wanted to represent the datas on (can be "ncbi", "fr", "base" or "virus").
+#' @param core The core to be requested either "taxo" (for position informations) or "addi" (for ascendance informations).
 #'
-#' @return a dataframe containing all the informations requested from the database
+#' @return A dataframe containing all the informations requested from the database.
 request_database <- function(taxids, basemap, core) {
   # getting the rigth URL depending on the basemap wanted
   if (basemap == "ncbi") {
@@ -79,11 +79,11 @@ request_database <- function(taxids, basemap, core) {
 }
 
 
-#' Add the direct ancestor for each taxa of the dataframe
+#' Add the direct ancestor for each taxa of the dataframe.
 #'
-#' @param df a dataframe with requested taxid and the full ascendance information
+#' @param df A dataframe with requested taxid and the full ascendance informations.
 #'
-#' @return a dataframe with the direct ancestor for each taxa
+#' @return A dataframe with the direct ancestor for each taxa.
 #'
 #' @importFrom purrr reduce
 get_direct_ancestor <- function(df) {
@@ -99,21 +99,21 @@ get_direct_ancestor <- function(df) {
 
 
 
-#' A function to construct a LifemapR object, usable by other functions
+#' A function to construct a LifemapR object, usable by the other functions of the package.
 #'
-#' @param df a dataframe containing at least a column named "taxid"
-#' @param basemap the basemap wanted ("fr","ncbi", "base" or "virus")
-#' @param verbose if TRUE, will write informations in the terminal
+#' @param df A dataframe containing at least a column named "taxid" containing NCBI format TaxIDs and that can contain characteristics associated with those TaxIDs.
+#' @param basemap The basemap wanted ("fr","ncbi", "base" or "virus").
+#' @param verbose If TRUE, will write informations on the status of the operation in the terminal.
 #'
-#' @return a lifemap object with :
+#' @return A lifemap object with :
 #' - df : a dataframe containing at least :
-#'   - the taxids (taxid)
-#'   - the longitude (long)
-#'   - the latitude (lat)
-#'   - the scientific nam (sci_name)
-#'   - the zoom at which the taxa can be seen (zoom)
-#'   - the ascendants of requested taxids (ascend)
-#'   - the type of each taxid ("requested" or "ancestor")
+#'   - The taxids (taxid)
+#'   - The longitude (long)
+#'   - The latitude (lat)
+#'   - The scientific nam (sci_name)
+#'   - The zoom at which the taxa can be seen (zoom)
+#'   - The ascendants of requested taxids (ascend)
+#'   - The type of each taxid ("requested" or "ancestor")
 #' - basemap : the basemap used to get taxa's informations
 #'
 #' @importFrom jsonlite fromJSON

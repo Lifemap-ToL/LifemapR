@@ -2,21 +2,20 @@
 % Please edit documentation in R/lifemap_obj.R
 \name{print.lifemap_obj}
 \alias{print.lifemap_obj}
-\title{print lifemap_obj objects}
+\title{Method to print lifemap_obj objects.}
 \usage{
 \method{print}{lifemap_obj}(x, ...)
 }
 \arguments{
-\item{x}{an lm_obj}
+\item{x}{An lifemap_obj.}
 
-\item{...}{further arguments passed to or from other methods.}
+\item{...}{Further arguments passed to or from other methods.}
 }
 \value{
 NA
 }
 \description{
-When the LifemapR object is just created, give the number of columns and rows
-as well as the basemap used to get the datas form the database
+Method to print lifemap_obj objects.
 }
 \examples{
 ## Only run examples in interactive R sessions

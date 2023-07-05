@@ -2,21 +2,21 @@
 % Please edit documentation in R/create_matrix.R
 \name{create_matrix}
 \alias{create_matrix}
-\title{Create a dataframe for the ancestry}
+\title{Create a dataframe for the ancestry.}
 \usage{
 create_matrix(df, cols)
 }
 \arguments{
-\item{df}{a dataframe containing taxids and values}
+\item{df}{A dataframe containing taxids and values.}
 
-\item{cols}{the columns that contains the values}
+\item{cols}{The columns that contains the values which needs to be inferred.}
 }
 \value{
-a dataframe
+A dataframe.
 }
 \description{
-Create a dataframe with couples of taxids, each taxid is associated with each
-one of it's ancestors, values are also associated with the taxids
+Create a dataframe with couples of taxids, each taxid and their corresponding values are associated with each
+one of the taxid's ancestors.
 }
 \examples{
 data(LM_eukaryotes)

@@ -1,16 +1,16 @@
-#' Create a Lifemap base
+#' Create a Lifemap base.
 #'
 #' @description This function create a blank Leaflet map using the leaflet function from the leaflet package.
-#' if a dataframe is provided, it will be used for the creation of the map object
+#' if a dataframe is provided, it will be used for the creation of the map object.
 #'
-#' @param df a dataframe, if given, the columns can be easily accessed with "~" (eg. ~GC.)
-#' @param basemap The base choose to display, either 
+#' @param df A dataframe, if given, the columns can be easily accessed with "~" (eg. ~GC.).
+#' @param basemap The basemap choose to display. Either
 #' - 'fr' for \url{https://lifemap-fr.univ-lyon1.fr/}
 #' - 'ncbi' for \url{https://lifemap-ncbi.univ-lyon1.fr/}
 #' - 'base' for \url{https://lifemap.univ-lyon1.fr/}
 #' - 'virus' for \url{http://virusmap.univ-lyon1.fr/}
 #'
-#' @return HTML widget object  with graphics layers
+#' @return HTML widget object  with graphics layers.
 #' @export
 #' @importFrom leaflet leaflet addTiles providerTileOptions
 #'

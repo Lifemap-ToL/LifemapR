@@ -2,20 +2,20 @@
 % Please edit documentation in R/make_newick.R
 \name{make_newick}
 \alias{make_newick}
-\title{Create a newick for the given dataset}
+\title{Create a newick for the given dataset.}
 \usage{
 make_newick(df)
 }
 \arguments{
-\item{df}{a dataframe either enriched with by the build_Lifemap function or containing at least two columns :
+\item{df}{A dataframe either enriched with by the build_Lifemap function or containing at least two columns :
 \itemize{
 \item "taxid" containing NCBI format taxids
-\item "ancestor" containing for each taxid, it's direct ancestor in the phyogeny
+\item "ancestor" containing for each taxid, it's direct ancestor in the phylogeny
 }}
 }
 \value{
-a character string
+A character string.
 }
 \description{
-Create a newick for the given dataset
+Create a newick for the given dataset.
 }

@@ -7,12 +7,12 @@
 url_verification(basemap_url, t = 20)
 }
 \arguments{
-\item{basemap_url}{the url corresponding to the basemap interrogated}
+\item{basemap_url}{The url corresponding to the basemap interrogated.}
 
-\item{t}{the time before timeout}
+\item{t}{The time before timeout.}
 }
 \value{
-a logical
+A logical.
 }
 \description{
 Check if the URL is working

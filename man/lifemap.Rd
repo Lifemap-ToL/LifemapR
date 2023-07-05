@@ -2,19 +2,19 @@
 % Please edit documentation in R/lifemap.R
 \name{lifemap}
 \alias{lifemap}
-\title{create a new Lifemap visualisation}
+\title{Initialise a new Lifemap visualisation.}
 \usage{
 lifemap(lm_obj, zoom = 4)
 }
 \arguments{
-\item{lm_obj}{Lifemap object used for data visualisation}
+\item{lm_obj}{lifemap_obj object used for data visualisation.}
 
-\item{zoom}{the level of zoom for which values are displayed (if zoom = 0 only the nodes at the current zoom level or lower can have their values displayed)}
+\item{zoom}{The level of zoom for which values are displayed (if zoom = 0 only the nodes at the current zoom level or lower can have their values displayed).}
 }
 \value{
-a lifemap object
+An lifemap_obj object.
 }
 \description{
-Initialise a lifemap object.
+Initialise a lifemap_obj object.
 It can be used to describe aesthetics like the zoom level at which taxids becomes visible...
 }

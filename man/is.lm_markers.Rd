@@ -2,13 +2,13 @@
 % Please edit documentation in R/lm_markers.R
 \name{is.lm_markers}
 \alias{is.lm_markers}
-\title{Reports whether x is a lm_markers object}
+\title{Reports whether x is a lm_markers object.}
 \usage{
 is.lm_markers(x)
 }
 \arguments{
-\item{x}{the object to test}
+\item{x}{The object to test.}
 }
 \description{
-Reports whether x is a lm_markers object
+Reports whether x is a lm_markers object.
 }
