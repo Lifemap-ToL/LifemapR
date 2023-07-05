@@ -64,15 +64,18 @@ LifemapR::lm_branches(col = "Genes", FUN = "mean")
 ## Development
 
 To do list : 
+- [ ] New protocole to fetch datas with improved databases (parquet format)
+- [ ] Improve create_matrix() to use less CPU (merge before joining all lists) 
+- [ ] Improve make_newick() to make it recursive
+- [ ] Improve the shiny application version
+
+- [x] Redo pass_info function to only infer unknown values and only from the value of direct ancestors
 - [x] Implement popups and labels for markers
 - [ ] Implement popups and labels for polylines
 - [x] Black background on leaflet
-- [ ] Repair the size legend
-- [ ] Improve make_newick function
-- [ ] Improve create_matrix function to remove dplyr dependance 
-- [ ] New protocole to fetch the datas on the solr database
-- [ ] Shiny application
-- [ ] Option to thicker the line depending on a variable
+- [x] Repair the size legend
+- [x] Option to thicker the line depending on a variable
+- [x] Improve create_matrix function to pass check
 
 ### How to use during development
 
