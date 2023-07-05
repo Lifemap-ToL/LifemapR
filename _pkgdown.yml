@@ -1,0 +1,17 @@
+template:
+  bootstrap: 5
+  bootswatch: flatly
+
+bslib:
+  trailing_slash_redirect: true
+  
+  navbar:
+    structure:
+    left:  [intro, reference, articles, tutorials, news]
+  right: [search, github]
+
+articles:
+- title: Articles
+  navbar: ~
+  contents:
+  - runLifemapR
