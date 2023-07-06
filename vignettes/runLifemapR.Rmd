@@ -33,7 +33,7 @@ But what sets LifemapR apart is its flexibility and adaptability, offering a wid
 1. Install the development version of `LifemapR` from GitHub
 
 ```{r, eval = FALSE}
-remotes::install_github("cbompard/LifemapR")
+remotes::install_github("damiendevienne/LifemapR")
 ```
 
 2. Once installed, the package can be loaded with : 
