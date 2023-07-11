@@ -1,7 +1,9 @@
+[![CRAN_Status_Badge](http://www.r-pkg.org/badges/version/LifemapR)](http://cran.r-project.org/package=LifemapR)
+[![CRAN Downloads](https://cranlogs.r-pkg.org/badges/LifemapR)](https://cran.r-project.org/package=LifemapR)
+[![R-CMD-check](https://github.com/damiendevienne/LifemapR/workflows/R-CMD-check/badge.svg)](https://github.com/damiendevienne/LifemapR/actions)
+
+
 # LifemapR <img src="man/figures/lifemapr-logo.png" align="right" style="float:right; width:20%;"/>
-
-## Overview
-
 An R package to visualise datas on a Lifemap base (https://lifemap-ncbi.univ-lyon1.fr/) 
 
 ## Installation
