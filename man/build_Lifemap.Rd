@@ -33,6 +33,6 @@ A lifemap object with :
 A function to construct a LifemapR object, usable by the other functions of the package.
 }
 \examples{
-data(eukaryotes_1000)
-LM <- build_Lifemap(eukaryotes_1000, "fr")
+data(eukaryotes_80)
+LM <- build_Lifemap(eukaryotes_80, "fr")
 }
