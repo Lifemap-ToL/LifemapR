@@ -13,13 +13,13 @@ url_verification <- function(basemap_url, t = 20){
 }
 
 
-#' Request one of the core of the solr database corresponding to the basemap choosen with TaxIDs wanted.
+#' Request one of the core of the solr database corresponding to the basemap choosen with the TaxIDs wanted.
 #'
 #' @param taxids A vector of TaxIDs to be requested.
-#' @param basemap The name of the basemap wanted to represent the datas on (can be "ncbi", "fr", "base" or "virus").
-#' @param core The core to be requested either "taxo" (for position informations) or "addi" (for ascendance informations).
+#' @param basemap The name of the basemap on which the data is represented (can be "ncbi", "fr", "base" or "virus").
+#' @param core The core to be requested either "taxo" (for position details) or "addi" (for ascendance details).
 #'
-#' @return A dataframe containing all the informations requested from the database.
+#' @return A dataframe containing all the pieces of information requested from the database.
 request_database <- function(taxids, basemap, core) {
   # getting the rigth URL depending on the basemap wanted
   if (basemap == "ncbi") {
@@ -81,7 +81,7 @@ request_database <- function(taxids, basemap, core) {
 
 #' Add the direct ancestor for each taxa of the dataframe.
 #'
-#' @param df A dataframe with requested taxid and the full ascendance informations.
+#' @param df A dataframe with requested taxid and the full ascendance information.
 #'
 #' @return A dataframe with the direct ancestor for each taxa.
 #'
@@ -101,20 +101,20 @@ get_direct_ancestor <- function(df) {
 
 #' A function to construct a LifemapR object, usable by the other functions of the package.
 #'
-#' @param df A dataframe containing at least a column named "taxid" containing NCBI format TaxIDs and that can contain characteristics associated with those TaxIDs.
+#' @param df A dataframe containing at least a column named "taxid" including NCBI format TaxIDs.
+#' The dataframe can also contain characteristics associated with those TaxIDs in separated columns.
 #' @param basemap The basemap wanted ("fr","ncbi", "base" or "virus").
-#' @param verbose If TRUE, will write informations on the status of the operation in the terminal.
+#' @param verbose If TRUE, will write details on the status of the operation in the terminal.
 #'
 #' @return A lifemap object with :
-#' - df : a dataframe containing at least :
-#'   - The taxids (taxid)
+#' - df : a dataframe containing at least for each TaxID (taxid) :
 #'   - The longitude (long)
 #'   - The latitude (lat)
-#'   - The scientific nam (sci_name)
-#'   - The zoom at which the taxa can be seen (zoom)
-#'   - The ascendants of requested taxids (ascend)
-#'   - The type of each taxid ("requested" or "ancestor")
-#' - basemap : the basemap used to get taxa's informations
+#'   - The scientific name (sci_name)
+#'   - The zoom level at which the taxa can be seen (zoom)
+#'   - Its ascendants (ascend)
+#'   - Its type ("requested" or "ancestor")
+#' - basemap : the basemap used to get taxa's details
 #'
 #' @importFrom jsonlite fromJSON
 #' @importFrom dplyr bind_rows distinct

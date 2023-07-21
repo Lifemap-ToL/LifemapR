@@ -1,20 +1,20 @@
 #' add a "markers" layer to a lifemap_obj object.
 #'
 #' @description
-#' Allow to add a layer with circles that can represent data. The parameters that can be used to represent data are the following:
+#' Adds a layer with circles that can represent data. The main parameters that can be used to represent data are the following:
 #' - radius
-#' - fillColor
-#' - color
+#' - var_fillColor
+#' - var_color (stroke's color)
 #'
 #'
 #' @param data A sub dataset to use, if NULL then all of the taxids from the lifemap object given to lifemap() will be used.
-#' @param radius Either a numerical value or a column name of the original dataframe to represent this variable by the size of points.
-#' @param min An integer indicating the minimal size of the points if radius is a column name.
-#' @param max An integer indicating the maximal size of the points if radius is a column name.
+#' @param radius Either a numerical value or a column name of the original dataframe to represent this variable by the size of markers.
+#' @param min An integer indicating the minimal size of the markers if radius is a column name.
+#' @param max An integer indicating the maximal size of the markers if radius is a column name.
 #' @param fillColor Either a color or a palette if the fillColor is represented by a variable.
-#' @param var_fillColor A column name of the original dataframe to represent this variable by the fillColor of points.
+#' @param var_fillColor A column name of the original dataframe to represent this variable by the fillColor of markers.
 #' @param fillOpacity A numeric indicating the fill opacity.
-#' @param stroke A logical indicating whether to draw a border for points.
+#' @param stroke A logical indicating whether to draw a border for markers.
 #' @param color The stroke color. Either a color or a palette if the stroke color is represented by a variable.
 #' @param var_color A column name of the original dataframe to represent this variable by the stroke color.
 #' @param weight The stroke width in pixels.
@@ -22,20 +22,20 @@
 #' @param legend Whether to display the legend or not.
 #' @param legendPosition c("topright", "bottomright", "bottomleft", "topleft").
 #' @param legendOrientation c("vertical", "horizontal").
-#' @param legendOpacity Legend opacity (apply on the shapes in the legend, not the background itself).
+#' @param legendOpacity Legend opacity (applies on the shapes in the legend, not the background itself).
 #' @param FUN The function to be applied to infer values. If NULL then the information missing from the parent nodes won't be inferred.
-#' @param display c("auto", "requested", "all", "leaves"), a string indicating how to display points :
-#' - "auto" : the markers are displayed depending on the zoom, by default, allow to have a lot of points
-#' - "requested" : only display the requested taxa, but all at the same time
-#' - "all" : display all the taxa including all the ancestors to the root
-#' - "leaves" : display only the last (most recent) taxa
+#' @param display c("auto", "requested", "all", "leaves"), a string indicating how to display markers :
+#' - "auto" : the markers are displayed depending on the zoom level, by default, allow to have a lot of markers
+#' - "requested" : only displays the requested taxa, but all at the same time
+#' - "all" : displays all the taxa including all the ancestors to the root
+#' - "leaves" : displays only the latest (most recent) taxa
 #'
 #' (WARNING : "requested", "leaves" and "auto" shouldn't be used to display more than 2000 markers as it may result in long computing time).
 #'
 #' @param popup A column name indicating what to display when clicking on a node.
 #' @param label A column name indicating what to display when hovering on a node.
 #'
-#' @return A list containing all aesthetics informations for one serie of markers.
+#' @return An lm_markers object containing all aesthetics details for one layer of markers.
 #' @export
 #'
 #' @examples

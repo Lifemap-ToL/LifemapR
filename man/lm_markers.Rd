@@ -30,19 +30,19 @@ lm_markers(
 \arguments{
 \item{data}{A sub dataset to use, if NULL then all of the taxids from the lifemap object given to lifemap() will be used.}
 
-\item{radius}{Either a numerical value or a column name of the original dataframe to represent this variable by the size of points.}
+\item{radius}{Either a numerical value or a column name of the original dataframe to represent this variable by the size of markers.}
 
-\item{min}{An integer indicating the minimal size of the points if radius is a column name.}
+\item{min}{An integer indicating the minimal size of the markers if radius is a column name.}
 
-\item{max}{An integer indicating the maximal size of the points if radius is a column name.}
+\item{max}{An integer indicating the maximal size of the markers if radius is a column name.}
 
 \item{fillColor}{Either a color or a palette if the fillColor is represented by a variable.}
 
-\item{var_fillColor}{A column name of the original dataframe to represent this variable by the fillColor of points.}
+\item{var_fillColor}{A column name of the original dataframe to represent this variable by the fillColor of markers.}
 
 \item{fillOpacity}{A numeric indicating the fill opacity.}
 
-\item{stroke}{A logical indicating whether to draw a border for points.}
+\item{stroke}{A logical indicating whether to draw a border for markers.}
 
 \item{color}{The stroke color. Either a color or a palette if the stroke color is represented by a variable.}
 
@@ -58,16 +58,16 @@ lm_markers(
 
 \item{legendOrientation}{c("vertical", "horizontal").}
 
-\item{legendOpacity}{Legend opacity (apply on the shapes in the legend, not the background itself).}
+\item{legendOpacity}{Legend opacity (applies on the shapes in the legend, not the background itself).}
 
 \item{FUN}{The function to be applied to infer values. If NULL then the information missing from the parent nodes won't be inferred.}
 
-\item{display}{c("auto", "requested", "all", "leaves"), a string indicating how to display points :
+\item{display}{c("auto", "requested", "all", "leaves"), a string indicating how to display markers :
 \itemize{
-\item "auto" : the markers are displayed depending on the zoom, by default, allow to have a lot of points
-\item "requested" : only display the requested taxa, but all at the same time
-\item "all" : display all the taxa including all the ancestors to the root
-\item "leaves" : display only the last (most recent) taxa
+\item "auto" : the markers are displayed depending on the zoom level, by default, allow to have a lot of markers
+\item "requested" : only displays the requested taxa, but all at the same time
+\item "all" : displays all the taxa including all the ancestors to the root
+\item "leaves" : displays only the latest (most recent) taxa
 }
 
 (WARNING : "requested", "leaves" and "auto" shouldn't be used to display more than 2000 markers as it may result in long computing time).}
@@ -77,14 +77,14 @@ lm_markers(
 \item{label}{A column name indicating what to display when hovering on a node.}
 }
 \value{
-A list containing all aesthetics informations for one serie of markers.
+An lm_markers object containing all aesthetics details for one layer of markers.
 }
 \description{
-Allow to add a layer with circles that can represent data. The parameters that can be used to represent data are the following:
+Adds a layer with circles that can represent data. The main parameters that can be used to represent data are the following:
 \itemize{
 \item radius
-\item fillColor
-\item color
+\item var_fillColor
+\item var_color (stroke's color)
 }
 }
 \examples{

@@ -2,20 +2,20 @@
 % Please edit documentation in R/create_matrix.R
 \name{pass_infos_discret}
 \alias{pass_infos_discret}
-\title{Pass discret informations to nodes}
+\title{Infer discret values to nodes for lm_piecharts function.}
 \usage{
 pass_infos_discret(M, value)
 }
 \arguments{
 \item{M}{The dataframe returned by create_matrix.}
 
-\item{value}{The column name to which the function applies.}
+\item{value}{The column name represented as piecharts.}
 }
 \value{
-A dataframe.
+A dataframe containing the TaxIDs and as many columns as there are distinct values.
 }
 \description{
-Pass discret informations to nodes
+Infer discret values to nodes for lm_piecharts function.
 }
 \examples{
 data(LM_eukaryotes)

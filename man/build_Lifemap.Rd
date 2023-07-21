@@ -7,26 +7,26 @@
 build_Lifemap(df, basemap = c("fr", "ncbi", "base", "virus"), verbose = TRUE)
 }
 \arguments{
-\item{df}{A dataframe containing at least a column named "taxid" containing NCBI format TaxIDs and that can contain characteristics associated with those TaxIDs.}
+\item{df}{A dataframe containing at least a column named "taxid" including NCBI format TaxIDs.
+The dataframe can also contain characteristics associated with those TaxIDs in separated columns.}
 
 \item{basemap}{The basemap wanted ("fr","ncbi", "base" or "virus").}
 
-\item{verbose}{If TRUE, will write informations on the status of the operation in the terminal.}
+\item{verbose}{If TRUE, will write details on the status of the operation in the terminal.}
 }
 \value{
 A lifemap object with :
 \itemize{
-\item df : a dataframe containing at least :
+\item df : a dataframe containing at least for each TaxID (taxid) :
 \itemize{
-\item The taxids (taxid)
 \item The longitude (long)
 \item The latitude (lat)
-\item The scientific nam (sci_name)
-\item The zoom at which the taxa can be seen (zoom)
-\item The ascendants of requested taxids (ascend)
-\item The type of each taxid ("requested" or "ancestor")
+\item The scientific name (sci_name)
+\item The zoom level at which the taxa can be seen (zoom)
+\item Its ascendants (ascend)
+\item Its type ("requested" or "ancestor")
 }
-\item basemap : the basemap used to get taxa's informations
+\item basemap : the basemap used to get taxa's details
 }
 }
 \description{

@@ -2,7 +2,7 @@
 % Please edit documentation in R/draw_Lifemap.R
 \name{add_lm_branches}
 \alias{add_lm_branches}
-\title{Compute the aes for a subtree.}
+\title{Compute the aesthetics for a subtree visualisation.}
 \usage{
 add_lm_branches(
   proxy,
@@ -17,7 +17,7 @@ add_lm_branches(
 \arguments{
 \item{proxy}{The map to be modified.}
 
-\item{aes}{The dataframe containing the aesthetics informations (must be of lm_branches class).}
+\item{aes}{The dataframe containing the aesthetics details (must be of lm_branches class).}
 
 \item{df}{The full dataframe.}
 
@@ -25,13 +25,13 @@ add_lm_branches(
 
 \item{df_descendants}{The dataframe containing all the information on the descendants of visible taxa.}
 
-\item{group_info}{The points' group.}
+\item{group_info}{the ID of this group of lines.}
 
-\item{all_taxids}{A vector with all the visible taxids and their direct descendants.}
+\item{all_taxids}{A vector containing all the visible taxids and their direct descendants.}
 }
 \value{
-A list of values.
+An updated map with the new layer added.
 }
 \description{
-Compute the aes for a subtree.
+Compute the aesthetics for a subtree visualisation.
 }

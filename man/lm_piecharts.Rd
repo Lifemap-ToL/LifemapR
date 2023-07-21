@@ -21,7 +21,7 @@ lm_piecharts(
 \arguments{
 \item{data}{A sub dataset to use, if NULL then all of the taxids from the lifemap object given to lifemap() will be used.}
 
-\item{param}{A string indicating the discret variable to be represented.}
+\item{param}{A column name indicating the discret variable to be represented.}
 
 \item{type}{The type of chart to draw.}
 
@@ -35,20 +35,22 @@ lm_piecharts(
 
 \item{pal}{The palette to be used for the charts.}
 
-\item{legend}{Whether to draw the legend or not.}
+\item{legend}{A boolean indiacting whether to draw the legend or not.}
 
 \item{legendPosition}{c("topright", "bottomright", "bottomleft", "topleft"). Where should the legend be placed.}
 
-\item{display}{c("auto", "requested", "all", "leaves"), a string indicating how to display points :
+\item{display}{c("auto", "requested", "all", "leaves"), a string indicating how to display charts :
 \itemize{
-\item "auto" : the markers are displayed depending on the zoom, by default, allow to have a lot of points
-\item "requested" : only display the requested taxa, but all at the same time
-\item "all" : display all the taxa including all the ancestors to the root
-\item "leaves" : display only the last (most recent) taxa
-}}
+\item "auto" : the markers are displayed depending on the zoom level, by default, allow to have a lot of charts
+\item "requested" : only displays the requested taxa, but all at the same time
+\item "all" : displays all the taxa including all the ancestors to the root
+\item "leaves" : displays only the latest (most recent) taxa
+}
+
+(WARNING : "requested", "leaves" and "auto" shouldn't be used to display more than 2000 charts as it may result in long computing time)}
 }
 \value{
-A lifemap object.
+An lm_piecharts object containing all aesthetics details for one layer of charts
 }
 \description{
 Add a "piecharts" layer to a lifemap_obj object.

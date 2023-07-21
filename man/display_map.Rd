@@ -7,9 +7,9 @@
 display_map(df = NULL, basemap = c("fr", "ncbi", "base", "virus"))
 }
 \arguments{
-\item{df}{A dataframe, if given, the columns can be easily accessed with "~" (eg. ~GC.).}
+\item{df}{A dataframe. If given, its columns can be easily accessed with "~" (eg. ~GC.).}
 
-\item{basemap}{The basemap choose to display. Either
+\item{basemap}{The basemap choosen to be displayed, it can be either :
 \itemize{
 \item 'fr' for \url{https://lifemap-fr.univ-lyon1.fr/}
 \item 'ncbi' for \url{https://lifemap-ncbi.univ-lyon1.fr/}
@@ -18,11 +18,11 @@ display_map(df = NULL, basemap = c("fr", "ncbi", "base", "virus"))
 }}
 }
 \value{
-HTML widget object  with graphics layers.
+An HTML widget object  with graphics layers.
 }
 \description{
 This function create a blank Leaflet map using the leaflet function from the leaflet package.
-if a dataframe is provided, it will be used for the creation of the map object.
+If a dataframe is provided, it will be used for the creation of the map.
 }
 \examples{
 display_map()

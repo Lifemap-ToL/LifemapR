@@ -3,9 +3,9 @@
 \docType{data}
 \name{LM_eukaryotes}
 \alias{LM_eukaryotes}
-\title{Transformation in a LifemapR format of NCBI informations for 1000 eukaryotes}
+\title{Transformation in a LifemapR format of NCBI information for 1000 eukaryotes}
 \format{
-A lifemap object - a list containing the basemap used to fetch datas and df, a data frame with 2760 rows and 26 variables:
+A lifemap object - a list containing the basemap used to fetch data and df, a data frame with 2760 rows and 26 variables:
 \describe{
 \item{X.Organism.Name}{Organism name at the species level}
 \item{taxid}{NCBI taxid}
@@ -39,6 +39,6 @@ A lifemap object - a list containing the basemap used to fetch datas and df, a d
 data(LM_eukaryotes)
 }
 \description{
-A dataset containing NCBI informations of 1000 eukaryotes. The variables are as follows:
+A dataset containing NCBI information of 1000 eukaryotes. The variables are as follows:
 }
 \keyword{datasets}

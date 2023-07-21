@@ -3,7 +3,7 @@
 \docType{data}
 \name{eukaryotes_1000}
 \alias{eukaryotes_1000}
-\title{NCBI informations for 1000 eukaryotes}
+\title{NCBI information for 1000 eukaryotes}
 \format{
 A data frame with 1000 rows and 19 variables:
 \describe{
@@ -32,6 +32,6 @@ A data frame with 1000 rows and 19 variables:
 data(eukaryotes_1000)
 }
 \description{
-A dataset containing NCBI informations of 1000 eukaryotes. The variables are as follows:
+A dataset containing NCBI information of 1000 eukaryotes. The variables are as follows:
 }
 \keyword{datasets}

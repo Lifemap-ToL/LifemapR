@@ -2,24 +2,24 @@
 % Please edit documentation in R/draw_Lifemap.R
 \name{add_lm_markers}
 \alias{add_lm_markers}
-\title{Compute the aes for a set of points.}
+\title{Compute the aesthetics for markers visualisation.}
 \usage{
 add_lm_markers(proxy, aes, df, df_visible, group_info)
 }
 \arguments{
 \item{proxy}{The map to be modified.}
 
-\item{aes}{The dataframe containing the aesthetics informations (must be of lm_markers class).}
+\item{aes}{The dataframe containing the aesthetics information (must be of lm_markers class).}
 
 \item{df}{The full dataframe.}
 
 \item{df_visible}{The dataframe containing visible taxa.}
 
-\item{group_info}{The points' group / layerID.}
+\item{group_info}{The ID of this group of markers.}
 }
 \value{
-A list of values.
+An updated map with the new layer added.
 }
 \description{
-Compute the aes for a set of points.
+Compute the aesthetics for markers visualisation.
 }

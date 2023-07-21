@@ -2,7 +2,7 @@
 % Please edit documentation in R/draw_Lifemap.R
 \name{draw_Lifemap}
 \alias{draw_Lifemap}
-\title{Represent datas on a Lifemap basemap.}
+\title{Represent data on a Lifemap basemap.}
 \usage{
 draw_Lifemap(lm_obj)
 }
@@ -13,7 +13,7 @@ draw_Lifemap(lm_obj)
 A shiny application
 }
 \description{
-Draw a map and all the aesthetics in the order you put them, the last one will be on top of the others.
+Draw a map and all the aesthetics in the order you put them in, the last one will be on top of the others.
 }
 \examples{
 ## Only run examples in interactive R sessions

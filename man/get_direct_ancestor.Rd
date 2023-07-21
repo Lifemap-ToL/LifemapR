@@ -7,7 +7,7 @@
 get_direct_ancestor(df)
 }
 \arguments{
-\item{df}{A dataframe with requested taxid and the full ascendance informations.}
+\item{df}{A dataframe with requested taxid and the full ascendance information.}
 }
 \value{
 A dataframe with the direct ancestor for each taxa.

@@ -9,14 +9,13 @@ create_matrix(df, cols)
 \arguments{
 \item{df}{A dataframe containing taxids and values.}
 
-\item{cols}{The columns that contains the values which needs to be inferred.}
+\item{cols}{The columns containing the values which needs to be inferred.}
 }
 \value{
 A dataframe.
 }
 \description{
-Create a dataframe with couples of taxids, each taxid and their corresponding values are associated with each
-one of the taxid's ancestors.
+Create a dataframe with pairs of taxids, each taxid and their corresponding values are associated with every one of its ancestors.
 }
 \examples{
 data(LM_eukaryotes)

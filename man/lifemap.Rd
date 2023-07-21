@@ -12,7 +12,7 @@ lifemap(lm_obj, zoom = 4)
 \item{zoom}{The level of zoom for which values are displayed (if zoom = 0 only the nodes at the current zoom level or lower can have their values displayed).}
 }
 \value{
-An lifemap_obj object.
+A lifemap_obj object.
 }
 \description{
 Initialise a lifemap_obj object.

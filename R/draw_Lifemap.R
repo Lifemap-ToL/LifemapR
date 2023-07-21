@@ -22,17 +22,17 @@ create_value_range <- function(value, df, df2, min, max){
 }
 
 
-#' Compute the aes for a set of points.
+#' Compute the aesthetics for markers visualisation.
 #'
-#' @param aes The dataframe containing the aesthetics informations (must be of lm_markers class).
+#' @param aes The dataframe containing the aesthetics information (must be of lm_markers class).
 #' @param df The full dataframe.
 #' @param df_visible The dataframe containing visible taxa.
 #' @param proxy The map to be modified.
-#' @param group_info The points' group / layerID.
+#' @param group_info The ID of this group of markers.
 #'
 #' @importFrom leaflet addCircleMarkers colorNumeric
 #'
-#' @return A list of values.
+#' @return An updated map with the new layer added.
 add_lm_markers <- function(proxy, aes, df, df_visible, group_info) {
 
   if (!(aes$var_fillColor %in% "default")) {
@@ -108,19 +108,19 @@ add_lm_markers <- function(proxy, aes, df, df_visible, group_info) {
 
 }
 
-#' Compute the aes for a subtree.
+#' Compute the aesthetics for a subtree visualisation.
 #'
 #' @param proxy The map to be modified.
-#' @param aes The dataframe containing the aesthetics informations (must be of lm_branches class).
+#' @param aes The dataframe containing the aesthetics details (must be of lm_branches class).
 #' @param df The full dataframe.
 #' @param df_visible The dataframe containing visible taxa.
 #' @param df_descendants The dataframe containing all the information on the descendants of visible taxa.
-#' @param group_info The points' group.
-#' @param all_taxids A vector with all the visible taxids and their direct descendants.
+#' @param group_info the ID of this group of lines.
+#' @param all_taxids A vector containing all the visible taxids and their direct descendants.
 #'
 #' @importFrom leaflet addPolylines colorNumeric
 #'
-#' @return A list of values.
+#' @return An updated map with the new layer added.
 add_lm_branches <- function(proxy, aes, df, df_visible, df_descendants, group_info, all_taxids) {
   if (!(aes$var_color %in% "default")) {
     make_col <- leaflet::colorNumeric(palette = aes$palette, domain = df[[aes$var_color]], reverse = TRUE)
@@ -163,18 +163,18 @@ add_lm_branches <- function(proxy, aes, df, df_visible, df_descendants, group_in
   }
   proxy
 }
-#' Compute the aes for discret values.
+#' Compute the aesthetics for discret values visualisation.
 #'
-#' @param aes The dataframe containing the aesthetics informations (must be of lm_piecharts class).
+#' @param aes The dataframe containing the aesthetics details (must be of lm_piecharts class).
 #' @param df The full dataframe.
 #' @param df_visible The dataframe containing visible taxa.
 #' @param proxy The map to be modified.
-#' @param layer The points' group.
+#' @param layer The ID of this group of charts
 #'
 #' @importFrom leaflet.minicharts addMinicharts
 #' @importFrom leaflet colorFactor
 #'
-#' @return A list of values.
+#' @return An updated map with the new layer added.
 add_lm_piecharts <- function(proxy, aes, df, df_visible, layer) {
   values <- unique(df[df$type == "requested", aes$param])
   layerId_info <- sapply(X = 1:nrow(df_visible), FUN = function(x){paste(layer,x,collapse="", sep="")})
@@ -202,14 +202,14 @@ add_lm_piecharts <- function(proxy, aes, df, df_visible, layer) {
 
 #' Compute the different display options.
 #'
-#' @param m A map to be modified.
-#' @param aes The dataframe containing the aesthetics informations
+#' @param m The map to be modified.
+#' @param aes The dataframe containing the aesthetics details
 #' @param df The full dataframe.
 #' @param type A string indicating the type of representation, either "markers" or "discret"
-#' @param leaves Vector of all the terminal taxids.
+#' @param leaves The Vector of all the terminal taxids.
 #' @param i The index of the aesthetics.
 #'
-#' @return A map.
+#' @return An updated map.
 display_option <- function(m, aes, df, type, leaves, i){
 
   if (aes$display == "requested") {
@@ -244,10 +244,10 @@ display_option <- function(m, aes, df, type, leaves, i){
 }
 
 
-#' Represent datas on a Lifemap basemap.
+#' Represent data on a Lifemap basemap.
 #'
 #' @description
-#' Draw a map and all the aesthetics in the order you put them, the last one will be on top of the others.
+#' Draw a map and all the aesthetics in the order you put them in, the last one will be on top of the others.
 #'
 #' @param lm_obj A Lifemap object filled with aesthetics.
 #'
@@ -293,7 +293,7 @@ draw_Lifemap <- function(lm_obj){
   cat("passing the information to the nodes \n")
   #pass the information to the nodes or not
   for (i in 1:length(aes)){
-    # passing informations if the function is given
+    # passing information if the function is given
     if (is.lm_markers(aes[[i]]) && !(is.null(aes[[i]]$FUN))) {
       for (parameter in aes[[i]]) {
 

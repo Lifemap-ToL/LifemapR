@@ -1,6 +1,6 @@
-#' NCBI informations for 1000 eukaryotes
+#' NCBI information for 1000 eukaryotes
 #'
-#' A dataset containing NCBI informations of 1000 eukaryotes. The variables are as follows:
+#' A dataset containing NCBI information of 1000 eukaryotes. The variables are as follows:
 #'
 #' @format A data frame with 1000 rows and 19 variables:
 #' \describe{
@@ -27,9 +27,9 @@
 #' @usage data(eukaryotes_1000)
 "eukaryotes_1000"
 
-#' NCBI informations for 80 eukaryotes
+#' NCBI information for 80 eukaryotes
 #'
-#' A dataset containing NCBI informations of 80 eukaryotes. The variables are as follows:
+#' A dataset containing NCBI information of 80 eukaryotes. The variables are as follows:
 #'
 #' @format A data frame with 80 rows and 19 variables:
 #' \describe{
@@ -56,11 +56,11 @@
 #' @usage data(eukaryotes_80)
 "eukaryotes_80"
 
-#' Transformation in a LifemapR format of NCBI informations for 1000 eukaryotes
+#' Transformation in a LifemapR format of NCBI information for 1000 eukaryotes
 #'
-#' A dataset containing NCBI informations of 1000 eukaryotes. The variables are as follows:
+#' A dataset containing NCBI information of 1000 eukaryotes. The variables are as follows:
 #'
-#' @format A lifemap object - a list containing the basemap used to fetch datas and df, a data frame with 2760 rows and 26 variables:
+#' @format A lifemap object - a list containing the basemap used to fetch data and df, a data frame with 2760 rows and 26 variables:
 #' \describe{
 #'   \item{X.Organism.Name}{Organism name at the species level}
 #'   \item{taxid}{NCBI taxid}
@@ -94,7 +94,7 @@
 
 #' Kraken results
 #'
-#' A dataset containing NCBI informations of 1000 eukaryotes. The variables are as follows:
+#' A dataset containing NCBI information of 1000 eukaryotes. The variables are as follows:
 #'
 #' @format A data frame with 4427 rows and 6 variables:
 #' \describe{
@@ -111,7 +111,7 @@
 
 #' Genomic results
 #'
-#' A dataset containing informations on Genome size and TE content for 808 taxids
+#' A dataset containing information on Genome size and TE content for 808 taxids
 #'
 #' @format A data frame with 808 rows and 3 variables:
 #' \describe{

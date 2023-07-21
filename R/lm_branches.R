@@ -7,11 +7,11 @@
 #' @param min An integer indicating the minimal thickness of the branches if the size is a column name.
 #' @param max An integer indicating the maximal thickness of the branches if the size is a column name.
 #' @param opacity An integer indicating branche's opacity.
-#' @param FUN The function to be applied to infer values.
+#' @param FUN The function to be applied to infer values. If NULL values won't be inferred
 #' @param legend A logical indicating whether or not to display the legend.
 #' @param legendPosition c("topright", "bottomright", "bottomleft", "topleft"), the position of the legend.
 #'
-#' @return A lifemap_obj object.
+#' @return An lm_branches object containing all aesthetics details for one layer of branches
 #' @export
 #'
 #' @examples

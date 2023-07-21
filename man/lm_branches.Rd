@@ -32,14 +32,14 @@ lm_branches(
 
 \item{opacity}{An integer indicating branche's opacity.}
 
-\item{FUN}{The function to be applied to infer values.}
+\item{FUN}{The function to be applied to infer values. If NULL values won't be inferred}
 
 \item{legend}{A logical indicating whether or not to display the legend.}
 
 \item{legendPosition}{c("topright", "bottomright", "bottomleft", "topleft"), the position of the legend.}
 }
 \value{
-A lifemap_obj object.
+An lm_branches object containing all aesthetics details for one layer of branches
 }
 \description{
 Add a "branches" layer to a lifemap_obj object.

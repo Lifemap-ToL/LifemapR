@@ -19,6 +19,6 @@ A data frame with 4427 rows and 6 variables:
 data(kraken_res)
 }
 \description{
-A dataset containing NCBI informations of 1000 eukaryotes. The variables are as follows:
+A dataset containing NCBI information of 1000 eukaryotes. The variables are as follows:
 }
 \keyword{datasets}

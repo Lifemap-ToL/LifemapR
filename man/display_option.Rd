@@ -7,20 +7,20 @@
 display_option(m, aes, df, type, leaves, i)
 }
 \arguments{
-\item{m}{A map to be modified.}
+\item{m}{The map to be modified.}
 
-\item{aes}{The dataframe containing the aesthetics informations}
+\item{aes}{The dataframe containing the aesthetics details}
 
 \item{df}{The full dataframe.}
 
 \item{type}{A string indicating the type of representation, either "markers" or "discret"}
 
-\item{leaves}{Vector of all the terminal taxids.}
+\item{leaves}{The Vector of all the terminal taxids.}
 
 \item{i}{The index of the aesthetics.}
 }
 \value{
-A map.
+An updated map.
 }
 \description{
 Compute the different display options.

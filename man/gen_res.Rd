@@ -16,6 +16,6 @@ A data frame with 808 rows and 3 variables:
 data(gen_res)
 }
 \description{
-A dataset containing informations on Genome size and TE content for 808 taxids
+A dataset containing information on Genome size and TE content for 808 taxids
 }
 \keyword{datasets}

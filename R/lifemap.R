@@ -8,7 +8,7 @@
 #' @param lm_obj lifemap_obj object used for data visualisation.
 #' @param zoom The level of zoom for which values are displayed (if zoom = 0 only the nodes at the current zoom level or lower can have their values displayed).
 #'
-#' @return An lifemap_obj object.
+#' @return A lifemap_obj object.
 #' @export
 lifemap <- function(lm_obj,
                     zoom = 4) {

@@ -1,11 +1,10 @@
 #' Create a dataframe for the ancestry.
 #'
 #' @description
-#' Create a dataframe with couples of taxids, each taxid and their corresponding values are associated with each
-#' one of the taxid's ancestors.
+#' Create a dataframe with pairs of taxids, each taxid and their corresponding values are associated with every one of its ancestors.
 #'
 #' @param df A dataframe containing taxids and values.
-#' @param cols The columns that contains the values which needs to be inferred.
+#' @param cols The columns containing the values which needs to be inferred.
 #'
 #' @return A dataframe.
 #' @export
@@ -55,12 +54,12 @@ pass_infos <- function(M, FUN, value){
 }
 
 
-#' Pass discret informations to nodes
+#' Infer discret values to nodes for lm_piecharts function.
 #'
 #' @param M The dataframe returned by create_matrix.
-#' @param value The column name to which the function applies.
+#' @param value The column name represented as piecharts.
 #'
-#' @return A dataframe.
+#' @return A dataframe containing the TaxIDs and as many columns as there are distinct values.
 #' @export
 #' @importFrom dplyr bind_rows
 #'
