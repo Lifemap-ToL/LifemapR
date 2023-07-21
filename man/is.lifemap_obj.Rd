@@ -9,6 +9,9 @@ is.lifemap_obj(x)
 \arguments{
 \item{x}{The object to test.}
 }
+\value{
+A boolean indicating whether or not the object if of lm_obj type.
+}
 \description{
 Reports whether x is a lifemap_obj object.
 }

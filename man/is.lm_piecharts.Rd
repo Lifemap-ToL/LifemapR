@@ -9,6 +9,9 @@ is.lm_piecharts(x)
 \arguments{
 \item{x}{The object to test.}
 }
+\value{
+A boolean indicating whether or not the object if of lm_piecharts type.
+}
 \description{
 Reports whether x is a lm_branches object.
 }

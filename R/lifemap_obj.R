@@ -28,6 +28,8 @@ print.lifemap_obj <- function(x,...) {
 #' Reports whether x is a lifemap_obj object.
 #' @param x The object to test.
 #' @export
+#' @return A boolean indicating whether or not the object if of lm_obj type.
+
 #'
 #' @examples
 #' ## Only run examples in interactive R sessions

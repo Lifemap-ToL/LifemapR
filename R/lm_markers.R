@@ -122,5 +122,6 @@ lm_markers <- function(data = NULL,
 
 #' Reports whether x is a lm_markers object.
 #' @param x The object to test.
+#' @return A boolean indicating whether or not the object if of lm_markers type.
 #' @export
 is.lm_markers <- function(x) {inherits(x, "lm_markers")}
