@@ -70,7 +70,7 @@
 
 
 <dt>param</dt>
-<dd><p>A string indicating the discret variable to be represented.</p></dd>
+<dd><p>A column name indicating the discret variable to be represented.</p></dd>
 
 
 <dt>type</dt>
@@ -98,7 +98,7 @@
 
 
 <dt>legend</dt>
-<dd><p>Whether to draw the legend or not.</p></dd>
+<dd><p>A boolean indiacting whether to draw the legend or not.</p></dd>
 
 
 <dt>legendPosition</dt>
@@ -106,18 +106,18 @@
 
 
 <dt>display</dt>
-<dd><p>c("auto", "requested", "all", "leaves"), a string indicating how to display points :</p><ul><li><p>"auto" : the markers are displayed depending on the zoom, by default, allow to have a lot of points</p></li>
-<li><p>"requested" : only display the requested taxa, but all at the same time</p></li>
-<li><p>"all" : display all the taxa including all the ancestors to the root</p></li>
-<li><p>"leaves" : display only the last (most recent) taxa</p></li>
-</ul></dd>
+<dd><p>c("auto", "requested", "all", "leaves"), a string indicating how to display charts :</p><ul><li><p>"auto" : the markers are displayed depending on the zoom level, by default, allow to have a lot of charts</p></li>
+<li><p>"requested" : only displays the requested taxa, but all at the same time</p></li>
+<li><p>"all" : displays all the taxa including all the ancestors to the root</p></li>
+<li><p>"leaves" : displays only the latest (most recent) taxa</p></li>
+</ul><p>(WARNING : "requested", "leaves" and "auto" shouldn't be used to display more than 2000 charts as it may result in long computing time)</p></dd>
 
 </dl></div>
     <div class="section level2">
     <h2 id="value">Value<a class="anchor" aria-label="anchor" href="#value"></a></h2>
     
 
-<p>A lifemap object.</p>
+<p>An lm_piecharts object containing all aesthetics details for one layer of charts</p>
     </div>
 
     <div class="section level2">

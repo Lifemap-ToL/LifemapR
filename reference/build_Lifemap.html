@@ -54,7 +54,8 @@
     <div class="section level2">
     <h2 id="arguments">Arguments<a class="anchor" aria-label="anchor" href="#arguments"></a></h2>
     <dl><dt>df</dt>
-<dd><p>A dataframe containing at least a column named "taxid" containing NCBI format TaxIDs and that can contain characteristics associated with those TaxIDs.</p></dd>
+<dd><p>A dataframe containing at least a column named "taxid" including NCBI format TaxIDs.
+The dataframe can also contain characteristics associated with those TaxIDs in separated columns.</p></dd>
 
 
 <dt>basemap</dt>
@@ -62,22 +63,21 @@
 
 
 <dt>verbose</dt>
-<dd><p>If TRUE, will write informations on the status of the operation in the terminal.</p></dd>
+<dd><p>If TRUE, will write details on the status of the operation in the terminal.</p></dd>
 
 </dl></div>
     <div class="section level2">
     <h2 id="value">Value<a class="anchor" aria-label="anchor" href="#value"></a></h2>
     
 
-<p>A lifemap object with :</p><ul><li><p>df : a dataframe containing at least :</p><ul><li><p>The taxids (taxid)</p></li>
-<li><p>The longitude (long)</p></li>
+<p>A lifemap object with :</p><ul><li><p>df : a dataframe containing at least for each TaxID (taxid) :</p><ul><li><p>The longitude (long)</p></li>
 <li><p>The latitude (lat)</p></li>
-<li><p>The scientific nam (sci_name)</p></li>
-<li><p>The zoom at which the taxa can be seen (zoom)</p></li>
-<li><p>The ascendants of requested taxids (ascend)</p></li>
-<li><p>The type of each taxid ("requested" or "ancestor")</p></li>
+<li><p>The scientific name (sci_name)</p></li>
+<li><p>The zoom level at which the taxa can be seen (zoom)</p></li>
+<li><p>Its ascendants (ascend)</p></li>
+<li><p>Its type ("requested" or "ancestor")</p></li>
 </ul></li>
-<li><p>basemap : the basemap used to get taxa's informations</p></li>
+<li><p>basemap : the basemap used to get taxa's details</p></li>
 </ul></div>
 
     <div class="section level2">
