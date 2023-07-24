@@ -12,7 +12,7 @@
 \item{e2}{A description of the graphical features wanted for a set of points (eg. markers, subtree, piecharts, ...).}
 }
 \value{
-An lifemap_obj object.
+An lm_obj object.
 }
 \description{
 Add a graphical element to a tree visualisation.

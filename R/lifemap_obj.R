@@ -4,7 +4,7 @@
 #' @param x An lifemap_obj.
 #' @param ... Further arguments passed to or from other methods.
 #'
-#' @return NA
+#' @return Either a description of the dataframe and basemap used for the lm_obj object, or a shiny application if aesthetics are furnished
 #' @export
 #' @examples
 #' ## Only run examples in interactive R sessions
@@ -28,7 +28,7 @@ print.lifemap_obj <- function(x,...) {
 #' Reports whether x is a lifemap_obj object.
 #' @param x The object to test.
 #' @export
-#' @return A boolean indicating whether or not the object if of lm_obj type.
+#' @return A boolean indicating whether or not the object is of lifemap_obj type.
 
 #'
 #' @examples
@@ -44,7 +44,7 @@ is.lifemap_obj <- function(x) inherits(x, "lifemap_obj")
 #' @param e1 An object of class lifemap_obj that contains at least $df, a dataframe, and $basemap, the map used to get the coordinates.
 #' @param e2 A description of the graphical features wanted for a set of points (eg. markers, subtree, piecharts, ...).
 #' @export
-#' @return An lifemap_obj object.
+#' @return An lm_obj object.
 #'
 #' @examples
 #' ## Only run examples in interactive R sessions

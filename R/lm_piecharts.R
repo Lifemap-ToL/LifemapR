@@ -57,6 +57,6 @@ lm_piecharts <- function(data = NULL,
 
 #' Reports whether x is a lm_branches object.
 #' @param x The object to test.
-#' @return A boolean indicating whether or not the object if of lm_piecharts type.
+#' @return A boolean indicating whether or not the object is of lm_piecharts type.
 #' @export
 is.lm_piecharts <- function(x) {inherits(x, "lm_piecharts")}

@@ -12,7 +12,7 @@
 \item{...}{Further arguments passed to or from other methods.}
 }
 \value{
-NA
+Either a description of the dataframe and basemap used for the lm_obj object, or a shiny application if aesthetics are furnished
 }
 \description{
 Method to print lifemap_obj objects.

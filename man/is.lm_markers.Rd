@@ -10,7 +10,7 @@ is.lm_markers(x)
 \item{x}{The object to test.}
 }
 \value{
-A boolean indicating whether or not the object if of lm_markers type.
+A boolean indicating whether or not the object is of lm_markers type.
 }
 \description{
 Reports whether x is a lm_markers object.
