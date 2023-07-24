@@ -44,7 +44,7 @@ is.lifemap_obj <- function(x) inherits(x, "lifemap_obj")
 #' @param e1 An object of class lifemap_obj that contains at least $df, a dataframe, and $basemap, the map used to get the coordinates.
 #' @param e2 A description of the graphical features wanted for a set of points (eg. markers, subtree, piecharts, ...).
 #' @export
-#' @return An lm_obj object.
+#' @return A lifemap_obj object.
 #'
 #' @examples
 #' ## Only run examples in interactive R sessions
