@@ -4,7 +4,7 @@
 
 
 # LifemapR <img src="man/figures/lifemapr-logo.png" align="right" style="float:right; width:20%;"/>
-An R package to visualise datas on a Lifemap base (https://lifemap-ncbi.univ-lyon1.fr/) 
+An R package to visualise data on a Lifemap base (https://lifemap-ncbi.univ-lyon1.fr/) 
 
 ## Installation
 
@@ -22,7 +22,7 @@ library("LifemapR")
 
 Here is a brief introduction on how to use LifemapR.
 
-1. With the ```build_Lifemap``` function transform your already existing datas into a format usable by LifemapR functions
+1. With the ```build_Lifemap``` function transform your already existing data into a format usable by LifemapR functions
 
 ```r
 data(eukaryotes_1000)
@@ -51,7 +51,7 @@ lifemap(LM_obj) +
 ## Development
 
 To do list : 
-- [ ] New protocole to fetch datas with improved databases (parquet format)
+- [ ] New protocole to fetch data with improved databases (parquet format)
 - [ ] Improve create_matrix() to use less CPU (merge before joining all lists) 
 - [ ] Improve make_newick() to make it recursive
 - [ ] Improve the shiny application version

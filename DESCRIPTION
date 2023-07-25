@@ -7,7 +7,7 @@ Authors@R: c(
     person("Damien M.", "de Vienne", role = "aut", email = "damien.de-vienne@univ-lyon1.fr"),
     person("Aurélie", "Siberchicot", role = c("ctb", "cre"), email = "aurelie.siberchicot@univ-lyon1.fr")
     )
-Description: Allow to visualise datas on the NCBI phylogenetic tree as presented in Lifemap '<http://lifemap.univ-lyon1.fr/>'. It takes an input a dataframe with at least a "taxid" column containing NCBI format TaxIds and allow to draw multiple layers with different visualisation tools.
+Description: Allow to visualise data on the NCBI phylogenetic tree as presented in Lifemap '<http://lifemap.univ-lyon1.fr/>'. It takes an input a dataframe with at least a "taxid" column containing NCBI format TaxIds and allow to draw multiple layers with different visualisation tools.
 License: MIT + file LICENSE
 Encoding: UTF-8
 Roxygen: list(markdown = TRUE)

@@ -24,7 +24,7 @@ vignette: >
 knitr::opts_chunk$set(echo = TRUE)
 ```
 
-Introducing LifemapR, a package aiming to visualise datas on a Lifemap basemap. The uniqueness of LifemapR is that it offers interactive visualization of data across a vast taxonomy (the NCBI taxonomy). LifemapR can easily process large datasets, exceeding 300,000 rows, with remarkable efficiency and precision. 
+Introducing LifemapR, a package aiming to visualise data on a Lifemap basemap. The uniqueness of LifemapR is that it offers interactive visualization of data across a vast taxonomy (the NCBI taxonomy). LifemapR can easily process large datasets, exceeding 300,000 rows, with remarkable efficiency and precision. 
 But what sets LifemapR apart is its flexibility and adaptability, offering a wide spectrum of customization options. This allows users to personalize their data visualization to better suit their unique needs and preferences. 
 
 
@@ -45,7 +45,7 @@ library("LifemapR")
 
 ## General case
 
-The very first step to use this package is to have a dataframe containing at least a ```taxid``` column containing NCBI format TaxIds. This dataframe can also contain other datas that you might want to visualise.
+The very first step to use this package is to have a dataframe containing at least a ```taxid``` column containing NCBI format TaxIds. This dataframe can also contain other data that you might want to visualise.
 
 ```{r echo = FALSE, results=FALSE, warning=FALSE}
 library("LifemapR")
@@ -69,13 +69,13 @@ LM <- build_Lifemap(data)
 After that, you get a ```lifemap```  object that takes the form of a list containing the following informations :
 
 - ```df``` : containing the augmented dataframe obtained after the first step.
-- ```basemap``` : which basemap was used to fetch the datas.
+- ```basemap``` : which basemap was used to fetch the data.
 
-You can then visualise your datas with ```lifemap()``` associated with one or more of the following functions :
+You can then visualise your data with ```lifemap()``` associated with one or more of the following functions :
 
-- ```lm_markers()```, to represent datas as circles.
+- ```lm_markers()```, to represent data as circles.
 - ```lm_branches()```, to represent the data's subtree.
-- ```lm_discret()```, to represent discret datas as piecharts.
+- ```lm_discret()```, to represent discret data as piecharts.
 
 Each one of these three function adds a layer to the visualisation. These layers are combined with the ```+``` symbol.
 
@@ -89,7 +89,7 @@ lifemap(LM) + lm_markers()
 lifemap(LM) + lm_markers() + lm_branches()
 ```
 
-These function also allow the user to represent datas by modifying characteristics of representations as we'll see later in the examples.
+These function also allow the user to represent data by modifying characteristics of representations as we'll see later in the examples.
 
 The output is a shiny interface where the user can move and zoom freely.
 
@@ -108,7 +108,7 @@ data(kraken_res)
 LM_kraken <- build_Lifemap(df = kraken_res, basemap = "ncbi")
 ```
 
-Then we can began to visualize our datas.
+Then we can began to visualize our data.
 
 We can for example represent the number of read that was assigned to each TaxID by the color of the markers with the following command.
 
@@ -117,7 +117,7 @@ lifemap(LM_kraken) +
   lm_markers(var_fillColor = "coverage_percent", fillColor = "PiYG")
 ```
 
-```{r, echo=FALSE,out.width="40%", out.height="20%",fig.cap= 'visualisation of kraken datas',fig.show='hold',fig.align='center'}
+```{r, echo=FALSE,out.width="40%", out.height="20%",fig.cap= 'visualisation of kraken data',fig.show='hold',fig.align='center'}
 knitr::include_graphics("figures/kraken_base.png")
 ``` 
 
@@ -152,7 +152,7 @@ lifemap(LM_kraken) +
 knitr::include_graphics("figures/kraken_popup.png")
 ``` 
 
-Finally, it is also possible to represent datas with a subtree, either by the size of the branches or their color.
+Finally, it is also possible to represent data with a subtree, either by the size of the branches or their color.
 
 ```{r, eval = FALSE}
 # Information on branche's color
@@ -182,11 +182,11 @@ data(gen_res)
 LM_gen <- build_Lifemap(df = gen_res, basemap = "ncbi")
 ```
 
-Then we can began to visualize our datas.
+Then we can began to visualize our data.
 
 Here we have two characteristics to visualise, we can do so with the following command.
 
-However, unlike the precedent data set, we don't have informations for all the nodes. Here we only have datas for the leaves so it will be necessary to infere values to the nodes where the information is missing with the ```FUN``` argument.
+However, unlike the precedent data set, we don't have informations for all the nodes. Here we only have data for the leaves so it will be necessary to infere values to the nodes where the information is missing with the ```FUN``` argument.
 
 ```{r, eval = FALSE}
 # Visualisation of the Genome size on the fillColor and the TEcontent on the size of markers.
@@ -195,7 +195,7 @@ lifemap(LM_gen) +
 
 ```
 
-```{r, echo=FALSE,out.width="100%", out.height="20%",fig.cap= 'visualisation of genomics datas',fig.show='hold',fig.align='center'}
+```{r, echo=FALSE,out.width="100%", out.height="20%",fig.cap= 'visualisation of genomics data',fig.show='hold',fig.align='center'}
 knitr::include_graphics("figures/gen_base.png")
 ``` 
 
@@ -209,7 +209,7 @@ lifemap(LM_gen) +
 
 ```
 
-```{r, echo=FALSE,out.width="100%", out.height="20%",fig.cap= 'visualisation of genomics datas with markers and subtree',fig.show='hold',fig.align='center'}
+```{r, echo=FALSE,out.width="100%", out.height="20%",fig.cap= 'visualisation of genomics data with markers and subtree',fig.show='hold',fig.align='center'}
 knitr::include_graphics("figures/gen_markers_branches.png")
 ``` 
 
@@ -226,10 +226,10 @@ data(eukaryotes_1000)
 LM_eukaryotes <- build_Lifemap(df = eukaryotes_1000, basemap = "ncbi")
 ```
 
-Then we can began to visualize our datas.
+Then we can began to visualize our data.
 
 ```{r, eval = FALSE}
-# Visualisation of eukaryotes datas.
+# Visualisation of eukaryotes data.
 lifemap(LM_eukaryotes) + 
   lm_markers()
 
@@ -240,7 +240,7 @@ knitr::include_graphics("figures/eukaryotes_base.png")
 ``` 
 
 
-We can also choose to visualise only a part of our datas. To do this, we can either sort our datas in advance or use the ```data``` argument to do so.
+We can also choose to visualise only a part of our data. To do this, we can either sort our data in advance or use the ```data``` argument to do so.
 
 ```{r, eval = FALSE}
 # Visualisation of Plants.
