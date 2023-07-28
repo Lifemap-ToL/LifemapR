@@ -26,7 +26,7 @@
     
     <a class="navbar-brand me-2" href="../index.html">LifemapR</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">1.0.2</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">1.0.3</small>
 
     
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -65,7 +65,7 @@
                         <h4 data-toc-skip class="author">Cassandra
 Bompard</h4>
             
-            <h4 data-toc-skip class="date">2023-07-24</h4>
+            <h4 data-toc-skip class="date">2023-07-28</h4>
       
       
       <div class="d-none name"><code>runLifemapR.Rmd</code></div>
@@ -73,14 +73,14 @@ Bompard</h4>
 
     
     
-<p>Introducing LifemapR, a package aiming to visualise datas on a
-Lifemap basemap. The uniqueness of LifemapR is that it offers
-interactive visualization of data across a vast taxonomy (the NCBI
-taxonomy). LifemapR can easily process large datasets, exceeding 300,000
-rows, with remarkable efficiency and precision. But what sets LifemapR
-apart is its flexibility and adaptability, offering a wide spectrum of
-customization options. This allows users to personalize their data
-visualization to better suit their unique needs and preferences.</p>
+<p>Introducing LifemapR, a package aiming to visualise data on a Lifemap
+basemap. The uniqueness of LifemapR is that it offers interactive
+visualization of data across a vast taxonomy (the NCBI taxonomy).
+LifemapR can easily process large datasets, exceeding 300,000 rows, with
+remarkable efficiency and precision. But what sets LifemapR apart is its
+flexibility and adaptability, offering a wide spectrum of customization
+options. This allows users to personalize their data visualization to
+better suit their unique needs and preferences.</p>
 <div class="section level2">
 <h2 id="installation">Installation<a class="anchor" aria-label="anchor" href="#installation"></a>
 </h2>
@@ -104,7 +104,7 @@ GitHub</li>
 </h3>
 <p>The very first step to use this package is to have a dataframe
 containing at least a <code>taxid</code> column containing NCBI format
-TaxIds. This dataframe can also contain other datas that you might want
+TaxIds. This dataframe can also contain other data that you might want
 to visualise.</p>
 <pre><code><span><span class="co">##      taxid                     X.Organism.Name BioProject.Accession</span></span>
 <span><span class="co">## 6  1004254         Cyberlindnera subsufficiens          PRJNA662200</span></span>
@@ -133,17 +133,17 @@ of a list containing the following informations :</p>
 the first step.</li>
 <li>
 <code>basemap</code> : which basemap was used to fetch the
-datas.</li>
+data.</li>
 </ul>
-<p>You can then visualise your datas with <code><a href="../reference/lifemap.html">lifemap()</a></code>
+<p>You can then visualise your data with <code><a href="../reference/lifemap.html">lifemap()</a></code>
 associated with one or more of the following functions :</p>
 <ul>
 <li>
-<code><a href="../reference/lm_markers.html">lm_markers()</a></code>, to represent datas as circles.</li>
+<code><a href="../reference/lm_markers.html">lm_markers()</a></code>, to represent data as circles.</li>
 <li>
 <code><a href="../reference/lm_branches.html">lm_branches()</a></code>, to represent the data’s subtree.</li>
 <li>
-<code>lm_discret()</code>, to represent discret datas as
+<code>lm_discret()</code>, to represent discret data as
 piecharts.</li>
 </ul>
 <p>Each one of these three function adds a layer to the visualisation.
@@ -156,7 +156,7 @@ These layers are combined with the <code>+</code> symbol.</p>
 <span></span>
 <span><span class="co"># three different layers </span></span>
 <span><span class="fu"><a href="../reference/lifemap.html">lifemap</a></span><span class="op">(</span><span class="va">LM</span><span class="op">)</span> <span class="op">+</span> <span class="fu"><a href="../reference/lm_markers.html">lm_markers</a></span><span class="op">(</span><span class="op">)</span> <span class="op">+</span> <span class="fu"><a href="../reference/lm_branches.html">lm_branches</a></span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
-<p>These function also allow the user to represent datas by modifying
+<p>These function also allow the user to represent data by modifying
 characteristics of representations as we’ll see later in the
 examples.</p>
 <p>The output is a shiny interface where the user can move and zoom
@@ -177,15 +177,15 @@ format.</p>
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/utils/data.html" class="external-link">data</a></span><span class="op">(</span><span class="va">kraken_res</span><span class="op">)</span></span>
 <span></span>
 <span><span class="va">LM_kraken</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/build_Lifemap.html">build_Lifemap</a></span><span class="op">(</span>df <span class="op">=</span> <span class="va">kraken_res</span>, basemap <span class="op">=</span> <span class="st">"ncbi"</span><span class="op">)</span></span></code></pre></div>
-<p>Then we can began to visualize our datas.</p>
+<p>Then we can began to visualize our data.</p>
 <p>We can for example represent the number of read that was assigned to
 each TaxID by the color of the markers with the following command.</p>
 <div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="../reference/lifemap.html">lifemap</a></span><span class="op">(</span><span class="va">LM_kraken</span><span class="op">)</span> <span class="op">+</span> </span>
 <span>  <span class="fu"><a href="../reference/lm_markers.html">lm_markers</a></span><span class="op">(</span>var_fillColor <span class="op">=</span> <span class="st">"coverage_percent"</span>, fillColor <span class="op">=</span> <span class="st">"PiYG"</span><span class="op">)</span></span></code></pre></div>
 <div class="figure" style="text-align: center">
-<img src="figures/kraken_base.png" alt="visualisation of kraken datas" width="40%" height="20%"><p class="caption">
-visualisation of kraken datas
+<img src="figures/kraken_base.png" alt="visualisation of kraken data" width="40%" height="20%"><p class="caption">
+visualisation of kraken data
 </p>
 </div>
 <p>With this representation, the markers are displayed if the if the
@@ -216,8 +216,8 @@ left : display = “requested”, right : display = “leaves”
 Usage of the <code>popup</code> argument
 </p>
 </div>
-<p>Finally, it is also possible to represent datas with a subtree,
-either by the size of the branches or their color.</p>
+<p>Finally, it is also possible to represent data with a subtree, either
+by the size of the branches or their color.</p>
 <div class="sourceCode" id="cb10"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># Information on branche's color</span></span>
 <span><span class="fu"><a href="../reference/lifemap.html">lifemap</a></span><span class="op">(</span><span class="va">LM_kraken</span><span class="op">)</span> <span class="op">+</span> </span>
@@ -244,11 +244,11 @@ format.</p>
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/utils/data.html" class="external-link">data</a></span><span class="op">(</span><span class="va">gen_res</span><span class="op">)</span></span>
 <span></span>
 <span><span class="va">LM_gen</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/build_Lifemap.html">build_Lifemap</a></span><span class="op">(</span>df <span class="op">=</span> <span class="va">gen_res</span>, basemap <span class="op">=</span> <span class="st">"ncbi"</span><span class="op">)</span></span></code></pre></div>
-<p>Then we can began to visualize our datas.</p>
+<p>Then we can began to visualize our data.</p>
 <p>Here we have two characteristics to visualise, we can do so with the
 following command.</p>
 <p>However, unlike the precedent data set, we don’t have informations
-for all the nodes. Here we only have datas for the leaves so it will be
+for all the nodes. Here we only have data for the leaves so it will be
 necessary to infere values to the nodes where the information is missing
 with the <code>FUN</code> argument.</p>
 <div class="sourceCode" id="cb12"><pre class="downlit sourceCode r">
@@ -256,8 +256,8 @@ with the <code>FUN</code> argument.</p>
 <span><span class="fu"><a href="../reference/lifemap.html">lifemap</a></span><span class="op">(</span><span class="va">LM_gen</span><span class="op">)</span> <span class="op">+</span> </span>
 <span>  <span class="fu"><a href="../reference/lm_markers.html">lm_markers</a></span><span class="op">(</span>var_fillColor <span class="op">=</span> <span class="st">"Genome_size"</span>, fillColor <span class="op">=</span> <span class="st">"PiYG"</span>, radius  <span class="op">=</span> <span class="st">"TEcontent_bp"</span>, FUN <span class="op">=</span> <span class="va">mean</span><span class="op">)</span></span></code></pre></div>
 <div class="figure" style="text-align: center">
-<img src="figures/gen_base.png" alt="visualisation of genomics datas" width="100%" height="20%"><p class="caption">
-visualisation of genomics datas
+<img src="figures/gen_base.png" alt="visualisation of genomics data" width="100%" height="20%"><p class="caption">
+visualisation of genomics data
 </p>
 </div>
 <p>We can also represent markers and subtree at the same time</p>
@@ -267,8 +267,8 @@ visualisation of genomics datas
 <span>  <span class="fu"><a href="../reference/lm_branches.html">lm_branches</a></span><span class="op">(</span><span class="op">)</span></span>
 <span>  <span class="fu"><a href="../reference/lm_markers.html">lm_markers</a></span><span class="op">(</span>var_fillColor <span class="op">=</span> <span class="st">"Genome_size"</span>, fillColor <span class="op">=</span> <span class="st">"PiYG"</span>, radius  <span class="op">=</span> <span class="st">"TEcontent_bp"</span>, FUN <span class="op">=</span> <span class="va">mean</span><span class="op">)</span> </span></code></pre></div>
 <div class="figure" style="text-align: center">
-<img src="figures/gen_markers_branches.png" alt="visualisation of genomics datas with markers and subtree" width="100%" height="20%"><p class="caption">
-visualisation of genomics datas with markers and subtree
+<img src="figures/gen_markers_branches.png" alt="visualisation of genomics data with markers and subtree" width="100%" height="20%"><p class="caption">
+visualisation of genomics data with markers and subtree
 </p>
 </div>
 </div>
@@ -283,9 +283,9 @@ format.</p>
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/utils/data.html" class="external-link">data</a></span><span class="op">(</span><span class="va">eukaryotes_1000</span><span class="op">)</span></span>
 <span></span>
 <span><span class="va">LM_eukaryotes</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/build_Lifemap.html">build_Lifemap</a></span><span class="op">(</span>df <span class="op">=</span> <span class="va">eukaryotes_1000</span>, basemap <span class="op">=</span> <span class="st">"ncbi"</span><span class="op">)</span></span></code></pre></div>
-<p>Then we can began to visualize our datas.</p>
+<p>Then we can began to visualize our data.</p>
 <div class="sourceCode" id="cb15"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="co"># Visualisation of eukaryotes datas.</span></span>
+<code class="sourceCode R"><span><span class="co"># Visualisation of eukaryotes data.</span></span>
 <span><span class="fu"><a href="../reference/lifemap.html">lifemap</a></span><span class="op">(</span><span class="va">LM_eukaryotes</span><span class="op">)</span> <span class="op">+</span> </span>
 <span>  <span class="fu"><a href="../reference/lm_markers.html">lm_markers</a></span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
 <div class="figure" style="text-align: center">
@@ -293,8 +293,8 @@ format.</p>
 Basic visualisation
 </p>
 </div>
-<p>We can also choose to visualise only a part of our datas. To do this,
-we can either sort our datas in advance or use the <code>data</code>
+<p>We can also choose to visualise only a part of our data. To do this,
+we can either sort our data in advance or use the <code>data</code>
 argument to do so.</p>
 <div class="sourceCode" id="cb16"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># Visualisation of Plants.</span></span>
