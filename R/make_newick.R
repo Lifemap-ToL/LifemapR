@@ -12,7 +12,7 @@ make_newick<-function(df) { #df must contain, a minima, a column "taxid" and a c
   mat<-cbind(df$ancestor, df$taxid)
 
   #remove NA (if any)
-  mat<-mat[complete.cases(mat),]
+  mat<-mat[stats::complete.cases(mat),]
 
   # put the root edges as first rows
   whereroot<-which(is.na(match(mat[,1],mat[,2])))

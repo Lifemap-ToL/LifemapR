@@ -256,7 +256,7 @@ display_option <- function(m, aes, df, type, leaves, i){
 #' @export
 #' @importFrom dplyr left_join
 #' @importFrom shiny fluidPage reactive observe shinyApp isolate
-#' @importFrom htmltools tags HTML
+#' @importFrom htmltools tags HTML p
 #' @importFrom leaflet leafletOutput renderLeaflet fitBounds leafletProxy addPopups clearMarkers clearShapes clearControls colorNumeric colorFactor clearPopups addPolylines clearGroup addLegend
 #' @importFrom leaflet.minicharts clearMinicharts
 #'
@@ -333,9 +333,9 @@ draw_Lifemap <- function(lm_obj){
     
     
     ui <- shiny::fluidPage(
-        tags$head(
-            tags$style(
-                HTML(".leaflet-container {
+        htmltools::tags$head(
+            htmltools::tags$style(
+                htmltools::HTML(".leaflet-container {
              background: #000000;
              outline: 0;
             }
@@ -343,9 +343,9 @@ draw_Lifemap <- function(lm_obj){
             )),
         
         
-        shiny::tags$style(type = "text/css", "html, body {width:100%;height:100%}"),
+        htmltools::tags$style(type = "text/css", "html, body {width:100%;height:100%}"),
         leaflet::leafletOutput("mymap", width = "100%", height = "1000px"),
-        shiny::p()
+        htmltools::p()
     )
     
     server <- function(input, output, session) {
@@ -532,7 +532,7 @@ draw_Lifemap <- function(lm_obj){
         }
         
         # when clicking on a marker, show a popup
-        observe({
+        shiny::observe({
             leafletProxy("mymap") |> leaflet::clearPopups()
             event <- input$mymap_marker_click
             if (is.null(event))
@@ -547,5 +547,5 @@ draw_Lifemap <- function(lm_obj){
         
     }
     
-    shinyApp(ui, server)
+    shiny::shinyApp(ui, server)
 }
