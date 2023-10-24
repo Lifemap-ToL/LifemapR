@@ -4,27 +4,32 @@
 \alias{build_Lifemap}
 \title{A function to construct a LifemapR object, usable by the other functions of the package.}
 \usage{
-build_Lifemap(df, basemap = c("fr", "ncbi", "base", "virus"), verbose = TRUE)
+build_Lifemap(df, basemap = c("ncbi", "base", "fr", "virus"), verbose = TRUE)
 }
 \arguments{
-\item{df}{A dataframe containing at least a column named "taxid" including NCBI format TaxIDs.
-The dataframe can also contain characteristics associated with those TaxIDs in separated columns.}
+\item{df}{A dataframe containing at least one column named "taxid" that contains NCBI Taxonomy Identifiers (taxid).
+The dataframe can contain any number of additional columns defining traits/characters/values associated to
+each taxid.}
 
-\item{basemap}{The basemap wanted ("fr","ncbi", "base" or "virus").}
+\item{basemap}{The chosen basemap for Lifemap ("fr","ncbi", "base" or "virus").}
 
-\item{verbose}{If TRUE, will write details on the status of the operation in the terminal.}
+\item{verbose}{If TRUE (the default), the function will print detailed information to the console.
+If FALSE, it will run silently.}
 }
 \value{
-A lifemap object with :
+A list of class lifemap_obj containing:
 \itemize{
-\item df : a dataframe containing at least for each TaxID (taxid) :
+\item df : a dataframe containing at least for each taxid :
 \itemize{
-\item The longitude (long)
-\item The latitude (lat)
+\item The x coordinate (lon)
+\item The y coordonate (lat)
 \item The scientific name (sci_name)
-\item The zoom level at which the taxa can be seen (zoom)
-\item Its ascendants (ascend)
+\item The zoom level at which the taxa is visible (zoom)
+\item A list of its ascendants (ascend)
 \item Its type ("requested" or "ancestor")
+\item Its direct ancestor
+\item Its type (type), i.e. whether the taxid was
+requested by the user ("requested") or if it is the anecestor of a requested taxid ("ancestor")
 }
 \item basemap : the basemap used to get taxa's details
 }

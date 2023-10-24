@@ -328,10 +328,6 @@ draw_Lifemap <- function(lm_obj){
         }
     }
     
-    
-    
-    
-    
     ui <- shiny::fluidPage(
         htmltools::tags$head(
             htmltools::tags$style(
