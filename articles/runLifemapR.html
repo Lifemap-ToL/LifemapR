@@ -26,7 +26,7 @@
     
     <a class="navbar-brand me-2" href="../index.html">LifemapR</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">1.0.4</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">1.1.0</small>
 
     
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -65,7 +65,7 @@
                         <h4 data-toc-skip class="author">Cassandra
 Bompard</h4>
             
-            <h4 data-toc-skip class="date">2023-08-24</h4>
+            <h4 data-toc-skip class="date">2023-10-24</h4>
       
       
       <div class="d-none name"><code>runLifemapR.Rmd</code></div>
@@ -106,18 +106,12 @@ GitHub</li>
 containing at least a <code>taxid</code> column containing NCBI format
 TaxIds. This dataframe can also contain other data that you might want
 to visualise.</p>
-<pre><code><span><span class="co">##      taxid                     X.Organism.Name BioProject.Accession</span></span>
-<span><span class="co">## 6  1004254         Cyberlindnera subsufficiens          PRJNA662200</span></span>
-<span><span class="co">## 7  1008252                                &lt;NA&gt;                 &lt;NA&gt;</span></span>
-<span><span class="co">## 8   100860                                &lt;NA&gt;                 &lt;NA&gt;</span></span>
-<span><span class="co">## 9   100903 Fusarium oxysporum f. sp. fragariae          PRJNA578477</span></span>
-<span><span class="co">## 10 1010633                    Digitaria exilis           PRJEB36539</span></span>
-<span><span class="co">##    BioProject.ID  Group</span></span>
-<span><span class="co">## 6         662200  Fungi</span></span>
-<span><span class="co">## 7             NA   &lt;NA&gt;</span></span>
-<span><span class="co">## 8             NA   &lt;NA&gt;</span></span>
-<span><span class="co">## 9         578477  Fungi</span></span>
-<span><span class="co">## 10        626237 Plants</span></span></code></pre>
+<pre><code><span><span class="co">##    taxid                  sci_name zoom       lat       lon</span></span>
+<span><span class="co">## 6   2836           Bacillariophyta   13 -8.304058 -11.45459</span></span>
+<span><span class="co">## 7   2849             Phaeodactylum   22 -8.350277 -11.49089</span></span>
+<span><span class="co">## 8   2850 Phaeodactylum tricornutum   24 -8.350205 -11.49080</span></span>
+<span><span class="co">## 9   2857                 Nitzschia   19 -8.342352 -11.49025</span></span>
+<span><span class="co">## 10  2864               Dinophyceae   12 -6.950003 -12.25905</span></span></code></pre>
 <p>You can then transform this dataframe into a format suitable for the
 visualisation functions of the package with the
 <code>build_Lifemap</code> function.<br></p>
@@ -201,7 +195,11 @@ associated node is close enough.</p>
 <span><span class="fu"><a href="../reference/lifemap.html">lifemap</a></span><span class="op">(</span><span class="va">LM_kraken</span><span class="op">)</span> <span class="op">+</span> </span>
 <span>  <span class="fu"><a href="../reference/lm_markers.html">lm_markers</a></span><span class="op">(</span>var_fillColor <span class="op">=</span> <span class="st">"coverage_percent"</span>, fillColor <span class="op">=</span> <span class="st">"PiYG"</span>, display <span class="op">=</span> <span class="st">"leaves"</span><span class="op">)</span></span></code></pre></div>
 <div class="figure" style="text-align: center">
-<img src="figures/kraken_requested.png" alt='left : display = "requested", right : display = "leaves"' width="40%" height="20%"><img src="figures/kraken_leaves.png" alt='left : display = "requested", right : display = "leaves"' width="40%" height="20%"><p class="caption">
+&lt;img src=“figures/kraken_requested.png” alt=“left : display
+=”requested”, right : display = “leaves”” width=“40%” height=“20%”
+/&gt;&lt;img src=“figures/kraken_leaves.png” alt=“left : display
+=”requested”, right : display = “leaves”” width=“40%” height=“20%” /&gt;
+<p class="caption">
 left : display = “requested”, right : display = “leaves”
 </p>
 </div>
