@@ -11,7 +11,7 @@ Description: Allow to visualise data on the NCBI phylogenetic tree as presented 
 License: MIT + file LICENSE
 Encoding: UTF-8
 Roxygen: list(markdown = TRUE)
-RoxygenNote: 7.2.3
+RoxygenNote: 7.3.1
 Depends: R (>= 3.5.0)
 Suggests: knitr
 VignetteBuilder: knitr
