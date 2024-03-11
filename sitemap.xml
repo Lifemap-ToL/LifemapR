@@ -61,9 +61,6 @@
     <loc>/reference/gen_res.html</loc>
   </url>
   <url>
-    <loc>/reference/get_direct_ancestor.html</loc>
-  </url>
-  <url>
     <loc>/reference/index.html</loc>
   </url>
   <url>
@@ -107,11 +104,5 @@
   </url>
   <url>
     <loc>/reference/print.lifemap_obj.html</loc>
-  </url>
-  <url>
-    <loc>/reference/request_database.html</loc>
-  </url>
-  <url>
-    <loc>/reference/url_verification.html</loc>
   </url>
 </urlset>
