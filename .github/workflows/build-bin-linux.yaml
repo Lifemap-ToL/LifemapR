@@ -52,4 +52,4 @@ jobs:
       - uses: actions/upload-artifact@v4
         with:
           name: binaries-for-linux
-          path: D:/a/LifemapR/LifemapR*.tar.gz
+          path: /home/runner/work/LifemapR/LifemapR*.tar.gz
