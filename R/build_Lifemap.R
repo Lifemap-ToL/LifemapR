@@ -22,7 +22,8 @@
 #'
 #' @importFrom jsonlite fromJSON
 #' @importFrom dplyr bind_rows distinct
-#' @importFrom rlang .data
+#' @importFrom rlang data
+#' @importFrom RCurl url.exists
 #'
 #' @export
 #' @examples
@@ -52,6 +53,10 @@ build_Lifemap <- function(df, basemap = c("ncbi", "base","fr","virus"), verbose=
 
   # download full data for chosen basemap
   if (verbose) cat("Downloading basemap coordinates...\n")
+
+
+  # ADD A CONTROL HERE TO TEST IF THE URL IS VALID. 
+  if (!url.exists(basemap_url)) stop ("The Lifemap server or some remote lifemap files cannot be reached. Please try again later.")
   load(url(basemap_url), envir=lifemap_basemap_envir)
   # add LUCA
   LUCA <- data.frame(taxid=0,lon=0, lat=-4.226497,sci_name="Luca",zoom=5)

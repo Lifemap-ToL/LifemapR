@@ -13,6 +13,7 @@
 #' @return An HTML widget object  with graphics layers.
 #' @export
 #' @importFrom leaflet leaflet addTiles providerTileOptions
+#' @importFrom RCurl url.exists
 #'
 #' @examples
 #' display_map()
@@ -27,6 +28,7 @@ display_map <- function(df = NULL,basemap = c("fr","ncbi", "base","virus")) {
   } else if (basemap == "virus"){
     display="http://virusmap.univ-lyon1.fr/osm_tiles/{z}/{x}/{y}.png"
   }
+  if (!url.exists(display)) stop ("The Lifemap server or some remote lifemap files cannot be reached. Please try again later.")
   m <- leaflet::leaflet(df) |>
     leaflet::addTiles(display, options = leaflet::providerTileOptions(minZoom = 5, maxZoom = 50))
   return(m)
