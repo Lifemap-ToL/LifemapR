@@ -47,7 +47,7 @@ build_Lifemap <- function(df, basemap = c("ncbi", "base","fr","virus"), verbose=
     basemap_url <- "https://lifemap.univ-lyon1.fr/data/lmdata.Rdata"
    }
   # else if (basemap == "virus") {
-  #   basemap_url <- "http://virusmap.univ-lyon1.fr/data/lmdata.Rdata"
+  #   basemap_url <- "https://virusmap.univ-lyon1.fr/data/lmdata.Rdata"
   # }
   else {stop(sprintf('%s is not a working basemap, try c("base", "fr", "ncbi" or "virus")', basemap))}
 

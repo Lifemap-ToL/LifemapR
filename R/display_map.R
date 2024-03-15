@@ -8,7 +8,7 @@
 #' - 'fr' for \url{https://lifemap-fr.univ-lyon1.fr/}
 #' - 'ncbi' for \url{https://lifemap-ncbi.univ-lyon1.fr/}
 #' - 'base' for \url{https://lifemap.univ-lyon1.fr/}
-#' - 'virus' for \url{http://virusmap.univ-lyon1.fr/}
+#' - 'virus' for \url{https://virusmap.univ-lyon1.fr/}
 #'
 #' @return An HTML widget object  with graphics layers.
 #' @export
@@ -26,7 +26,7 @@ display_map <- function(df = NULL,basemap = c("fr","ncbi", "base","virus")) {
   } else if (basemap == "base"){
     display="http://lifemap.univ-lyon1.fr/osm_tiles/{z}/{x}/{y}.png"
   } else if (basemap == "virus"){
-    display="http://virusmap.univ-lyon1.fr/osm_tiles/{z}/{x}/{y}.png"
+    display="https://virusmap.univ-lyon1.fr/osm_tiles/{z}/{x}/{y}.png"
   }
   url2check<-strsplit(display, "osm_tiles")[[1]][1]
   if (!url.exists(url2check)) stop ("The Lifemap server or some remote lifemap files cannot be reached. Please try again later.")
