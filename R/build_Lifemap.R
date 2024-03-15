@@ -22,7 +22,7 @@
 #'
 #' @importFrom jsonlite fromJSON
 #' @importFrom dplyr bind_rows distinct
-#' @importFrom rlang data
+#' @importFrom rlang .data
 #' @importFrom RCurl url.exists
 #'
 #' @export
