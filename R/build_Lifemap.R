@@ -82,7 +82,7 @@ build_Lifemap <- function(df, basemap = c("ncbi", "base", "fr", "virus"), verbos
     
     # create new df with only existing taxids
     df_exists <- df_distinct[!is.na(indexes), ]
-    DATA0 < -lifemap_basemap_envir$DF[indexes[!is.na(indexes)], ]
+    DATA0 <- lifemap_basemap_envir$DF[indexes[!is.na(indexes)], ]
     
     # get ancestors
     unique_ancestors <- unique(unlist(DATA0$ascend))
@@ -93,10 +93,10 @@ build_Lifemap <- function(df, basemap = c("ncbi", "base", "fr", "virus"), verbos
     DATA0$type<-"requested"
     ANCESTORS$type<-"ancestor"
     # bind all
-    DATA1<-rbind(DATA0,ANCESTORS)
+    DATA1 <- rbind(DATA0, ANCESTORS)
     
     # merge 
-    DATA2<-merge(DATA1,df_exists, by = "taxid", all = TRUE)
+    DATA2 <- merge(DATA1, df_exists, by = "taxid", all = TRUE)
     
     # replace the column 'ascend' by simply the direct ancestor
     DATA2$ancestor <- unlist(lapply(DATA2$ascend, function(x) ifelse(!is.null(x), x[1], NA)))
