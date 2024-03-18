@@ -38,7 +38,7 @@ remotes::install_github("damiendevienne/LifemapR")
 
 2. Once installed, the package can be loaded with : 
 ```{r, eval = FALSE}
-library("LifemapR")
+require("LifemapR")
 ```
 
 # Usage
@@ -48,7 +48,7 @@ library("LifemapR")
 The very first step to use this package is to have a dataframe containing at least a ```taxid``` column containing NCBI format TaxIds. This dataframe can also contain other data that you might want to visualise.
 
 ```{r echo = FALSE, results=FALSE, warning=FALSE}
-library("LifemapR")
+require("LifemapR")
 
 data(eukaryotes_1000)
 LM_eukaryotes <- build_Lifemap(eukaryotes_1000, "ncbi")
@@ -61,7 +61,7 @@ LM_eukaryotes$df[6:10,1:5]
 You can then transform this dataframe into a format suitable for the visualisation functions of the package with the ```build_Lifemap``` function.\
 
 ```{r, eval = FALSE}
-library("LifemapR")
+require("LifemapR")
 
 LM <- build_Lifemap(data)
 ```

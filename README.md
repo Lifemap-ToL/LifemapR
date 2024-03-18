@@ -14,7 +14,7 @@ remotes::install_github("damiendevienne/LifemapR")
 ```
 Once installed, load the package with :
 ```r
-library("LifemapR")
+require("LifemapR")
 ```
 
 
@@ -69,7 +69,7 @@ To do list :
 Go to the package's folder
 
 ```r
-library(devtools)
+require(devtools)
 devtools::load_all()
 ```
 then you can simply use the package's functions
