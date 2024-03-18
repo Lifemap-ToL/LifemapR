@@ -24,6 +24,7 @@
 #' @importFrom dplyr bind_rows distinct
 #' @importFrom rlang .data
 #' @importFrom RCurl url.exists
+#' @importFrom fastmatch fmatch
 #'
 #' @export
 #' @examples
@@ -75,7 +76,7 @@ build_Lifemap <- function(df, basemap = c("ncbi", "base", "fr", "virus"), verbos
     if(verbose) cat("Getting info for requested taxids...\n")
     
     # get index of requested taxids
-    indexes <- match(df_distinct$taxid, lifemap_basemap_envir$DF$taxid)
+    indexes <- fastmatch::fmatch(df_distinct$taxid, lifemap_basemap_envir$DF$taxid)
     if(sum(is.na(indexes)) > 0) {
         warning(sprintf("%s TaxID(s) could not be found: %s \n",sum(is.na(indexes)), paste(df_distinct$taxid[is.na(indexes)], sep=",")))
     }
@@ -87,7 +88,7 @@ build_Lifemap <- function(df, basemap = c("ncbi", "base", "fr", "virus"), verbos
     # get ancestors
     unique_ancestors <- unique(unlist(DATA0$ascend))
     real_ancestors <- setdiff(unique_ancestors, df_exists$taxid)
-    ANCESTORS <- lifemap_basemap_envir$DF[match(real_ancestors, lifemap_basemap_envir$DF$taxid), ]
+    ANCESTORS <- lifemap_basemap_envir$DF[fastmatch::fmatch(real_ancestors, lifemap_basemap_envir$DF$taxid), ]
     
     # add type
     DATA0$type<-"requested"

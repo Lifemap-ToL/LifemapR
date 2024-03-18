@@ -11,7 +11,7 @@ build_Lifemap(df, basemap = c("ncbi", "base", "fr", "virus"), verbose = TRUE)
 The dataframe can contain any number of additional columns defining traits/characters/values associated to
 each taxid.}
 
-\item{basemap}{The chosen basemap for Lifemap ("fr","ncbi", "base" or "virus").}
+\item{basemap}{The chosen basemap for Lifemap ("fr", "ncbi", "base" or "virus").}
 
 \item{verbose}{If TRUE (the default), the function will print detailed information to the console.
 If FALSE, it will run silently.}
