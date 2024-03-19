@@ -39,5 +39,8 @@ A function to construct a LifemapR object, usable by the other functions of the 
 }
 \examples{
 data(eukaryotes_80)
+\dontrun{
+# make sure you have a good internet connection to load these very large files
 LM <- build_Lifemap(eukaryotes_80, "fr")
+}
 }

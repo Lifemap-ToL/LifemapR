@@ -29,7 +29,10 @@
 #' @export
 #' @examples
 #' data(eukaryotes_80)
+#' \dontrun{
+#' # make sure you have a good internet connection to load these very large files
 #' LM <- build_Lifemap(eukaryotes_80, "fr")
+#' }
 build_Lifemap <- function(df, basemap = c("ncbi", "base", "fr", "virus"), verbose = TRUE) {
     
     basemap <- match.arg(arg = basemap, choices = basemap)
