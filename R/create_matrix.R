@@ -76,9 +76,9 @@ pass_infos_discret <- function(M, value) {
   bind_values <- M |> 
     dplyr::select(.data$ancestor, dplyr::all_of(value)) |>
     stats::na.omit() |>
-    dplyr::group_by(.data$Status, .data$ancestor) |> 
+    dplyr::group_by(.data[[value]], .data$ancestor) |>
     dplyr::count() |> 
-    tidyr::pivot_wider(names_from = .data$Status, values_from = .data$n, values_fill = 0) |> 
+    tidyr::pivot_wider(names_from = dplyr::all_of(value), values_from = .data$n, values_fill = 0) |>
     as.data.frame() |>
     dplyr::rename("taxid" = "ancestor") |> 
     dplyr::arrange(.data$taxid)
