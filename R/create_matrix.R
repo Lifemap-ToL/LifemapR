@@ -61,7 +61,10 @@ pass_infos <- function(M, FUN, value){
 #'
 #' @return A dataframe containing the TaxIDs and as many columns as there are distinct values.
 #' @export
-#' @importFrom dplyr bind_rows
+#' @importFrom dplyr select group_by count rename arrange all_of
+#' @importFrom tidyr pivot_wider
+#' @importFrom stats na.omit
+#' @importFrom rlang .data
 #'
 #' @examples
 #' data(LM_eukaryotes)
@@ -70,13 +73,15 @@ pass_infos <- function(M, FUN, value){
 #'
 #' inferred_values <- pass_infos_discret(M = infos, value = "Status")
 pass_infos_discret <- function(M, value) {
-  tabled <- tapply(M[[value]], M$ancestor, function(x){
-    x <- x[!is.na(x)]
-    table(x)})
-  bind_values <- as.data.frame(dplyr::bind_rows(tabled))
-  bind_values[is.na(bind_values)] <- 0
-  bind_values$taxid <- names(tabled)
+  bind_values <- M |> 
+    dplyr::select(.data$ancestor, dplyr::all_of(value)) |>
+    stats::na.omit() |>
+    dplyr::group_by(.data$Status, .data$ancestor) |> 
+    dplyr::count() |> 
+    tidyr::pivot_wider(names_from = .data$Status, values_from = .data$n, values_fill = 0) |> 
+    as.data.frame() |>
+    dplyr::rename("taxid" = "ancestor") |> 
+    dplyr::arrange(.data$taxid)
+  
   return(bind_values)
 }
-
-
