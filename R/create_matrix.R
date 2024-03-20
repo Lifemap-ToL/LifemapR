@@ -80,4 +80,3 @@ pass_infos_discret <- function(M, value) {
 }
 
 
-
