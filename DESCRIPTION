@@ -15,5 +15,5 @@ RoxygenNote: 7.3.1
 Depends: R (>= 3.5.0)
 Suggests: knitr
 VignetteBuilder: knitr
-URL: https://damiendevienne.github.io/LifemapR/, https://github.com/damiendevienne/LifemapR
-BugReports: https://github.com/damiendevienne/LifemapR/issues
+URL: https://lifemap-tol.github.io/LifemapR/, https://github.com/Lifemap-ToL/LifemapR
+BugReports: https://github.com/Lifemap-ToL/LifemapR/issues

@@ -1,6 +1,6 @@
 [![CRAN_Status_Badge](http://www.r-pkg.org/badges/version/LifemapR)](https://cran.r-project.org/package=LifemapR)
 [![CRAN Downloads](https://cranlogs.r-pkg.org/badges/LifemapR)](https://cran.r-project.org/package=LifemapR)
-[![R-CMD-check](https://github.com/damiendevienne/LifemapR/workflows/R-CMD-check/badge.svg)](https://github.com/damiendevienne/LifemapR/actions)
+[![R-CMD-check](https://github.com/Lifemap-ToL/LifemapR/workflows/R-CMD-check/badge.svg)](https://github.com/Lifemap-ToL/LifemapR/actions)
 
 
 # LifemapR <img src="man/figures/lifemapr-logo.png" align="right" style="float:right; width:20%;"/>
