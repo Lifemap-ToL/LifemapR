@@ -29,8 +29,11 @@ display_map <- function(df = NULL,basemap = c("fr","ncbi", "base","virus")) {
     display="https://virusmap.univ-lyon1.fr/osm_tiles/{z}/{x}/{y}.png"
   }
   url2check<-strsplit(display, "osm_tiles")[[1]][1]
-  if (!url.exists(url2check)) stop ("The Lifemap server or some remote lifemap files cannot be reached. Please try again later.")
-  m <- leaflet::leaflet(df) |>
-    leaflet::addTiles(display, options = leaflet::providerTileOptions(minZoom = 5, maxZoom = 50))
-  return(m)
+  if (!url.exists(url2check)) {
+    message("The Lifemap server or some remote lifemap files cannot be reached. Please try again later.")
+  } else {
+    m <- leaflet::leaflet(df) |>
+      leaflet::addTiles(display, options = leaflet::providerTileOptions(minZoom = 5, maxZoom = 50))
+    return(m)
+  }
 }

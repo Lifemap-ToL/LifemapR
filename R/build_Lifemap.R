@@ -34,35 +34,37 @@
 #' LM <- build_Lifemap(eukaryotes_80, "fr")
 #' }
 build_Lifemap <- function(df, basemap = c("ncbi", "base", "fr", "virus"), verbose = TRUE) {
-    
-    basemap <- match.arg(arg = basemap, choices = basemap)
-    if(is.null(df$taxid)) {
-        stop('The dataframe must at least contain a "taxid" column')
-    }
-    # create a new "environment" to store the full data
-    if(!exists("lifemap_basemap_envir", where = .GlobalEnv)) lifemap_basemap_envir <- new.env()
-    
-    ## SET DATASETS ASDRESSES
-    # getting the right URL depending on the basemap wanted
-    if(basemap == "ncbi") {
-        basemap_url <- "https://lifemap-ncbi.univ-lyon1.fr/data/lmdata.Rdata"
-    } else if(basemap == "fr") {
-        basemap_url <- "https://lifemap-fr.univ-lyon1.fr/data/lmdata.Rdata"
-    } else if(basemap == "base") {
-        basemap_url <- "https://lifemap.univ-lyon1.fr/data/lmdata.Rdata"
-    }
-    # else if(basemap == "virus") {
-    #   basemap_url <- "https://virusmap.univ-lyon1.fr/data/lmdata.Rdata"
-    # }
-    else {
-        stop(sprintf('%s is not a working basemap, try c("base", "fr", "ncbi" or "virus")', basemap))
-    }
-    
-    # download full data for chosen basemap
-    if(verbose) cat("Downloading basemap coordinates...\n")
-    
-    # control to test if the url is valid
-    if(!url.exists(basemap_url)) stop ("The Lifemap server or some remote lifemap files cannot be reached. Please try again later.")
+  
+  basemap <- match.arg(arg = basemap, choices = basemap)
+  if(is.null(df$taxid)) {
+    stop('The dataframe must at least contain a "taxid" column')
+  }
+  # create a new "environment" to store the full data
+  if(!exists("lifemap_basemap_envir", where = .GlobalEnv)) lifemap_basemap_envir <- new.env()
+  
+  ## SET DATASETS ASDRESSES
+  # getting the right URL depending on the basemap wanted
+  if(basemap == "ncbi") {
+    basemap_url <- "https://lifemap-ncbi.univ-lyon1.fr/data/lmdata.Rdata"
+  } else if(basemap == "fr") {
+    basemap_url <- "https://lifemap-fr.univ-lyon1.fr/data/lmdata.Rdata"
+  } else if(basemap == "base") {
+    basemap_url <- "https://lifemap.univ-lyon1.fr/data/lmdata.Rdata"
+  }
+  # else if(basemap == "virus") {
+  #   basemap_url <- "https://virusmap.univ-lyon1.fr/data/lmdata.Rdata"
+  # }
+  else {
+    stop(sprintf('%s is not a working basemap, try c("base", "fr", "ncbi" or "virus")', basemap))
+  }
+  
+  # download full data for chosen basemap
+  if(verbose) cat("Downloading basemap coordinates...\n")
+  
+  # control to test if the url is valid
+  if(!url.exists(basemap_url)) {
+    message("The Lifemap server or some remote lifemap files cannot be reached. Please try again later.")
+  } else {
     load(url(basemap_url), envir = lifemap_basemap_envir)
     
     # add LUCA
@@ -109,4 +111,5 @@ build_Lifemap <- function(df, basemap = c("ncbi", "base", "fr", "virus"), verbos
     class(lm_obj) <- c("lifemap_obj", "list")
     
     return(lm_obj)
+  }
 }
