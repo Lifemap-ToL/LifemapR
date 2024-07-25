@@ -1,5 +1,5 @@
 ---
-title: "run-LifemapR"
+title: "Use of LifemapR"
 author: "Cassandra Bompard"
 date: "`r Sys.Date()`"
 output:
@@ -15,7 +15,7 @@ toccolor: 'blue'
 header-includes: \renewcommand*\familydefault{\sfdefault} 
 vignette: >
   %\VignetteEngine{knitr::rmarkdown}
-  %\VignetteIndexEntry{1-Use of LifemapR} 
+  %\VignetteIndexEntry{Use of LifemapR} 
   %!\VignetteEncoding{UTF-8}
   \usepackage[utf8]{inputenc}
 ---
