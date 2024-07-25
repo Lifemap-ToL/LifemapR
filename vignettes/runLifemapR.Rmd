@@ -32,12 +32,12 @@ But what sets LifemapR apart is its flexibility and adaptability, offering a wid
 
 1. Install the development version of `LifemapR` from GitHub
 
-```{r, eval = FALSE}
+```{r install, eval = FALSE}
 remotes::install_github("Lifemap-ToL/LifemapR")
 ```
 
 2. Once installed, the package can be loaded with : 
-```{r, eval = FALSE}
+```{r load, eval = FALSE}
 require("LifemapR")
 ```
 
@@ -47,14 +47,14 @@ require("LifemapR")
 
 The very first step to use this package is to have a dataframe containing at least a ```taxid``` column containing NCBI format TaxIds. This dataframe can also contain other data that you might want to visualise.
 
-```{r echo = FALSE, results=FALSE, warning=FALSE}
+```{r buildLF, eval = TRUE, echo = FALSE, results = FALSE, warning = FALSE}
 require("LifemapR", quietly = TRUE)
 
 data(eukaryotes_1000)
 LM_eukaryotes <- build_Lifemap(eukaryotes_1000, "ncbi")
 ```
 
-```{r echo = FALSE}
+```{r printLF, eval = TRUE, echo = FALSE}
 if(is.lifemap_obj(LM_eukaryotes))
   LM_eukaryotes$df[6:10,1:5]
 ```
@@ -109,7 +109,7 @@ data(kraken_res)
 LM_kraken <- build_Lifemap(df = kraken_res, basemap = "ncbi")
 ```
 
-Then we can began to visualize our data.
+Then we can began to visualise our data.
 
 We can for example represent the number of read that was assigned to each TaxID by the color of the markers with the following command.
 
@@ -118,7 +118,7 @@ lifemap(LM_kraken) +
   lm_markers(var_fillColor = "coverage_percent", fillColor = "PiYG")
 ```
 
-```{r, echo=FALSE,out.width="40%", out.height="20%",fig.cap= 'visualisation of kraken data',fig.show='hold',fig.align='center'}
+```{r includekrakenfig1, eval = TRUE, echo = FALSE, out.width = "40%", out.height = "20%", fig.cap = 'Visualisation of kraken data', fig.show = 'hold', fig.align = 'center'}
 knitr::include_graphics("figures/kraken_base.png")
 ``` 
 
@@ -127,51 +127,50 @@ With this representation, the markers are displayed if the if the associated nod
 It is possible to change the way markers are displayed with the ```display``` argument.
 
 ```{r, eval = FALSE}
-# All the nodes that were requested by the user
+# All the nodes that were requested by the user.
 lifemap(LM_kraken) + 
   lm_markers(var_fillColor = "coverage_percent", fillColor = "PiYG", display = "requested")
 
-# Only the nodes that have no descendants
+# Only the nodes that have no descendants.
 lifemap(LM_kraken) + 
   lm_markers(var_fillColor = "coverage_percent", fillColor = "PiYG", display = "leaves")
 
 ```
 
-```{r, echo=FALSE,out.width="40%", out.height="20%",fig.cap= 'left : display = "requested", right : display = "leaves"',fig.show='hold',fig.align='center'}
-knitr::include_graphics(c("figures/kraken_requested.png","figures/kraken_leaves.png"))
+```{r includekrakenfig2, eval = TRUE, echo = FALSE, out.width = "40%", out.height = "20%", fig.cap = 'left : display = "requested", right : display = "leaves"', fig.show = 'hold', fig.align = 'center'}
+knitr::include_graphics(c("figures/kraken_requested.png", "figures/kraken_leaves.png"))
 ``` 
 
 Informations can also be displayed for the user with the ```popup``` or ```label``` arguments.
 
 ```{r, eval = FALSE}
-# When clicking on a node, display the desired information
+# When clicking on a node, display the desired information.
 lifemap(LM_kraken) + 
   lm_markers(var_fillColor = "coverage_percent", fillColor = "PiYG", popup = "name")
 ```
 
-```{r, echo=FALSE,out.width="40%", out.height="20%",fig.cap= 'Usage of the ```popup``` argument',fig.show='hold',fig.align='center'}
+```{r includekrakenfig3, eval = TRUE, echo = FALSE, out.width = "40%", out.height = "20%", fig.cap = 'Usage of the ```popup``` argument', fig.show = 'hold', fig.align = 'center'}
 knitr::include_graphics("figures/kraken_popup.png")
 ``` 
 
 Finally, it is also possible to represent data with a subtree, either by the size of the branches or their color.
 
 ```{r, eval = FALSE}
-# Information on branche's color
+# Information on branche's color.
 lifemap(LM_kraken) + 
   lm_branches(var_color = "coverage_percent", color = "PiYG")
 
-# Information on branche's size
+# Information on branche's size.
 lifemap(LM_kraken) + 
   lm_branches(size = "coverage_percent")
-
 ```
 
-```{r, echo=FALSE,out.width="45%", out.height="30%",fig.cap= "left : branche's color, right : branche's size",fig.show='hold',fig.align='center'}
-knitr::include_graphics(c("figures/kraken_branches_color.png","figures/kraken_branches_size.png"))
+```{r includekrakenfig4, eval = TRUE, echo = FALSE, out.width = "45%", out.height = "30%", fig.cap = "left : branche's color, right : branche's size", fig.show = 'hold', fig.align = 'center'}
+knitr::include_graphics(c("figures/kraken_branches_color.png", "figures/kraken_branches_size.png"))
 ``` 
 
 
-## comparative genomic data on genome sizes and transposable elements 
+## Comparative genomic data on genome sizes and transposable elements 
 
 This dataset contains informations about the genome size and the Transposable Elements content for molluscs, insects and vertebrates.
 
@@ -179,24 +178,23 @@ First of all, we load the data and transform it into the LifemapR format.
 
 ```{r, eval = FALSE}
 data(gen_res)
-
 LM_gen <- build_Lifemap(df = gen_res, basemap = "ncbi")
 ```
 
-Then we can began to visualize our data.
+Then we can began to visualise our data.
 
 Here we have two characteristics to visualise, we can do so with the following command.
 
-However, unlike the precedent data set, we don't have informations for all the nodes. Here we only have data for the leaves so it will be necessary to infere values to the nodes where the information is missing with the ```FUN``` argument.
+However, unlike the precedent data set, we don't have informations for all the nodes. 
+Here we only have data for the leaves so it will be necessary to infere values to the nodes where the information is missing with the ```FUN``` argument.
 
 ```{r, eval = FALSE}
 # Visualisation of the Genome size on the fillColor and the TEcontent on the size of markers.
 lifemap(LM_gen) + 
   lm_markers(var_fillColor = "Genome_size", fillColor = "PiYG", radius  = "TEcontent_bp", FUN = mean)
-
 ```
 
-```{r, echo=FALSE,out.width="100%", out.height="20%",fig.cap= 'visualisation of genomics data',fig.show='hold',fig.align='center'}
+```{r includegenfig, eval = TRUE, echo = FALSE, out.width = "100%", out.height = "20%", fig.cap = 'Visualisation of genomics data', fig.show = 'hold', fig.align = 'center'}
 knitr::include_graphics("figures/gen_base.png")
 ``` 
 
@@ -207,15 +205,14 @@ We can also represent markers and subtree at the same time
 lifemap(LM_gen) + 
   lm_branches()
   lm_markers(var_fillColor = "Genome_size", fillColor = "PiYG", radius  = "TEcontent_bp", FUN = mean) 
-
 ```
 
-```{r, echo=FALSE,out.width="100%", out.height="20%",fig.cap= 'visualisation of genomics data with markers and subtree',fig.show='hold',fig.align='center'}
+```{r includegenmarkfig, eval = TRUE, echo = FALSE, out.width = "100%", out.height = "20%", fig.cap = 'Visualisation of genomics data with markers and subtree', fig.show = 'hold', fig.align = 'center'}
 knitr::include_graphics("figures/gen_markers_branches.png")
 ``` 
 
 
-## dataset of eukaryotes from NCBI database
+## Dataset of eukaryotes from NCBI database
 
 This dataset contains informations about around 1 000 eukaryotes randomly fetched from the NCBI database.
 
@@ -223,34 +220,30 @@ First of all, we load the data and transform it into the LifemapR format.
 
 ```{r, eval = FALSE}
 data(eukaryotes_1000)
-
 LM_eukaryotes <- build_Lifemap(df = eukaryotes_1000, basemap = "ncbi")
 ```
 
-Then we can began to visualize our data.
+Then we can began to visualise our data.
 
 ```{r, eval = FALSE}
 # Visualisation of eukaryotes data.
 lifemap(LM_eukaryotes) + 
   lm_markers()
-
 ```
 
-```{r, echo=FALSE,out.width="50%", out.height="20%",fig.cap= 'Basic visualisation',fig.show='hold',fig.align='center'}
+```{r includeeukaryotefig1, eval = TRUE, echo = FALSE, out.width = "50%", out.height = "20%", fig.cap = 'Basic visualisation', fig.show = 'hold', fig.align = 'center'}
 knitr::include_graphics("figures/eukaryotes_base.png")
 ``` 
-
 
 We can also choose to visualise only a part of our data. To do this, we can either sort our data in advance or use the ```data``` argument to do so.
 
 ```{r, eval = FALSE}
 # Visualisation of Plants.
 lifemap(LM_eukaryotes) + 
-  lm_markers(data = LM_eukaryotes$df[LM_eukaryotes$df$Group %in% "Plants",])
-
+  lm_markers(data = LM_eukaryotes$df[LM_eukaryotes$df$Group %in% "Plants", ])
 ```
 
-```{r, echo=FALSE,out.width="50%", out.height="20%",fig.cap= 'Visualisation of Plants',fig.show='hold',fig.align='center'}
+```{r includeeukaryotefig2, eval = TRUE, echo = FALSE, out.width = "50%", out.height = "20%", fig.cap = 'Visualisation of Plants', fig.show = 'hold', fig.align = 'center'}
 knitr::include_graphics("figures/eukaryotes_data.png")
 ``` 
 
@@ -260,9 +253,8 @@ Finally we can visualise discret variables with the ```lm_piechats()``` function
 # Visualisation of the maximum assembly level.
 lifemap(LM_eukaryotes) + 
   lm_piecharts(param = "Group")
-
 ```
 
-```{r, echo=FALSE,out.width="50%", out.height="20%",fig.cap= 'Visualisation of the maximum assembly level',fig.show='hold',fig.align='center'}
+```{r includeeukaryotefig3, eval = TRUE, echo = FALSE, out.width = "50%", out.height = "20%", fig.cap = 'Visualisation of the maximum assembly level', fig.show = 'hold', fig.align = 'center'}
 knitr::include_graphics("figures/eukaryotes_piecharts.png")
 ``` 
