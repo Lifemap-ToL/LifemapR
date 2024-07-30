@@ -10,14 +10,14 @@
 #' - 'base' for \url{https://lifemap.univ-lyon1.fr/}
 #' - 'virus' for \url{https://virusmap.univ-lyon1.fr/}
 #'
-#' @return An HTML widget object  with graphics layers.
+#' @return An HTML widget object with graphics layers.
 #' @export
 #' @importFrom leaflet leaflet addTiles providerTileOptions
 #' @importFrom RCurl url.exists
 #'
 #' @examples
 #' display_map()
-display_map <- function(df = NULL,basemap = c("fr","ncbi", "base","virus")) {
+display_map <- function(df = NULL, basemap = c("fr","ncbi", "base","virus")) {
   basemap <- match.arg(basemap)
   if (basemap == "fr"){
     display="http://lifemap-fr.univ-lyon1.fr/osm_tiles/{z}/{x}/{y}.png"
