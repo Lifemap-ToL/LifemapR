@@ -58,13 +58,22 @@ build_Lifemap <- function(df, basemap = c("ncbi", "base", "fr", "virus"), verbos
     stop(sprintf('%s is not a working basemap, try c("base", "fr", "ncbi" or "virus")', basemap))
   }
   
-  # download full data for chosen basemap
-  if(verbose) cat("Downloading basemap coordinates...\n")
-  
-  # control to test if the url is valid
-  if(!url.exists(basemap_url)) {
+  y <- tryCatch({
+    load(url(basemap_url), envir = lifemap_basemap_envir)
+  },
+  warning = function(w) {
     message("The Lifemap server or some remote lifemap files cannot be reached. Please try again later.")
-  } else {
+    return(NA)
+  },
+  error = function(e) {
+    message("The Lifemap server or some remote lifemap files cannot be reached. Please try again later.")
+    return(NA)
+  }
+  )
+  
+  if(!is.na(y)) {
+    # download full data for chosen basemap
+    if(verbose) cat("Downloading basemap coordinates...\n")
     load(url(basemap_url), envir = lifemap_basemap_envir)
     
     # add LUCA
@@ -111,5 +120,7 @@ build_Lifemap <- function(df, basemap = c("ncbi", "base", "fr", "virus"), verbos
     class(lm_obj) <- c("lifemap_obj", "list")
     
     return(lm_obj)
+  } else {
+    return(NA)
   }
 }
