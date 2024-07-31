@@ -18,7 +18,7 @@ display_map(df = NULL, basemap = c("fr", "ncbi", "base", "virus"))
 }}
 }
 \value{
-An HTML widget object  with graphics layers.
+An HTML widget object with graphics layers.
 }
 \description{
 This function create a blank Leaflet map using the leaflet function from the leaflet package.
