@@ -17,18 +17,18 @@
 #'
 #' @examples
 #' display_map()
-display_map <- function(df = NULL, basemap = c("fr","ncbi", "base","virus")) {
+display_map <- function(df = NULL, basemap = c("fr", "ncbi", "base", "virus")) {
   basemap <- match.arg(basemap)
   if (basemap == "fr"){
-    display="http://lifemap-fr.univ-lyon1.fr/osm_tiles/{z}/{x}/{y}.png"
+    display <- "http://lifemap-fr.univ-lyon1.fr/osm_tiles/{z}/{x}/{y}.png"
   } else if (basemap == "ncbi"){
-    display="http://lifemap-ncbi.univ-lyon1.fr/osm_tiles/{z}/{x}/{y}.png"
+    display <- "http://lifemap-ncbi.univ-lyon1.fr/osm_tiles/{z}/{x}/{y}.png"
   } else if (basemap == "base"){
-    display="http://lifemap.univ-lyon1.fr/osm_tiles/{z}/{x}/{y}.png"
+    display <- "http://lifemap.univ-lyon1.fr/osm_tiles/{z}/{x}/{y}.png"
   } else if (basemap == "virus"){
-    display="https://virusmap.univ-lyon1.fr/osm_tiles/{z}/{x}/{y}.png"
+    display <- "https://virusmap.univ-lyon1.fr/osm_tiles/{z}/{x}/{y}.png"
   }
-  url2check<-strsplit(display, "osm_tiles")[[1]][1]
+  url2check <- strsplit(display, "osm_tiles")[[1]][1]
   
   m <- tryCatch({
     leaflet::leaflet(df) |>
@@ -44,7 +44,7 @@ display_map <- function(df = NULL, basemap = c("fr","ncbi", "base","virus")) {
   }
   )
   
-  if(!all(is.na(m))) {
+  if (!all(is.na(m))) {
     return(m)
   } else {
     return(NA)
