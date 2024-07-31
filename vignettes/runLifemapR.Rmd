@@ -55,8 +55,8 @@ LM_eukaryotes <- build_Lifemap(eukaryotes_1000, "ncbi")
 ```
 
 ```{r printLF, eval = TRUE, echo = FALSE}
-if(is.lifemap_obj(LM_eukaryotes))
-  LM_eukaryotes$df[6:10,1:5]
+if (is.lifemap_obj(LM_eukaryotes))
+  LM_eukaryotes$df[6:10, 1:5]
 ```
 
 You can then transform this dataframe into a format suitable for the visualisation functions of the package with the ```build_Lifemap``` function.\
@@ -203,7 +203,7 @@ We can also represent markers and subtree at the same time
 ```{r, eval = FALSE}
 # Visualisation of the Genome size on the fillColor and the TEcontent on the size of markers.
 lifemap(LM_gen) + 
-  lm_branches()
+  lm_branches() +
   lm_markers(var_fillColor = "Genome_size", fillColor = "PiYG", radius  = "TEcontent_bp", FUN = mean) 
 ```
 
