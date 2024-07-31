@@ -20,10 +20,10 @@ make_newick <- function(df) {
   mat <- rbind(mat[whereroot, ], mat[-whereroot, ])
   i <- length(whereroot) + 1
   while (i < nrow(mat)) {
-    while(!(mat[i, 1] %in% mat[1:(i - 1), 2])) {
+    while (!(mat[i, 1] %in% mat[1:(i - 1), 2])) {
       mat <- rbind(mat[-i, ], mat[i, ])
     }
-    i <- i+1
+    i <- i + 1
   }
 
   ## Put secial characters ("-") before and after each name
@@ -32,7 +32,7 @@ make_newick <- function(df) {
   nodes <- unique(matok[, 1])
   nwk <- paste(matok[1, 2], ";", sep = "")
   for (n in nodes[-1]) {
-    desc <- paste("(", paste(matok[which(matok[, 1]%in% n), 2], collapse = ","),")", n, sep = "")
+    desc <- paste("(", paste(matok[which(matok[, 1] %in% n), 2], collapse = ","), ")", n, sep = "")
     nwk <- gsub(n, desc, nwk)
   }
   # remove the special character

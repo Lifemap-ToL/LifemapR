@@ -19,17 +19,16 @@
 #' display_map()
 display_map <- function(df = NULL, basemap = c("fr", "ncbi", "base", "virus")) {
   basemap <- match.arg(basemap)
-  if (basemap == "fr"){
+  if (basemap == "fr") {
     display <- "http://lifemap-fr.univ-lyon1.fr/osm_tiles/{z}/{x}/{y}.png"
-  } else if (basemap == "ncbi"){
+  } else if (basemap == "ncbi") {
     display <- "http://lifemap-ncbi.univ-lyon1.fr/osm_tiles/{z}/{x}/{y}.png"
-  } else if (basemap == "base"){
+  } else if (basemap == "base") {
     display <- "http://lifemap.univ-lyon1.fr/osm_tiles/{z}/{x}/{y}.png"
-  } else if (basemap == "virus"){
+  } else if (basemap == "virus") {
     display <- "https://virusmap.univ-lyon1.fr/osm_tiles/{z}/{x}/{y}.png"
   }
-  url2check <- strsplit(display, "osm_tiles")[[1]][1]
-  
+
   m <- tryCatch({
     leaflet::leaflet(df) |>
       leaflet::addTiles(display, options = leaflet::providerTileOptions(minZoom = 5, maxZoom = 50))
@@ -43,7 +42,7 @@ display_map <- function(df = NULL, basemap = c("fr", "ncbi", "base", "virus")) {
     return(NA)
   }
   )
-  
+
   if (!all(is.na(m))) {
     return(m)
   } else {

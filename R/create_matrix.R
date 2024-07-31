@@ -15,10 +15,10 @@
 #'
 #' create_matrix(LM_eukaryotes$df, c("GC.", "Genes"))
 create_matrix <- function(df, cols) {
-  a <- sapply(1:nrow(df), 
-              function(x,y) {
+  a <- sapply(seq_len(nrow(df)),
+              function(x, y) {
                 cbind(y$taxid[x], c(y$taxid[x], y$ascend[x][[1]]))
-              }, 
+              },
               y = df)
   a <- a[-length(a)]
   B <- do.call(rbind, a)
@@ -30,7 +30,7 @@ create_matrix <- function(df, cols) {
       new_df <- dplyr::full_join(new_df, df[, c("taxid", var)], by = dplyr::join_by("descendant" == "taxid"))
     }
   }
-  return (new_df)
+  return(new_df)
 }
 
 #' Infer numerical values to nodes.
@@ -49,9 +49,10 @@ create_matrix <- function(df, cols) {
 #'
 #' inferred_values <- pass_infos(M = infos, FUN = mean, value = "GC.")
 pass_infos <- function(M, FUN, value) {
-  inferred_values <- tapply(M[[value]], M$ancestor, function(x) {
+  iv <- tapply(M[[value]], M$ancestor, function(x) {
     x <- x[!is.na(x)]
     FUN(x)})
+  return(iv)
 }
 
 
@@ -74,15 +75,15 @@ pass_infos <- function(M, FUN, value) {
 #'
 #' inferred_values <- pass_infos_discret(M = infos, value = "Status")
 pass_infos_discret <- function(M, value) {
-  bind_values <- M |> 
+  bind_values <- M |>
     dplyr::select(.data$ancestor, dplyr::all_of(value)) |>
     stats::na.omit() |>
     dplyr::group_by(.data[[value]], .data$ancestor) |>
-    dplyr::count() |> 
+    dplyr::count() |>
     tidyr::pivot_wider(names_from = dplyr::all_of(value), values_from = .data$n, values_fill = 0) |>
     as.data.frame() |>
-    dplyr::rename("taxid" = "ancestor") |> 
+    dplyr::rename("taxid" = "ancestor") |>
     dplyr::arrange(.data$taxid)
-  
+
   return(bind_values)
 }

@@ -17,7 +17,6 @@
 #' - "leaves" : displays only the latest (most recent) taxa
 #' 
 #' (WARNING : "requested", "leaves" and "auto" shouldn't be used to display more than 2000 charts as it may result in long computing time)
-#'
 #' @return An lm_piecharts object containing all aesthetics details for one layer of charts
 #' @export
 #'

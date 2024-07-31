@@ -12,10 +12,10 @@
 #' data(LM_eukaryotes)
 #' print(LM_eukaryotes)
 #' }
-print.lifemap_obj <- function(x,...) {
+print.lifemap_obj <- function(x, ...) {
   if (is.null(x$aes) && !is.null(x$df)) {
-    cat('The dataframe contains', nrow(x$df),'rows and', ncol(x$df), 'columns. \n')
-    cat('The basemap used is :', x$basemap, '\n')
+    cat("The dataframe contains", nrow(x$df), "rows and", ncol(x$df), "columns. \n")
+    cat("The basemap used is :", x$basemap, "\n")
   } else if (is.null(x$df)) {
     class(x) <- "list"
     print(x)
@@ -37,7 +37,9 @@ print.lifemap_obj <- function(x,...) {
 #' is.lifemap_obj(LM_eukaryotes)
 #' }
 #'
-is.lifemap_obj <- function(x) inherits(x, "lifemap_obj")
+is.lifemap_obj <- function(x) {
+  inherits(x, "lifemap_obj")
+}
 
 #' Add a graphical element to a tree visualisation.
 #' @param e1 An object of class lifemap_obj that contains at least $df, a dataframe, and $basemap, the map used to get the coordinates.
@@ -52,8 +54,8 @@ is.lifemap_obj <- function(x) inherits(x, "lifemap_obj")
 #' LM_obj <- lifemap(LM_eukaryotes) + lm_markers() + lm_branches()
 #' }
 #'
-"+.lifemap_obj" <- function(e1,e2) {
-  if (is.lm_markers(e2)){
+"+.lifemap_obj" <- function(e1, e2) {
+  if (is.lm_markers(e2)) {
     for (aes in c("radius", "var_fillColor", "var_color", "fillOpacity")){
       if (is.character(e2[[aes]]) && !(e2[[aes]] %in% "default")) {
         e2[[aes]] <- match.arg(arg = e2[[aes]], choices = colnames(e1$df))
@@ -70,7 +72,7 @@ is.lifemap_obj <- function(x) inherits(x, "lifemap_obj")
     e2$param <- match.arg(arg = e2$param, choices = colnames(e1$df))
   }
 
-  if(is.null(e1$aes)) {
+  if (is.null(e1$aes)) {
     e1$aes <- list(e2)
   } else {
     e1$aes <- append(e1$aes, list(e2))

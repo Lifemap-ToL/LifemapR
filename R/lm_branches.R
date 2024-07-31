@@ -29,7 +29,7 @@ lm_branches <- function(data = NULL,
                         max = 20,
                         opacity = 0.5,
                         FUN = NULL,
-                        legend=TRUE,
+                        legend = TRUE,
                         legendPosition = c("topright", "bottomright", "bottomleft", "topleft")) {
   
   legendPosition <- match.arg(arg = legendPosition, choices = legendPosition)
@@ -40,7 +40,7 @@ lm_branches <- function(data = NULL,
     taxids <- NULL
   }
   
-  if (is.null(var_color)){
+  if (is.null(var_color)) {
     var_color <- "default"
   }
   palette <- NULL
@@ -66,7 +66,7 @@ lm_branches <- function(data = NULL,
               FUN = FUN, var_color = var_color, value = value,
               size = size, min = min, max = max, opacity = opacity,
               legend = legend, legendPosition = legendPosition)
-  class(res)=c("lifemap_obj", "lm_branches", "list")
+  class(res) <- c("lifemap_obj", "lm_branches", "list")
   return(res)
 }
 
