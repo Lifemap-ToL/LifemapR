@@ -14,10 +14,12 @@
 #' data(LM_eukaryotes)
 #'
 #' create_matrix(LM_eukaryotes$df, c("GC.", "Genes"))
-create_matrix <- function(df, cols){
-  a <- sapply(1:nrow(df), function(x,y){
-    cbind(y$taxid[x], c(y$taxid[x],y$ascend[x][[1]]))
-  }, y = df)
+create_matrix <- function(df, cols) {
+  a <- sapply(1:nrow(df), 
+              function(x,y) {
+                cbind(y$taxid[x], c(y$taxid[x], y$ascend[x][[1]]))
+              }, 
+              y = df)
   a <- a[-length(a)]
   B <- do.call(rbind, a)
 
@@ -25,9 +27,8 @@ create_matrix <- function(df, cols){
   colnames(new_df) <- c("descendant", "ancestor")
   if (!is.null(cols)) {
     for (var in cols) {
-      new_df <- dplyr::full_join(new_df, df[,c("taxid", var)], by = dplyr::join_by("descendant" == "taxid"))
+      new_df <- dplyr::full_join(new_df, df[, c("taxid", var)], by = dplyr::join_by("descendant" == "taxid"))
     }
-
   }
   return (new_df)
 }
@@ -47,8 +48,8 @@ create_matrix <- function(df, cols){
 #' infos <- create_matrix(LM_eukaryotes$df, c("GC.", "Genes"))
 #'
 #' inferred_values <- pass_infos(M = infos, FUN = mean, value = "GC.")
-pass_infos <- function(M, FUN, value){
-  inferred_values <- tapply(M[[value]], M$ancestor, function(x){
+pass_infos <- function(M, FUN, value) {
+  inferred_values <- tapply(M[[value]], M$ancestor, function(x) {
     x <- x[!is.na(x)]
     FUN(x)})
 }

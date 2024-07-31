@@ -8,7 +8,7 @@
 #' @param max The new maximum of the range.
 #'
 #' @return A vector of values.
-create_value_range <- function(value, df, df2, min, max){
+create_value_range <- function(value, df, df2, min, max) {
     if (value %in% colnames(df)) {
         old_min <- min(df[[value]], na.rm = TRUE)
         old_max <- max(df[[value]], na.rm = TRUE)
@@ -36,7 +36,7 @@ create_value_range <- function(value, df, df2, min, max){
 add_lm_markers <- function(proxy, aes, df, df_visible, group_info) {
     
     if (!(aes$var_fillColor %in% "default")) {
-        if (is.numeric(df[[aes$var_fillColor]])){
+        if (is.numeric(df[[aes$var_fillColor]])) {
             make_fillColor <- leaflet::colorNumeric(palette = aes$fillPalette, domain = df[[aes$var_fillColor]], reverse = TRUE)
             fillColor_info <- make_fillColor(df_visible[[aes$var_fillColor]])
         } else {
@@ -46,7 +46,7 @@ add_lm_markers <- function(proxy, aes, df, df_visible, group_info) {
     } else {
         fillColor_info <- aes$fillColor}
     
-    if (aes$radius %in% "default"){
+    if (aes$radius %in% "default") {
         radius_info <- create_value_range(aes$value, df, df_visible, aes$min, aes$max)
         # radius_info <- aes$value
     } else {
@@ -54,7 +54,7 @@ add_lm_markers <- function(proxy, aes, df, df_visible, group_info) {
     }
     
     # stroke presence
-    if (isTRUE(aes$stroke)){
+    if (isTRUE(aes$stroke)) {
         if (!(aes$var_color %in% "default")) {
             if (is.numeric(df[[aes$var_color]])){
                 make_color <- leaflet::colorNumeric(aes$palette, df[[aes$var_color]], reverse = TRUE)
@@ -89,7 +89,7 @@ add_lm_markers <- function(proxy, aes, df, df_visible, group_info) {
                                            weight = weight_info,
                                            group = group_info
         )
-    } else if (length(df_visible[[aes$label]]) > 0){
+    } else if (length(df_visible[[aes$label]]) > 0) {
         proxy <- leaflet::addCircleMarkers(proxy,
                                            lng = df_visible$lon,
                                            lat = df_visible$lat,
@@ -105,7 +105,6 @@ add_lm_markers <- function(proxy, aes, df, df_visible, group_info) {
         )
     }
     proxy
-    
 }
 
 #' Compute the aesthetics for a subtree visualisation.
@@ -143,9 +142,11 @@ add_lm_branches <- function(proxy, aes, df, df_visible, df_descendants, group_in
         for (desc in descendants_visible[descendants_visible$ancestor == id, ]$taxid) {
             if (!(aes$var_color %in% "default")) {
                 col_info <- make_col(descendants_visible[descendants_visible$taxid == desc, aes$var_color])
-            } else { col_info <- aes$color}
+            } else {
+              col_info <- aes$color
+            }
             
-            if (aes$size %in% colnames(df)){
+            if (aes$size %in% colnames(df)) {
                 size_info <- (((descendants_visible[descendants_visible$taxid == desc, aes$size] - old_min) * new_range) / old_range) + aes$min
             } else {size_info <- aes$value}
             
@@ -177,7 +178,7 @@ add_lm_branches <- function(proxy, aes, df, df_visible, df_descendants, group_in
 #' @return An updated map with the new layer added.
 add_lm_piecharts <- function(proxy, aes, df, df_visible, layer) {
     values <- unique(df[df$type == "requested", aes$param])
-    layerId_info <- sapply(X = 1:nrow(df_visible), FUN = function(x){paste(layer,x,collapse="", sep="")})
+    layerId_info <- sapply(X = 1:nrow(df_visible), FUN = function(x){paste(layer,x,collapse="", sep = "")})
     make_col <- leaflet::colorFactor(aes$pal, values)
     proxy <- proxy |>
         leaflet.minicharts::addMinicharts(
@@ -199,7 +200,6 @@ add_lm_piecharts <- function(proxy, aes, df, df_visible, layer) {
 }
 
 
-
 #' Compute the different display options.
 #'
 #' @param m The map to be modified.
@@ -210,7 +210,7 @@ add_lm_piecharts <- function(proxy, aes, df, df_visible, layer) {
 #' @param i The index of the aesthetics.
 #'
 #' @return An updated map.
-display_option <- function(m, aes, df, type, leaves, i){
+display_option <- function(m, aes, df, type, leaves, i) {
     
     if (aes$display == "requested") {
         df_visible <- df[df$type == "requested",]
@@ -219,12 +219,12 @@ display_option <- function(m, aes, df, type, leaves, i){
     } else if (aes$display == "leaves") {
         df_visible <- df[df$taxid %in% leaves,]
     }
-    ancestors <- unique(unlist(df[df$taxid %in% aes$taxids[[1]],"ascend"]))
+    ancestors <- unique(unlist(df[df$taxid %in% aes$taxids[[1]], "ascend"]))
     all_taxids <- c(df[df$taxid %in% aes$taxids[[1]],"taxid"], ancestors)
     if (!(is.null(aes$taxids))) {
-        df_visible = df_visible[df_visible$taxid %in% all_taxids,]
+        df_visible = df_visible[df_visible$taxid %in% all_taxids, ]
     }
-    if (nrow(df_visible) < 5000){
+    if (nrow(df_visible) < 5000) {
         
         if (type == "markers") {
             m <- m |>
@@ -266,7 +266,7 @@ display_option <- function(m, aes, df, type, leaves, i){
 #' data(LM_eukaryotes)
 #' lifemap(LM_eukaryotes) + lm_markers() + lm_branches()
 #' }
-draw_Lifemap <- function(lm_obj){
+draw_Lifemap <- function(lm_obj) {
     
     df <- lm_obj$df
     basemap <- lm_obj$basemap
@@ -277,7 +277,7 @@ draw_Lifemap <- function(lm_obj){
     leaves <- df[!(df$taxid %in% all_ancestors), "taxid"]
     
     variables <- c()
-    for (i in 1:length(aes)){
+    for (i in 1:length(aes)) {
         for (param in aes[[i]]){
             if ((is.character(param)) && param %in% colnames(df)){
                 variables <- append(variables, param)
@@ -292,7 +292,7 @@ draw_Lifemap <- function(lm_obj){
     
     cat("passing the information to the nodes \n")
     #pass the information to the nodes or not
-    for (i in 1:length(aes)){
+    for (i in 1:length(aes)) {
         # passing information if the function is given
         if (is.lm_markers(aes[[i]]) && !(is.null(aes[[i]]$FUN))) {
             for (parameter in aes[[i]]) {
@@ -302,20 +302,20 @@ draw_Lifemap <- function(lm_obj){
                                          FUN = aes[[i]]$FUN,
                                          value = parameter)
                     for (id in names(new_df)) {
-                        if (is.na(df[df$taxid == id, parameter])){
+                        if (is.na(df[df$taxid == id, parameter])) {
                             df[df$taxid == id, parameter] <- new_df[id]
                         }
                     }
                 }
             }
         } else if (is.lm_branches(aes[[i]]) && !(is.null(aes[[i]]$FUN))) {
-            for (parameter in aes[[i]]){
+            for (parameter in aes[[i]]) {
                 if (!(is.null(parameter)) && is.character(parameter) && parameter %in% colnames(df)) {
                     new_df <- pass_infos(M = M,
                                          FUN = aes[[i]]$FUN,
                                          value = parameter)
                     for (id in names(new_df)) {
-                        if (is.na(df[df$taxid == id, parameter])){
+                        if (is.na(df[df$taxid == id, parameter])) {
                             df[df$taxid == id, parameter] <- new_df[id]
                         }
                     }
@@ -366,10 +366,10 @@ draw_Lifemap <- function(lm_obj){
         # define the descendants of df_zoom_bounds' taxids
         df_descendants <- shiny::reactive({
             visibles <- df_zoom_bounds()$taxid
-            df[df$ancestor %in% visibles,]
+            df[df$ancestor %in% visibles, ]
         })
         
-        addLegendCustom <- function(map, colors, labels, sizes, shapes, borders, opacity = 0.5, title, position){
+        addLegendCustom <- function(map, colors, labels, sizes, shapes, borders, opacity = 0.5, title, position) {
             
             make_shapes <- function(colors, sizes, borders, shapes) {
                 shapes <- gsub("circle", "50%", shapes)
@@ -469,10 +469,7 @@ draw_Lifemap <- function(lm_obj){
                         m <- display_option(m = m, aes = aes[[i]], df = df, type = "discret", leaves = leaves, i = i)
                     }
                 }
-                
-                
             }
-            
             m
         })
         
@@ -480,18 +477,19 @@ draw_Lifemap <- function(lm_obj){
         shiny::observe({
             
             # clearing all the already existing shapes/markers/controls
-            proxy <- leaflet::leafletProxy("mymap", session=session)
+            proxy <- leaflet::leafletProxy("mymap", session = session)
             
             # adding the visible shapes
-            for (i in 1:length(aes)){
-                
+            for (i in 1:length(aes)) {
                 
                 # for each aesthetic, if a sub dataset is given, compute the right taxids to be used
-                ancestors <- unique(unlist(df[df$taxid %in% aes[[i]]$taxids[[1]],"ascend"]))
-                all_taxids <- c(df[df$taxid %in% aes[[i]]$taxids[[1]],"taxid"], ancestors)
+                ancestors <- unique(unlist(df[df$taxid %in% aes[[i]]$taxids[[1]], "ascend"]))
+                all_taxids <- c(df[df$taxid %in% aes[[i]]$taxids[[1]], "taxid"], ancestors)
                 if (!(is.null(aes[[i]]$taxids))) {
-                    df_visible = df_zoom_bounds()[df_zoom_bounds()$taxid %in% all_taxids,]
-                } else { df_visible = df_zoom_bounds()}
+                    df_visible <- df_zoom_bounds()[df_zoom_bounds()$taxid %in% all_taxids,]
+                } else {
+                  df_visible = df_zoom_bounds()
+                }
                 
                 # adding markers if aes[[i]] is an lm_markers object
                 if (is.lm_markers(aes[[i]]) && aes[[i]]$display == "auto") {
@@ -509,29 +507,24 @@ draw_Lifemap <- function(lm_obj){
                                         group_info = as.character(i),
                                         all_taxids = all_taxids)
                     
-                    
-                    
                     # adding charts if aes[[i]] is an lm_piecharts object
                 } else if(is.lm_piecharts(aes[[i]]) && nrow(df_visible) > 0 && aes[[i]]$display %in% "auto") {
                     proxy <- leaflet.minicharts::clearMinicharts(proxy) |>
                         add_lm_piecharts(aes = aes[[i]], df = df,
                                          df_visible = df_visible,
                                          layer = as.character(i))
-                    
                 }
             }
-            
             proxy
         })
         
         # functions to add popups
         showSciName_popup <- function(group, lng, lat) {
-            if(!is.null(aes[[as.numeric(group)]]$popup)){
-                selectedId <- df[round(df$lon, digits=6) == round(lng,digits=6) & round(df$lat, digits=6) == round(lat, digits = 6),]
+            if(!is.null(aes[[as.numeric(group)]]$popup)) {
+                selectedId <- df[round(df$lon, digits = 6) == round(lng, digits = 6) & round(df$lat, digits = 6) == round(lat, digits = 6), ]
                 content <- as.character(selectedId$taxid)
                 content <- paste(content, ",", aes[[as.numeric(group)]]$popup, ":", selectedId[[aes[[as.numeric(group)]]$popup]])
                 leafletProxy("mymap") |> leaflet::addPopups(lng, lat, content)
-                
             }
         }
         
@@ -546,10 +539,6 @@ draw_Lifemap <- function(lm_obj){
                 showSciName_popup(event$group, event$lng, event$lat)
             })
         })
-        
-        
-        
     }
-    
     shiny::shinyApp(ui, server)
 }

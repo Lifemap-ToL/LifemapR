@@ -31,13 +31,15 @@ lm_branches <- function(data = NULL,
                         FUN = NULL,
                         legend=TRUE,
                         legendPosition = c("topright", "bottomright", "bottomleft", "topleft")) {
-
+  
   legendPosition <- match.arg(arg = legendPosition, choices = legendPosition)
-
+  
   if (!(is.null(data))) {
     taxids <- I(list(c(data$taxid)))
-  } else { taxids <- NULL}
-
+  } else {
+    taxids <- NULL
+  }
+  
   if (is.null(var_color)){
     var_color <- "default"
   }
@@ -49,15 +51,17 @@ lm_branches <- function(data = NULL,
   } else {
     if (is.null(color)) {
       palette <- "RdBu"
-    } else { palette <- color }
+    } else {
+      palette <- color
+    }
   }
-
+  
   value <- NULL
-  if (is.numeric(size)){
+  if (is.numeric(size)) {
     value <- size
     size <- "default"
   }
-
+  
   res <- list(taxids = taxids, color = color, palette = palette,
               FUN = FUN, var_color = var_color, value = value,
               size = size, min = min, max = max, opacity = opacity,
@@ -70,4 +74,6 @@ lm_branches <- function(data = NULL,
 #' @param x The object to test.
 #' @return A boolean indicating whether or not the object is of lm_branches type.
 #' @export
-is.lm_branches <- function(x) {inherits(x, "lm_branches")}
+is.lm_branches <- function(x) {
+  inherits(x, "lm_branches")
+}

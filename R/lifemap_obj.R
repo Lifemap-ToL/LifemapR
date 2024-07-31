@@ -15,14 +15,13 @@
 print.lifemap_obj <- function(x,...) {
   if (is.null(x$aes) && !is.null(x$df)) {
     cat('The dataframe contains', nrow(x$df),'rows and', ncol(x$df), 'columns. \n')
-    cat('The basemap used is :', x$basemap,'\n')
-  } else if (is.null(x$df)){
+    cat('The basemap used is :', x$basemap, '\n')
+  } else if (is.null(x$df)) {
     class(x) <- "list"
     print(x)
   } else {
     print(draw_Lifemap(x))
   }
-
 }
 
 #' Reports whether x is a lifemap_obj object.
@@ -61,8 +60,8 @@ is.lifemap_obj <- function(x) inherits(x, "lifemap_obj")
       }
     }
 
-  } else if (is.lm_branches(e2)){
-    for (aes in c("var_color", "size")){
+  } else if (is.lm_branches(e2)) {
+    for (aes in c("var_color", "size")) {
       if (is.character(e2[[aes]]) && !(e2[[aes]] %in% "default")) {
         e2[[aes]] <- match.arg(arg = e2[[aes]], choices = colnames(e1$df))
       }

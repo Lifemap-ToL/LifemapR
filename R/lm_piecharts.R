@@ -30,7 +30,7 @@
 #'
 lm_piecharts <- function(data = NULL,
                        param,
-                       type = c("pie","bar", "polar-area", "polar-radius", "auto"),
+                       type = c("pie", "bar", "polar-area", "polar-radius", "auto"),
                        width = 30,
                        height = 30,
                        opacity = 1,
@@ -39,24 +39,30 @@ lm_piecharts <- function(data = NULL,
                        legend = TRUE,
                        legendPosition = c("topright", "bottomright", "bottomleft", "topleft"),
                        display = c("auto", "requested", "all", "leaves")) {
+  
   type <- match.arg(arg = type, choices = type)
   legendPosition <- match.arg(arg = legendPosition, choices = legendPosition)
   display <- match.arg(display)
 
   if (!(is.null(data))) {
     taxids <- I(list(c(data$taxid)))
-  } else { taxids <- NULL}
+  } else {
+    taxids <- NULL
+  }
 
   res <- list(taxids = taxids, param = param,
               type = type, width = width, opacity = opacity,
               showLabels = showLabels, pal = pal,
               legend = legend, legendPosition = legendPosition, display = display)
-  class(res)=c("lifemap_obj", "lm_piecharts", "list")
+  class(res) <- c("lifemap_obj", "lm_piecharts", "list")
   return(res)
 }
+
 
 #' Reports whether x is a lm_branches object.
 #' @param x The object to test.
 #' @return A boolean indicating whether or not the object is of lm_piecharts type.
 #' @export
-is.lm_piecharts <- function(x) {inherits(x, "lm_piecharts")}
+is.lm_piecharts <- function(x) {
+  inherits(x, "lm_piecharts")
+}

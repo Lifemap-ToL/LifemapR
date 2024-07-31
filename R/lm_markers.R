@@ -65,17 +65,21 @@ lm_markers <- function(data = NULL,
                        display = c("auto", "requested", "all", "leaves"),
                        popup = NULL,
                        label = NULL) {
+  
   legendPosition <- match.arg(legendPosition)
   legendOrientation <- match.arg(legendOrientation)
   display <- match.arg(display)
-
+  
   if (!(is.null(data))) {
     taxids <- I(list(c(data$taxid)))
-  } else { taxids <- NULL}
-
-  if (is.null(var_fillColor)){
+  } else {
+    taxids <- NULL
+  }
+  
+  if (is.null(var_fillColor)) {
     var_fillColor <- "default"
   }
+  
   fillPalette <- NULL
   if (var_fillColor %in% "default") {
     if (is.null(fillColor)) {
@@ -84,12 +88,15 @@ lm_markers <- function(data = NULL,
   } else {
     if (is.null(fillColor)) {
       fillPalette <- "RdBu"
-    } else { fillPalette <- fillColor }
+    } else {
+      fillPalette <- fillColor
+    }
   }
-
-  if (is.null(var_color)){
+  
+  if (is.null(var_color)) {
     var_color <- "default"
   }
+  
   palette <- NULL
   if (var_color %in% "default") {
     if (is.null(color)) {
@@ -98,15 +105,17 @@ lm_markers <- function(data = NULL,
   } else {
     if (is.null(color)) {
       palette <- "RdBu"
-    } else { palette <- color }
+    } else {
+      palette <- color
+    }
   }
-
+  
   value <- NULL
-  if (is.numeric(radius)){
+  if (is.numeric(radius)) {
     value <- radius
     radius <- "default"
   }
-
+  
   res <- list(taxids = taxids, radius = radius, value = value,
               fillColor = fillColor, fillPalette = fillPalette, min = min,
               max = max, FUN = FUN, stroke = stroke,
@@ -116,12 +125,15 @@ lm_markers <- function(data = NULL,
               legend = legend, legendPosition = legendPosition,
               legendOrientation = legendOrientation, legendOpacity = legendOpacity,
               display = display, popup = popup, label = label)
-  class(res)=c("lifemap_obj", "lm_markers", "list")
+  class(res) <- c("lifemap_obj", "lm_markers", "list")
   return(res)
 }
+
 
 #' Reports whether x is a lm_markers object.
 #' @param x The object to test.
 #' @return A boolean indicating whether or not the object is of lm_markers type.
 #' @export
-is.lm_markers <- function(x) {inherits(x, "lm_markers")}
+is.lm_markers <- function(x) {
+  inherits(x, "lm_markers")
+}
