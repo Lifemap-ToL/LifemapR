@@ -4,14 +4,14 @@
 \alias{build_Lifemap}
 \title{A function to construct a LifemapR object, usable by the other functions of the package.}
 \usage{
-build_Lifemap(df, basemap = c("ncbi", "base", "fr", "virus"), verbose = TRUE)
+build_Lifemap(df, basemap = NULL, verbose = TRUE)
 }
 \arguments{
 \item{df}{A dataframe containing at least one column named "taxid" that contains NCBI Taxonomy Identifiers (taxid).
 The dataframe can contain any number of additional columns defining traits/characters/values associated to
 each taxid.}
 
-\item{basemap}{The chosen basemap for Lifemap ("fr", "ncbi", "base" or "virus").}
+\item{basemap}{Deprecated argument.}
 
 \item{verbose}{If TRUE (the default), the function will print detailed information to the console.
 If FALSE, it will run silently.}
@@ -41,6 +41,6 @@ A function to construct a LifemapR object, usable by the other functions of the 
 data(eukaryotes_80)
 \dontrun{
 # make sure you have a good internet connection to load these very large files
-LM <- build_Lifemap(eukaryotes_80, "fr")
+LM <- build_Lifemap(eukaryotes_80)
 }
 }
