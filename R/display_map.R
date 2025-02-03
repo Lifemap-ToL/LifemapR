@@ -4,11 +4,7 @@
 #' If a dataframe is provided, it will be used for the creation of the map.
 #'
 #' @param df A dataframe. If given, its columns can be easily accessed with "~" (eg. ~GC.).
-#' @param basemap The basemap choosen to be displayed, it can be either :
-#' - 'fr' for \url{https://lifemap-fr.univ-lyon1.fr/}
-#' - 'ncbi' for \url{https://lifemap-ncbi.univ-lyon1.fr/}
-#' - 'base' for \url{https://lifemap.univ-lyon1.fr/}
-#' - 'virus' for \url{https://virusmap.univ-lyon1.fr/}
+#' @param basemap Deprecated argument.
 #'
 #' @return An HTML widget object with graphics layers.
 #' @export
@@ -17,30 +13,25 @@
 #'
 #' @examples
 #' display_map()
-display_map <- function(df = NULL, basemap = c("fr", "ncbi", "base", "virus")) {
-  basemap <- match.arg(basemap)
-  if (basemap == "fr") {
-    display <- "http://lifemap-fr.univ-lyon1.fr/osm_tiles/{z}/{x}/{y}.png"
-  } else if (basemap == "ncbi") {
-    display <- "http://lifemap-ncbi.univ-lyon1.fr/osm_tiles/{z}/{x}/{y}.png"
-  } else if (basemap == "base") {
-    display <- "http://lifemap.univ-lyon1.fr/osm_tiles/{z}/{x}/{y}.png"
-  } else if (basemap == "virus") {
-    display <- "https://virusmap.univ-lyon1.fr/osm_tiles/{z}/{x}/{y}.png"
+display_map <- function(df = NULL, basemap = NULL) {
+  if (!is.null(basemap)) {
+    warning("The basemap argument is now deprecated.")
   }
+  display <- "https://lifemap-back.univ-lyon1.fr/osm_tiles/{z}/{x}/{y}.png"
 
-  m <- tryCatch({
-    leaflet::leaflet(df) |>
-      leaflet::addTiles(display, options = leaflet::providerTileOptions(minZoom = 5, maxZoom = 50))
-  },
-  warning = function(w) {
-    message("The Lifemap server or some remote lifemap files cannot be reached. Please try again later.")
-    return(NA)
-  },
-  error = function(e) {
-    message("The Lifemap server or some remote lifemap files cannot be reached. Please try again later.")
-    return(NA)
-  }
+  m <- tryCatch(
+    {
+      leaflet::leaflet(df) |>
+        leaflet::addTiles(display, options = leaflet::providerTileOptions(minZoom = 5, maxZoom = 50))
+    },
+    warning = function(w) {
+      message("The Lifemap server or some remote lifemap files cannot be reached. Please try again later.")
+      return(NA)
+    },
+    error = function(e) {
+      message("The Lifemap server or some remote lifemap files cannot be reached. Please try again later.")
+      return(NA)
+    }
   )
 
   if (!all(is.na(m))) {
