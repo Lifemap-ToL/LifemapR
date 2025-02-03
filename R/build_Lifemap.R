@@ -3,7 +3,7 @@
 #' @param df A dataframe containing at least one column named "taxid" that contains NCBI Taxonomy Identifiers (taxid).
 #' The dataframe can contain any number of additional columns defining traits/characters/values associated to
 #' each taxid.
-#' @param basemap The chosen basemap for Lifemap ("fr", "ncbi", "base" or "virus").
+#' @param basemap Deprecated argument.
 #' @param verbose If TRUE (the default), the function will print detailed information to the console.
 #' If FALSE, it will run silently.
 #'
@@ -31,11 +31,14 @@
 #' data(eukaryotes_80)
 #' \dontrun{
 #' # make sure you have a good internet connection to load these very large files
-#' LM <- build_Lifemap(eukaryotes_80, "fr")
+#' LM <- build_Lifemap(eukaryotes_80)
 #' }
-build_Lifemap <- function(df, basemap = c("ncbi", "base", "fr", "virus"), verbose = TRUE) {
+build_Lifemap <- function(df, basemap = NULL, verbose = TRUE) {
+  if (!is.null(basemap)) {
+    warning("The basemap argument is now deprecated.")
+  }
+  basemap_url <- "https://lifemap-back.univ-lyon1.fr/data/lmdata.Rdata"
 
-  basemap <- match.arg(arg = basemap, choices = basemap)
   if (is.null(df$taxid)) {
     stop('The dataframe must at least contain a "taxid" column')
   }
@@ -44,33 +47,20 @@ build_Lifemap <- function(df, basemap = c("ncbi", "base", "fr", "virus"), verbos
     lifemap_basemap_envir <- new.env()
   }
 
-  ## SET DATASETS ASDRESSES
-  # getting the right URL depending on the basemap wanted
-  if (basemap == "ncbi") {
-    basemap_url <- "https://lifemap-ncbi.univ-lyon1.fr/data/lmdata.Rdata"
-  } else if (basemap == "fr") {
-    basemap_url <- "https://lifemap-fr.univ-lyon1.fr/data/lmdata.Rdata"
-  } else if (basemap == "base") {
-    basemap_url <- "https://lifemap.univ-lyon1.fr/data/lmdata.Rdata"
-  }
-  # else if(basemap == "virus") {
-  #   basemap_url <- "https://virusmap.univ-lyon1.fr/data/lmdata.Rdata"
-  # }
-  else {
-    stop(sprintf('%s is not a working basemap, try c("base", "fr", "ncbi" or "virus")', basemap))
-  }
-
-  y <- tryCatch({
-    load(url(basemap_url), envir = lifemap_basemap_envir)
-  },
-  warning = function(w) {
-    message("The Lifemap server or some remote lifemap files cannot be reached. Please try again later.")
-    return(NA)
-  },
-  error = function(e) {
-    message("The Lifemap server or some remote lifemap files cannot be reached. Please try again later.")
-    return(NA)
-  }
+  y <- tryCatch(
+    {
+      load(url(basemap_url), envir = lifemap_basemap_envir)
+    },
+    warning = function(w) {
+      print(w)
+      message("The Lifemap server or some remote lifemap files cannot be reached. Please try again later.")
+      return(NA)
+    },
+    error = function(e) {
+      print(e)
+      message("The Lifemap server or some remote lifemap files cannot be reached. Please try again later.")
+      return(NA)
+    }
   )
 
   if (!is.na(y)) {
@@ -81,7 +71,7 @@ build_Lifemap <- function(df, basemap = c("ncbi", "base", "fr", "virus"), verbos
     load(url(basemap_url), envir = lifemap_basemap_envir)
 
     # add LUCA
-    LUCA <- data.frame("taxid" = 0, "lon" = 0, "lat" = -4.226497, "sci_name" = "Luca", "zoom" = 5)
+    LUCA <- data.frame("taxid" = "0", "lon" = 0, "lat" = -4.226497, "sci_name" = "Luca", "zoom" = 5)
     lifemap_basemap_envir$DF <- dplyr::bind_rows(lifemap_basemap_envir$DF, LUCA)
 
     # get info for unique taxids (then we work with df_distinct, not df anymore)
@@ -98,9 +88,11 @@ build_Lifemap <- function(df, basemap = c("ncbi", "base", "fr", "virus"), verbos
     # get index of requested taxids
     indexes <- fastmatch::fmatch(df_distinct$taxid, lifemap_basemap_envir$DF$taxid)
     if (sum(is.na(indexes)) > 0) {
-      warning(sprintf("%s TaxID(s) could not be found: %s \n",
-                      sum(is.na(indexes)),
-                      paste(df_distinct$taxid[is.na(indexes)], sep = ",")))
+      warning(sprintf(
+        "%s TaxID(s) could not be found: %s \n",
+        sum(is.na(indexes)),
+        paste(df_distinct$taxid[is.na(indexes)], sep = ",")
+      ))
     }
 
     # create new df with only existing taxids
@@ -116,7 +108,7 @@ build_Lifemap <- function(df, basemap = c("ncbi", "base", "fr", "virus"), verbos
     DATA0$type <- "requested"
     ANCESTORS$type <- "ancestor"
     # bind all
-    DATA1 <- rbind(DATA0, ANCESTORS)
+    DATA1 <- dplyr::bind_rows(DATA0, ANCESTORS)
 
     # merge
     DATA2 <- merge(DATA1, df_exists, by = "taxid", all = TRUE)
