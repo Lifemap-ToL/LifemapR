@@ -364,14 +364,17 @@ draw_Lifemap <- function(lm_obj) {
   server <- function(input, output, session) {
   
     # define the zone visible by the users
-    df_zoom_bounds <- shiny::reactive(
+    df_zoom_bounds <- shiny::reactive({
+      if (is.null(input$mymap_zoom) || is.null(input$mymap_bounds)) {
+        return(df)
+      }
       df[df$zoom <= (input$mymap_zoom + zoom_level) &
-           df$lat > input$mymap_bounds$south &
-           df$lat < input$mymap_bounds$north &
-           df$lon > input$mymap_bounds$west &
-           df$lon < input$mymap_bounds$east, ]
-    )
-  
+        df$lat > input$mymap_bounds$south &
+        df$lat < input$mymap_bounds$north &
+        df$lon > input$mymap_bounds$west &
+        df$lon < input$mymap_bounds$east, ]
+    })
+
     # define the descendants of df_zoom_bounds' taxids
     df_descendants <- shiny::reactive({
       visibles <- df_zoom_bounds()$taxid

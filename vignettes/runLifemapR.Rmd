@@ -51,7 +51,7 @@ The very first step to use this package is to have a dataframe containing at lea
 require("LifemapR", quietly = TRUE)
 
 data(eukaryotes_1000)
-LM_eukaryotes <- build_Lifemap(eukaryotes_1000, "ncbi")
+LM_eukaryotes <- build_Lifemap(eukaryotes_1000)
 ```
 
 ```{r printLF, eval = TRUE, echo = FALSE}
@@ -70,7 +70,6 @@ LM <- build_Lifemap(data)
 After that, you get a ```lifemap```  object that takes the form of a list containing the following informations :
 
 - ```df``` : containing the augmented dataframe obtained after the first step.
-- ```basemap``` : which basemap was used to fetch the data.
 
 You can then visualise your data with ```lifemap()``` associated with one or more of the following functions :
 
@@ -106,7 +105,7 @@ First of all, we load the data and transform it into the LifemapR format.
 ```{r, eval = FALSE}
 data(kraken_res)
 
-LM_kraken <- build_Lifemap(df = kraken_res, basemap = "ncbi")
+LM_kraken <- build_Lifemap(df = kraken_res)
 ```
 
 Then we can began to visualise our data.
@@ -178,7 +177,7 @@ First of all, we load the data and transform it into the LifemapR format.
 
 ```{r, eval = FALSE}
 data(gen_res)
-LM_gen <- build_Lifemap(df = gen_res, basemap = "ncbi")
+LM_gen <- build_Lifemap(df = gen_res)
 ```
 
 Then we can began to visualise our data.
@@ -220,7 +219,7 @@ First of all, we load the data and transform it into the LifemapR format.
 
 ```{r, eval = FALSE}
 data(eukaryotes_1000)
-LM_eukaryotes <- build_Lifemap(df = eukaryotes_1000, basemap = "ncbi")
+LM_eukaryotes <- build_Lifemap(df = eukaryotes_1000)
 ```
 
 Then we can began to visualise our data.

@@ -18,7 +18,7 @@ Draw a map and all the aesthetics in the order you put them in, the last one wil
 \examples{
 ## Only run examples in interactive R sessions
 if (interactive()) {
-data(LM_eukaryotes)
-lifemap(LM_eukaryotes) + lm_markers() + lm_branches()
+  data(LM_eukaryotes)
+  lifemap(LM_eukaryotes) + lm_markers() + lm_branches()
 }
 }

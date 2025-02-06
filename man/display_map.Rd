@@ -4,18 +4,12 @@
 \alias{display_map}
 \title{Create a Lifemap base.}
 \usage{
-display_map(df = NULL, basemap = c("fr", "ncbi", "base", "virus"))
+display_map(df = NULL, basemap = NULL)
 }
 \arguments{
 \item{df}{A dataframe. If given, its columns can be easily accessed with "~" (eg. ~GC.).}
 
-\item{basemap}{The basemap choosen to be displayed, it can be either :
-\itemize{
-\item 'fr' for \url{https://lifemap-fr.univ-lyon1.fr/}
-\item 'ncbi' for \url{https://lifemap-ncbi.univ-lyon1.fr/}
-\item 'base' for \url{https://lifemap.univ-lyon1.fr/}
-\item 'virus' for \url{https://virusmap.univ-lyon1.fr/}
-}}
+\item{basemap}{Deprecated argument.}
 }
 \value{
 An HTML widget object with graphics layers.

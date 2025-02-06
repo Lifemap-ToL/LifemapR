@@ -1,7 +1,7 @@
 Package: LifemapR
 Title: Data Visualisation on 'Lifemap' Tree
 Version: 1.1.5
-Imports: leaflet, shiny, jsonlite, dplyr, tidyr, leaflet.minicharts, htmltools, rlang, RCurl, fastmatch
+Imports: leaflet, shiny, jsonlite, dplyr, tidyr, leaflet.minicharts, htmltools, rlang, RCurl, fastmatch, arrow
 Authors@R: c(
     person("Cassandra", "Bompard", role = "aut", email = "cassbomp68@gmail.com"),
     person("Damien M.", "de Vienne", role = "aut", email = "damien.de-vienne@univ-lyon1.fr"),
