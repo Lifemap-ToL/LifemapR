@@ -78,33 +78,36 @@
 <span></span>
 <span><span class="co"># Construction of a LifemapR usable dataframe</span></span>
 <span><span class="va">LM_obj</span> <span class="op">&lt;-</span> <span class="fu">LifemapR</span><span class="fu">::</span><span class="fu"><a href="reference/build_Lifemap.html">build_Lifemap</a></span><span class="op">(</span><span class="va">eukaryotes_1000</span><span class="op">)</span></span></code></pre></div>
-<p>After the <code>build_Lifemap</code> function the result is a LifemapR format containing a dataframe and the name of the basemap chosen. These elements are accessible as following :</p>
+<p>After the <code>build_Lifemap</code> function the result is a LifemapR format containing a dataframe :</p>
 <div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">full_df</span> <span class="op">&lt;-</span> <span class="va">LM_obj</span><span class="op">$</span><span class="va">df</span></span>
-<span><span class="va">basemap</span> <span class="op">&lt;-</span> <span class="va">LM_obj</span><span class="op">$</span><span class="va">basemap</span></span></code></pre></div>
+<code class="sourceCode R"><span><span class="va">full_df</span> <span class="op">&lt;-</span> <span class="va">LM_obj</span><span class="op">$</span><span class="va">df</span></span></code></pre></div>
 <ol start="2" style="list-style-type: decimal">
 <li>Then you can display a map with wanted informations by calling one ore more <code>LifemapR</code> functions. Note that with the <code>LifemapR</code> functions, a <code>shiny</code> application will be launched</li>
 </ol>
 <div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># Initialise a visualisation for LM_obj</span></span>
-<span><span class="fu"><a href="reference/lifemap.html">lifemap</a></span><span class="op">(</span><span class="va">LM_obj</span><span class="op">)</span> <span class="op">+</span> </span>
+<span><span class="fu"><a href="reference/lifemap.html">lifemap</a></span><span class="op">(</span><span class="va">LM_obj</span><span class="op">)</span> <span class="op">+</span></span>
 <span>    <span class="co"># adding a subtree with colored branches</span></span>
 <span>    <span class="fu">LifemapR</span><span class="fu">::</span><span class="fu"><a href="reference/lm_branches.html">lm_branches</a></span><span class="op">(</span>var_col <span class="op">=</span> <span class="st">"Protein"</span>, FUN <span class="op">=</span> <span class="va">mean</span>, col <span class="op">=</span> <span class="st">"PiYG"</span><span class="op">)</span><span class="op">+</span></span>
 <span>    <span class="co"># adding a set of points</span></span>
-<span>    <span class="fu">LifemapR</span><span class="fu">::</span><span class="fu"><a href="reference/lm_markers.html">lm_markers</a></span><span class="op">(</span>radius <span class="op">=</span> <span class="st">"GC."</span>, var_fillColor <span class="op">=</span> <span class="st">"Genes"</span>, FUN <span class="op">=</span> <span class="va">mean</span><span class="op">)</span> </span></code></pre></div>
+<span>    <span class="fu">LifemapR</span><span class="fu">::</span><span class="fu"><a href="reference/lm_markers.html">lm_markers</a></span><span class="op">(</span>radius <span class="op">=</span> <span class="st">"GC."</span>, var_fillColor <span class="op">=</span> <span class="st">"Genes"</span>, FUN <span class="op">=</span> <span class="va">mean</span><span class="op">)</span></span></code></pre></div>
 </div>
 <div class="section level2">
 <h2 id="development">Development<a class="anchor" aria-label="anchor" href="#development"></a>
 </h2>
-<p>To do list : - [ ] New protocole to fetch data with improved databases (parquet format) - [ ] Improve create_matrix() to use less CPU (merge before joining all lists) - [ ] Improve make_newick() to make it recursive - [ ] Improve the shiny application version</p>
+<p>To do list :</p>
 <ul class="task-list">
-<li><label><input type="checkbox" checked>Redo pass_info function to only infer unknown values and only from the value of direct ancestors</label></li>
-<li><label><input type="checkbox" checked>Implement popups and labels for markers</label></li>
-<li><label><input type="checkbox">Implement popups and labels for polylines</label></li>
-<li><label><input type="checkbox" checked>Black background on leaflet</label></li>
-<li><label><input type="checkbox" checked>Repair the size legend</label></li>
-<li><label><input type="checkbox" checked>Option to thicker the line depending on a variable</label></li>
-<li><label><input type="checkbox" checked>Improve create_matrix function to pass check</label></li>
+<li><p><label><input type="checkbox">New protocole to fetch data with improved databases (parquet format)</label></p></li>
+<li><p><label><input type="checkbox">Improve create_matrix() to use less CPU (merge before joining all lists)</label></p></li>
+<li><p><label><input type="checkbox">Improve make_newick() to make it recursive</label></p></li>
+<li><p><label><input type="checkbox">Improve the shiny application version</label></p></li>
+<li><p><label><input type="checkbox" checked>Redo pass_info function to only infer unknown values and only from the value of direct ancestors</label></p></li>
+<li><p><label><input type="checkbox" checked>Implement popups and labels for markers</label></p></li>
+<li><p><label><input type="checkbox">Implement popups and labels for polylines</label></p></li>
+<li><p><label><input type="checkbox" checked>Black background on leaflet</label></p></li>
+<li><p><label><input type="checkbox" checked>Repair the size legend</label></p></li>
+<li><p><label><input type="checkbox" checked>Option to thicker the line depending on a variable</label></p></li>
+<li><p><label><input type="checkbox" checked>Improve create_matrix function to pass check</label></p></li>
 </ul>
 <div class="section level3">
 <h3 id="how-to-use-during-development">How to use during development<a class="anchor" aria-label="anchor" href="#how-to-use-during-development"></a>

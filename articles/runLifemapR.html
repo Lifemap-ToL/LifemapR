@@ -59,7 +59,7 @@
                         <h4 data-toc-skip class="author">Cassandra
 Bompard</h4>
             
-            <h4 data-toc-skip class="date">2025-01-29</h4>
+            <h4 data-toc-skip class="date">2025-02-06</h4>
       
       <small class="dont-index">Source: <a href="https://github.com/Lifemap-ToL/LifemapR/blob/main/vignettes/runLifemapR.Rmd" class="external-link"><code>vignettes/runLifemapR.Rmd</code></a></small>
       <div class="d-none name"><code>runLifemapR.Rmd</code></div>
@@ -100,12 +100,12 @@ GitHub</li>
 containing at least a <code>taxid</code> column containing NCBI format
 TaxIds. This dataframe can also contain other data that you might want
 to visualise.</p>
-<pre><code><span><span class="co">##    taxid                  sci_name zoom       lat       lon</span></span>
-<span><span class="co">## 6   2836           Bacillariophyta   13 -8.307441 -11.45947</span></span>
-<span><span class="co">## 7   2849             Phaeodactylum   22 -8.352870 -11.49588</span></span>
-<span><span class="co">## 8   2850 Phaeodactylum tricornutum   24 -8.352800 -11.49580</span></span>
-<span><span class="co">## 9   2857                 Nitzschia   19 -8.344973 -11.49516</span></span>
-<span><span class="co">## 10  2864               Dinophyceae   12 -6.953183 -12.25743</span></span></code></pre>
+<pre><code><span><span class="co">##      taxid                            sci_name zoom        lat        lon</span></span>
+<span><span class="co">## 6  1003877                         Benincaseae   20  9.3045287  -7.026574</span></span>
+<span><span class="co">## 7  1004254         Cyberlindnera subsufficiens   24  6.3209234 -10.574330</span></span>
+<span><span class="co">## 8  1008252                             Melinae   25 -0.9759531 -12.991605</span></span>
+<span><span class="co">## 9   100860                         Aphanomyces   17 -7.8909783 -12.002886</span></span>
+<span><span class="co">## 10  100903 Fusarium oxysporum f. sp. fragariae   32  6.2602766 -11.276616</span></span></code></pre>
 <p>You can then transform this dataframe into a format suitable for the
 visualisation functions of the package with the
 <code>build_Lifemap</code> function.<br></p>
@@ -119,9 +119,6 @@ of a list containing the following informations :</p>
 <li>
 <code>df</code> : containing the augmented dataframe obtained after
 the first step.</li>
-<li>
-<code>basemap</code> : which basemap was used to fetch the
-data.</li>
 </ul>
 <p>You can then visualise your data with <code><a href="../reference/lifemap.html">lifemap()</a></code>
 associated with one or more of the following functions :</p>
@@ -164,7 +161,7 @@ format.</p>
 <div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/utils/data.html" class="external-link">data</a></span><span class="op">(</span><span class="va">kraken_res</span><span class="op">)</span></span>
 <span></span>
-<span><span class="va">LM_kraken</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/build_Lifemap.html">build_Lifemap</a></span><span class="op">(</span>df <span class="op">=</span> <span class="va">kraken_res</span>, basemap <span class="op">=</span> <span class="st">"ncbi"</span><span class="op">)</span></span></code></pre></div>
+<span><span class="va">LM_kraken</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/build_Lifemap.html">build_Lifemap</a></span><span class="op">(</span>df <span class="op">=</span> <span class="va">kraken_res</span><span class="op">)</span></span></code></pre></div>
 <p>Then we can began to visualise our data.</p>
 <p>We can for example represent the number of read that was assigned to
 each TaxID by the color of the markers with the following command.</p>
@@ -234,7 +231,7 @@ Transposable Elements content for molluscs, insects and vertebrates.</p>
 format.</p>
 <div class="sourceCode" id="cb11"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/utils/data.html" class="external-link">data</a></span><span class="op">(</span><span class="va">gen_res</span><span class="op">)</span></span>
-<span><span class="va">LM_gen</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/build_Lifemap.html">build_Lifemap</a></span><span class="op">(</span>df <span class="op">=</span> <span class="va">gen_res</span>, basemap <span class="op">=</span> <span class="st">"ncbi"</span><span class="op">)</span></span></code></pre></div>
+<span><span class="va">LM_gen</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/build_Lifemap.html">build_Lifemap</a></span><span class="op">(</span>df <span class="op">=</span> <span class="va">gen_res</span><span class="op">)</span></span></code></pre></div>
 <p>Then we can began to visualise our data.</p>
 <p>Here we have two characteristics to visualise, we can do so with the
 following command.</p>
@@ -272,7 +269,7 @@ randomly fetched from the NCBI database.</p>
 format.</p>
 <div class="sourceCode" id="cb14"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/utils/data.html" class="external-link">data</a></span><span class="op">(</span><span class="va">eukaryotes_1000</span><span class="op">)</span></span>
-<span><span class="va">LM_eukaryotes</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/build_Lifemap.html">build_Lifemap</a></span><span class="op">(</span>df <span class="op">=</span> <span class="va">eukaryotes_1000</span>, basemap <span class="op">=</span> <span class="st">"ncbi"</span><span class="op">)</span></span></code></pre></div>
+<span><span class="va">LM_eukaryotes</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/build_Lifemap.html">build_Lifemap</a></span><span class="op">(</span>df <span class="op">=</span> <span class="va">eukaryotes_1000</span><span class="op">)</span></span></code></pre></div>
 <p>Then we can began to visualise our data.</p>
 <div class="sourceCode" id="cb15"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># Visualisation of eukaryotes data.</span></span>
