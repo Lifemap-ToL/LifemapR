@@ -25,6 +25,7 @@
 #' @importFrom rlang .data
 #' @importFrom RCurl url.exists
 #' @importFrom fastmatch fmatch
+#' @importFrom arrow read_parquet
 #'
 #' @export
 #' @examples
@@ -37,19 +38,18 @@ build_Lifemap <- function(df, basemap = NULL, verbose = TRUE) {
   if (!is.null(basemap)) {
     warning("The basemap argument is now deprecated.")
   }
-  basemap_url <- "https://lifemap-back.univ-lyon1.fr/data/lmdata.Rdata"
+  basemap_url <- "https://lifemap-back.univ-lyon1.fr/data/lmdata_R.parquet"
 
   if (is.null(df$taxid)) {
     stop('The dataframe must at least contain a "taxid" column')
   }
-  # create a new "environment" to store the full data
-  if (!exists("lifemap_basemap_envir", where = .GlobalEnv)) {
-    lifemap_basemap_envir <- new.env()
-  }
 
-  y <- tryCatch(
+  tryCatch(
     {
-      load(url(basemap_url), envir = lifemap_basemap_envir)
+      if (verbose) {
+        cat("Downloading basemap coordinates...\n")
+      }
+      DF <- arrow::read_parquet(basemap_url)
     },
     warning = function(w) {
       print(w)
@@ -63,64 +63,54 @@ build_Lifemap <- function(df, basemap = NULL, verbose = TRUE) {
     }
   )
 
-  if (!is.na(y)) {
-    # download full data for chosen basemap
-    if (verbose) {
-      cat("Downloading basemap coordinates...\n")
-    }
-    load(url(basemap_url), envir = lifemap_basemap_envir)
+  # add LUCA
+  LUCA <- data.frame("taxid" = "0", "lon" = 0, "lat" = -4.226497, "sci_name" = "Luca", "zoom" = 5)
+  DF <- dplyr::bind_rows(DF, LUCA)
 
-    # add LUCA
-    LUCA <- data.frame("taxid" = "0", "lon" = 0, "lat" = -4.226497, "sci_name" = "Luca", "zoom" = 5)
-    lifemap_basemap_envir$DF <- dplyr::bind_rows(lifemap_basemap_envir$DF, LUCA)
-
-    # get info for unique taxids (then we work with df_distinct, not df anymore)
-    df_distinct <- dplyr::distinct(df, .data$taxid, .keep_all = TRUE)
-    if (nrow(df_distinct) != nrow(df)) {
-      warning(sprintf("%s duplicated TaxIDs were removed \n", nrow(df) - nrow(df_distinct)))
-    }
-
-    # get data
-    if (verbose) {
-      cat("Getting info for requested taxids...\n")
-    }
-
-    # get index of requested taxids
-    indexes <- fastmatch::fmatch(df_distinct$taxid, lifemap_basemap_envir$DF$taxid)
-    if (sum(is.na(indexes)) > 0) {
-      warning(sprintf(
-        "%s TaxID(s) could not be found: %s \n",
-        sum(is.na(indexes)),
-        paste(df_distinct$taxid[is.na(indexes)], sep = ",")
-      ))
-    }
-
-    # create new df with only existing taxids
-    df_exists <- df_distinct[!is.na(indexes), ]
-    DATA0 <- lifemap_basemap_envir$DF[indexes[!is.na(indexes)], ]
-
-    # get ancestors
-    unique_ancestors <- unique(unlist(DATA0$ascend))
-    real_ancestors <- setdiff(unique_ancestors, df_exists$taxid)
-    ANCESTORS <- lifemap_basemap_envir$DF[fastmatch::fmatch(real_ancestors, lifemap_basemap_envir$DF$taxid), ]
-
-    # add type
-    DATA0$type <- "requested"
-    ANCESTORS$type <- "ancestor"
-    # bind all
-    DATA1 <- dplyr::bind_rows(DATA0, ANCESTORS)
-
-    # merge
-    DATA2 <- merge(DATA1, df_exists, by = "taxid", all = TRUE)
-
-    # replace the column 'ascend' by simply the direct ancestor
-    DATA2$ancestor <- unlist(lapply(DATA2$ascend, function(x) ifelse(!is.null(x), x[1], NA)))
-
-    lm_obj <- list(df = DATA2, basemap = basemap)
-    class(lm_obj) <- c("lifemap_obj", "list")
-
-    return(lm_obj)
-  } else {
-    return(NA)
+  # get info for unique taxids (then we work with df_distinct, not df anymore)
+  df_distinct <- dplyr::distinct(df, .data$taxid, .keep_all = TRUE)
+  if (nrow(df_distinct) != nrow(df)) {
+    warning(sprintf("%s duplicated TaxIDs were removed \n", nrow(df) - nrow(df_distinct)))
   }
+
+  # get data
+  if (verbose) {
+    cat("Getting info for requested taxids...\n")
+  }
+
+  # get index of requested taxids
+  indexes <- fastmatch::fmatch(df_distinct$taxid, DF$taxid)
+  if (sum(is.na(indexes)) > 0) {
+    warning(sprintf(
+      "%s TaxID(s) could not be found: %s \n",
+      sum(is.na(indexes)),
+      paste(df_distinct$taxid[is.na(indexes)], sep = ",")
+    ))
+  }
+
+  # create new df with only existing taxids
+  df_exists <- df_distinct[!is.na(indexes), ]
+  DATA0 <- DF[indexes[!is.na(indexes)], ]
+
+  # get ancestors
+  unique_ancestors <- unique(unlist(DATA0$ascend))
+  real_ancestors <- setdiff(unique_ancestors, df_exists$taxid)
+  ANCESTORS <- DF[fastmatch::fmatch(real_ancestors, DF$taxid), ]
+
+  # add type
+  DATA0$type <- "requested"
+  ANCESTORS$type <- "ancestor"
+  # bind all
+  DATA1 <- dplyr::bind_rows(DATA0, ANCESTORS)
+
+  # merge
+  DATA2 <- merge(DATA1, df_exists, by = "taxid", all = TRUE)
+
+  # replace the column 'ascend' by simply the direct ancestor
+  DATA2$ancestor <- unlist(lapply(DATA2$ascend, function(x) ifelse(!is.null(x), x[1], NA)))
+
+  lm_obj <- list(df = DATA2, basemap = basemap)
+  class(lm_obj) <- c("lifemap_obj", "list")
+
+  return(lm_obj)
 }
