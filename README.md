@@ -1,6 +1,10 @@
-[![CRAN_Status_Badge](https://www.r-pkg.org/badges/version/LifemapR)](https://cran.r-project.org/package=LifemapR)
+[![CRAN_Release_Badge](https://www.r-pkg.org/badges/version-ago/LifemapR)](https://cran.r-project.org/package=LifemapR)
 [![CRAN Downloads](https://cranlogs.r-pkg.org/badges/LifemapR)](https://cran.r-project.org/package=LifemapR)
 [![R-CMD-check](https://github.com/Lifemap-ToL/LifemapR/workflows/R-CMD-check/badge.svg)](https://github.com/Lifemap-ToL/LifemapR/actions)
+[![License: GPL v3](https://img.shields.io/badge/License-GPLv3-blue.svg)](https://www.gnu.org/licenses/gpl-3.0)
+[![Project Status: Active – The project has reached a stable, usable state and is being actively developed.](https://www.repostatus.org/badges/latest/active.svg)](https://www.repostatus.org/#active)
+[![SWH](https://archive.softwareheritage.org/badge/origin/https://github.com/Lifemap-ToL/LifemapR/)](https://archive.softwareheritage.org/browse/origin/?origin_url=https://github.com/Lifemap-ToL/LifemapR)
+
 
 # LifemapR <img src="man/figures/lifemapr-logo.png" align="right" style="float:right; width:20%;"/>
 
