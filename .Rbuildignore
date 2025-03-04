@@ -4,3 +4,4 @@ LICENSE.md
 _pkgdown.yml
 ^\.github$
 .lintr
+^codemeta\.json$
