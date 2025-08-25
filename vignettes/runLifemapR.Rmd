@@ -47,16 +47,13 @@ require("LifemapR")
 
 The very first step to use this package is to have a dataframe containing at least a ```taxid``` column containing NCBI format TaxIds. This dataframe can also contain other data that you might want to visualise.
 
-```{r buildLF, eval = TRUE, echo = FALSE, results = FALSE, warning = FALSE}
-require("LifemapR", quietly = TRUE)
-
-data(eukaryotes_1000)
-LM_eukaryotes <- build_Lifemap(eukaryotes_1000)
 ```
-
-```{r printLF, eval = TRUE, echo = FALSE}
-if (is.lifemap_obj(LM_eukaryotes))
-  LM_eukaryotes$df[6:10, 1:5]
+##      taxid                            sci_name zoom        lat        lon
+## 6  1003877                         Benincaseae   20  9.3052589  -7.025261
+## 7  1004254         Cyberlindnera subsufficiens   24  6.3197736 -10.573859
+## 8  1008252                             Melinae   25 -0.9776037 -12.991050
+## 9   100860                         Aphanomyces   17 -7.8904607 -12.002383
+## 10  100903 Fusarium oxysporum f. sp. fragariae   32  6.2603410 -11.277101
 ```
 
 You can then transform this dataframe into a format suitable for the visualisation functions of the package with the ```build_Lifemap``` function.\
