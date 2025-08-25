@@ -10,9 +10,7 @@
 #' @export
 #' @importFrom leaflet leaflet addTiles providerTileOptions
 #' @importFrom RCurl url.exists
-#'
-#' @examples
-#' display_map()
+
 display_map <- function(df = NULL, basemap = NULL) {
   if (!is.null(basemap)) {
     warning("The basemap argument is now deprecated.")
