@@ -4,3 +4,5 @@ LifemapR.Rproj
 .RData
 .Ruserdata
 R/.Rhistory
+.vscode/
+test.R

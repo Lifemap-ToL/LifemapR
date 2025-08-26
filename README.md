@@ -8,7 +8,7 @@
 
 # LifemapR <img src="man/figures/lifemapr-logo.png" align="right" style="float:right; width:20%;"/>
 
-An R package to visualise data on a Lifemap base (https://lifemap-ncbi.univ-lyon1.fr/)
+An R package to visualise data on a Lifemap base (https://lifemap.cnrs.fr/)
 
 ## Installation
 
