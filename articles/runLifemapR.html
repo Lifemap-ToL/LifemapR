@@ -59,7 +59,7 @@
                         <h4 data-toc-skip class="author">Cassandra
 Bompard</h4>
             
-            <h4 data-toc-skip class="date">2025-03-04</h4>
+            <h4 data-toc-skip class="date">2025-08-26</h4>
       
       <small class="dont-index">Source: <a href="https://github.com/Lifemap-ToL/LifemapR/blob/main/vignettes/runLifemapR.Rmd" class="external-link"><code>vignettes/runLifemapR.Rmd</code></a></small>
       <div class="d-none name"><code>runLifemapR.Rmd</code></div>
@@ -169,7 +169,7 @@ each TaxID by the color of the markers with the following command.</p>
 <code class="sourceCode R"><span><span class="fu"><a href="../reference/lifemap.html">lifemap</a></span><span class="op">(</span><span class="va">LM_kraken</span><span class="op">)</span> <span class="op">+</span> </span>
 <span>  <span class="fu"><a href="../reference/lm_markers.html">lm_markers</a></span><span class="op">(</span>var_fillColor <span class="op">=</span> <span class="st">"coverage_percent"</span>, fillColor <span class="op">=</span> <span class="st">"PiYG"</span><span class="op">)</span></span></code></pre></div>
 <div class="figure" style="text-align: center">
-<img src="figures%2Fkraken_base.png" alt="Visualisation of kraken data" width="40%" height="20%"><p class="caption">
+<img src="figures/kraken_base.png" alt="Visualisation of kraken data" width="40%" height="20%"><p class="caption">
 Visualisation of kraken data
 </p>
 </div>
@@ -201,7 +201,7 @@ left : display = “requested”, right : display = “leaves”
 <span><span class="fu"><a href="../reference/lifemap.html">lifemap</a></span><span class="op">(</span><span class="va">LM_kraken</span><span class="op">)</span> <span class="op">+</span> </span>
 <span>  <span class="fu"><a href="../reference/lm_markers.html">lm_markers</a></span><span class="op">(</span>var_fillColor <span class="op">=</span> <span class="st">"coverage_percent"</span>, fillColor <span class="op">=</span> <span class="st">"PiYG"</span>, popup <span class="op">=</span> <span class="st">"name"</span><span class="op">)</span></span></code></pre></div>
 <div class="figure" style="text-align: center">
-<img src="figures%2Fkraken_popup.png" alt="Usage of the ```popup``` argument" width="40%" height="20%"><p class="caption">
+<img src="figures/kraken_popup.png" alt="Usage of the ```popup``` argument" width="40%" height="20%"><p class="caption">
 Usage of the <code>popup</code> argument
 </p>
 </div>
@@ -216,7 +216,7 @@ by the size of the branches or their color.</p>
 <span><span class="fu"><a href="../reference/lifemap.html">lifemap</a></span><span class="op">(</span><span class="va">LM_kraken</span><span class="op">)</span> <span class="op">+</span> </span>
 <span>  <span class="fu"><a href="../reference/lm_branches.html">lm_branches</a></span><span class="op">(</span>size <span class="op">=</span> <span class="st">"coverage_percent"</span><span class="op">)</span></span></code></pre></div>
 <div class="figure" style="text-align: center">
-<img src="figures%2Fkraken_branches_color.png" alt="left : branche's color, right : branche's size" width="45%" height="30%"><img src="figures%2Fkraken_branches_size.png" alt="left : branche's color, right : branche's size" width="45%" height="30%"><p class="caption">
+<img src="figures/kraken_branches_color.png" alt="left : branche's color, right : branche's size" width="45%" height="30%"><img src="figures/kraken_branches_size.png" alt="left : branche's color, right : branche's size" width="45%" height="30%"><p class="caption">
 left : branche’s color, right : branche’s size
 </p>
 </div>
@@ -244,7 +244,7 @@ with the <code>FUN</code> argument.</p>
 <span><span class="fu"><a href="../reference/lifemap.html">lifemap</a></span><span class="op">(</span><span class="va">LM_gen</span><span class="op">)</span> <span class="op">+</span> </span>
 <span>  <span class="fu"><a href="../reference/lm_markers.html">lm_markers</a></span><span class="op">(</span>var_fillColor <span class="op">=</span> <span class="st">"Genome_size"</span>, fillColor <span class="op">=</span> <span class="st">"PiYG"</span>, radius  <span class="op">=</span> <span class="st">"TEcontent_bp"</span>, FUN <span class="op">=</span> <span class="va">mean</span><span class="op">)</span></span></code></pre></div>
 <div class="figure" style="text-align: center">
-<img src="figures%2Fgen_base.png" alt="Visualisation of genomics data" width="100%" height="20%"><p class="caption">
+<img src="figures/gen_base.png" alt="Visualisation of genomics data" width="100%" height="20%"><p class="caption">
 Visualisation of genomics data
 </p>
 </div>
@@ -255,7 +255,7 @@ Visualisation of genomics data
 <span>  <span class="fu"><a href="../reference/lm_branches.html">lm_branches</a></span><span class="op">(</span><span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu"><a href="../reference/lm_markers.html">lm_markers</a></span><span class="op">(</span>var_fillColor <span class="op">=</span> <span class="st">"Genome_size"</span>, fillColor <span class="op">=</span> <span class="st">"PiYG"</span>, radius  <span class="op">=</span> <span class="st">"TEcontent_bp"</span>, FUN <span class="op">=</span> <span class="va">mean</span><span class="op">)</span> </span></code></pre></div>
 <div class="figure" style="text-align: center">
-<img src="figures%2Fgen_markers_branches.png" alt="Visualisation of genomics data with markers and subtree" width="100%" height="20%"><p class="caption">
+<img src="figures/gen_markers_branches.png" alt="Visualisation of genomics data with markers and subtree" width="100%" height="20%"><p class="caption">
 Visualisation of genomics data with markers and subtree
 </p>
 </div>
@@ -276,7 +276,7 @@ format.</p>
 <span><span class="fu"><a href="../reference/lifemap.html">lifemap</a></span><span class="op">(</span><span class="va">LM_eukaryotes</span><span class="op">)</span> <span class="op">+</span> </span>
 <span>  <span class="fu"><a href="../reference/lm_markers.html">lm_markers</a></span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
 <div class="figure" style="text-align: center">
-<img src="figures%2Feukaryotes_base.png" alt="Basic visualisation" width="50%" height="20%"><p class="caption">
+<img src="figures/eukaryotes_base.png" alt="Basic visualisation" width="50%" height="20%"><p class="caption">
 Basic visualisation
 </p>
 </div>
@@ -288,7 +288,7 @@ argument to do so.</p>
 <span><span class="fu"><a href="../reference/lifemap.html">lifemap</a></span><span class="op">(</span><span class="va">LM_eukaryotes</span><span class="op">)</span> <span class="op">+</span> </span>
 <span>  <span class="fu"><a href="../reference/lm_markers.html">lm_markers</a></span><span class="op">(</span>data <span class="op">=</span> <span class="va">LM_eukaryotes</span><span class="op">$</span><span class="va">df</span><span class="op">[</span><span class="va">LM_eukaryotes</span><span class="op">$</span><span class="va">df</span><span class="op">$</span><span class="va">Group</span> <span class="op"><a href="https://rdrr.io/r/base/match.html" class="external-link">%in%</a></span> <span class="st">"Plants"</span>, <span class="op">]</span><span class="op">)</span></span></code></pre></div>
 <div class="figure" style="text-align: center">
-<img src="figures%2Feukaryotes_data.png" alt="Visualisation of Plants" width="50%" height="20%"><p class="caption">
+<img src="figures/eukaryotes_data.png" alt="Visualisation of Plants" width="50%" height="20%"><p class="caption">
 Visualisation of Plants
 </p>
 </div>
@@ -299,7 +299,7 @@ Visualisation of Plants
 <span><span class="fu"><a href="../reference/lifemap.html">lifemap</a></span><span class="op">(</span><span class="va">LM_eukaryotes</span><span class="op">)</span> <span class="op">+</span> </span>
 <span>  <span class="fu"><a href="../reference/lm_piecharts.html">lm_piecharts</a></span><span class="op">(</span>param <span class="op">=</span> <span class="st">"Group"</span><span class="op">)</span></span></code></pre></div>
 <div class="figure" style="text-align: center">
-<img src="figures%2Feukaryotes_piecharts.png" alt="Visualisation of the maximum assembly level" width="50%" height="20%"><p class="caption">
+<img src="figures/eukaryotes_piecharts.png" alt="Visualisation of the maximum assembly level" width="50%" height="20%"><p class="caption">
 Visualisation of the maximum assembly level
 </p>
 </div>
@@ -316,7 +316,7 @@ Visualisation of the maximum assembly level
 </div>
 
 <div class="pkgdown-footer-right">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.1.1.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.1.3.</p>
 </div>
 
     </footer>
