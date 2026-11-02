@@ -133,14 +133,12 @@ display_map <- function(df = NULL, basemap = NULL) {
               var taxonZoom = Number(first(doc.zoom));
               if (!Number.isFinite(lon) || !Number.isFinite(lat) || !name) return;
 
-              var fontSize = 16 + (currentZoom - taxonZoom) * 3;
-              var commonName = first(doc.common_name_en);
+              var fontSize = 20 + (currentZoom - taxonZoom) * 3;
               var label = '<span class=\"name\" style=\"font-size:' + fontSize + 'px\">' +
-                escapeHtml(name) + (commonName && fontSize > 10 ? '<br><span style=\"font-size:' + Math.max(10, fontSize - 8) + 'px\">' + escapeHtml(commonName) + '</span>' : '') +
-                '</span>';
+                escapeHtml(name) + '</span>';
 
               L.circleMarker([lat, lon], {
-                radius: 4,
+                radius: 6,
                 fillColor: '#e15759',
                 color: '#000',
                 weight: 1,
