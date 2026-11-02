@@ -41,6 +41,7 @@ display_map <- function(df = NULL, basemap = NULL) {
         '.lifemap-taxon-label .name { color: rgba(255, 255, 255, 1); font-family: Segoe UI, Helvetica, sans-serif; font-weight: 400; line-height: 1.05; text-shadow: -1px -1px 0 #000, 1px -1px 0 #000, -1px 1px 0 #000, 1px 1px 0 #000; }';
       document.head.appendChild(labelStyle);
 
+      function initializeLifemapVectorMap() {
       map.createPane('lifemap-polygons');
       map.getPane('lifemap-polygons').style.zIndex = 200;
       map.createPane('lifemap-branches');
@@ -190,6 +191,19 @@ display_map <- function(df = NULL, basemap = NULL) {
       });
       map.whenReady(function() { setTimeout(refreshLabels, 0); });
       map._lifemapLabelsLayer = labelsLayer;
+      }
+
+      if (L.vectorGrid && L.vectorGrid.protobuf) {
+        initializeLifemapVectorMap();
+      } else {
+        var vectorGridScript = document.createElement('script');
+        vectorGridScript.src = 'https://unpkg.com/leaflet.vectorgrid@1.3.0/dist/Leaflet.VectorGrid.bundled.js';
+        vectorGridScript.onload = initializeLifemapVectorMap;
+        vectorGridScript.onerror = function() {
+          console.error('Unable to load Leaflet.VectorGrid.');
+        };
+        document.head.appendChild(vectorGridScript);
+      }
     }",
     jsonlite::toJSON(display, auto_unbox = TRUE)
   )
