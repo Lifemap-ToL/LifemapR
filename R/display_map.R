@@ -32,6 +32,16 @@ display_map <- function(df = NULL, basemap = NULL) {
     "function(el, x) {
       var map = this;
       var tileUrl = %s;
+      var solrUrl = 'https://lifemap-back.univ-lyon1.fr/solr/taxo/select';
+
+      map.getContainer().style.backgroundColor = '#000000';
+
+      var labelStyle = document.createElement('style');
+      labelStyle.textContent = '.lifemap-taxon-label { background: transparent; border: 0; white-space: nowrap; pointer-events: none; }' +
+        '.lifemap-taxon-label .dot { display: inline-block; margin-right: 4px; color: #e15759; font-size: 10px; vertical-align: 2px; text-shadow: 0 0 2px #000; }' +
+        '.lifemap-taxon-label .name { color: #fff; font-family: Segoe UI, Helvetica, sans-serif; font-weight: 400; text-shadow: -1px -1px 0 #000, 1px -1px 0 #000, -1px 1px 0 #000, 1px 1px 0 #000; }';
+      document.head.appendChild(labelStyle);
+
       var vectorLayer = L.vectorGrid.protobuf(tileUrl, {
         rendererFactory: L.canvas.tile,
         maxNativeZoom: 42,
@@ -57,6 +67,82 @@ display_map <- function(df = NULL, basemap = NULL) {
       });
       vectorLayer.addTo(map);
       map._lifemapVectorLayer = vectorLayer;
+
+      var labelsLayer = L.layerGroup().addTo(map);
+      var labelsRequest = 0;
+
+      function first(value) {
+        return Array.isArray(value) ? value[0] : value;
+      }
+
+      function escapeHtml(value) {
+        return String(value == null ? '' : value)
+          .replace(/&/g, '&amp;')
+          .replace(/</g, '&lt;')
+          .replace(/>/g, '&gt;')
+          .replace(/\"/g, '&quot;')
+          .replace(/'/g, '&#039;');
+      }
+
+      function refreshLabels() {
+        var currentRequest = ++labelsRequest;
+        var bounds = map.getBounds();
+        var currentZoom = Math.round(map.getZoom());
+        var queryZoom = currentZoom + 3;
+        var params = new URLSearchParams({
+          q: '*:*',
+          fq: 'zoom:[0 TO ' + queryZoom + ']',
+          fl: 'sci_name,lon,lat,zoom,common_name_en',
+          wt: 'json',
+          rows: '1000'
+        });
+        params.append('fq', 'lat:[' + bounds.getSouth() + ' TO ' + bounds.getNorth() + ']');
+        params.append('fq', 'lon:[' + bounds.getWest() + ' TO ' + bounds.getEast() + ']');
+
+        fetch(solrUrl + '?' + params.toString())
+          .then(function(response) { return response.json(); })
+          .then(function(data) {
+            if (currentRequest !== labelsRequest) return;
+            labelsLayer.clearLayers();
+            var docs = data.response && data.response.docs ? data.response.docs : [];
+
+            docs.forEach(function(doc) {
+              var lon = Number(first(doc.lon));
+              var lat = Number(first(doc.lat));
+              var name = first(doc.sci_name);
+              var taxonZoom = Number(first(doc.zoom));
+              if (!Number.isFinite(lon) || !Number.isFinite(lat) || !name) return;
+
+              var fontSize = Math.max(10, 16 + (currentZoom - taxonZoom) * 3);
+              var commonName = first(doc.common_name_en);
+              var label = '<span class=\"dot\">●</span><span class=\"name\" style=\"font-size:' + fontSize + 'px\">' +
+                escapeHtml(name) + (commonName && fontSize > 10 ? '<br><span style=\"font-size:' + Math.max(10, fontSize - 8) + 'px\">' + escapeHtml(commonName) + '</span>' : '') +
+                '</span>';
+
+              L.marker([lat, lon], {
+                icon: L.divIcon({
+                  className: 'lifemap-taxon-label',
+                  html: label,
+                  iconSize: null,
+                  iconAnchor: [0, 0]
+                }),
+                interactive: false,
+                keyboard: false
+              }).addTo(labelsLayer);
+            });
+          })
+          .catch(function(error) {
+            console.warn('Lifemap labels could not be loaded:', error);
+          });
+      }
+
+      var labelTimer;
+      map.on('moveend', function() {
+        clearTimeout(labelTimer);
+        labelTimer = setTimeout(refreshLabels, 100);
+      });
+      map.whenReady(function() { setTimeout(refreshLabels, 0); });
+      map._lifemapLabelsLayer = labelsLayer;
     }",
     jsonlite::toJSON(display, auto_unbox = TRUE)
   )
