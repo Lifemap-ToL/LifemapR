@@ -65,7 +65,9 @@ display_map <- function(df = NULL, basemap = NULL) {
             return {fill: true, stroke: false, color: 'transparent', weight: 0,
               fillColor: style.fillColor,
               fillOpacity: Math.max(0, style.fillOpacity * opacityFactor), opacity: 0};
-          }
+          },
+          'branches-layer': [],
+          'ranks-layer': []
         }
       });
 
@@ -77,7 +79,9 @@ display_map <- function(df = NULL, basemap = NULL) {
         vectorTileLayerStyles: {
           'branches-layer': {
             fill: false, color: '#cacaca', opacity: 1, weight: 0.8
-          }
+          },
+          'poly-layer': [],
+          'ranks-layer': []
         }
       });
       polygonsLayer.addTo(map);
