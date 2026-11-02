@@ -18,48 +18,61 @@ export(make_newick)
 export(pass_infos)
 export(pass_infos_discret)
 importFrom(RCurl,url.exists)
-importFrom(dplyr,all_of)
-importFrom(dplyr,arrange)
-importFrom(dplyr,bind_rows)
-importFrom(dplyr,count)
-importFrom(dplyr,distinct)
-importFrom(dplyr,full_join)
-importFrom(dplyr,group_by)
-importFrom(dplyr,join_by)
-importFrom(dplyr,left_join)
-importFrom(dplyr,rename)
-importFrom(dplyr,select)
+importFrom(arrow,read_parquet)
+importFrom(dplyr,
+  all_of,
+  arrange,
+  bind_rows,
+  count,
+  distinct,
+  full_join,
+  group_by,
+  join_by,
+  left_join,
+  rename,
+  select
+)
 importFrom(fastmatch,fmatch)
-importFrom(htmltools,HTML)
-importFrom(htmltools,p)
-importFrom(htmltools,tags)
+importFrom(htmltools,
+  HTML,
+  htmlDependency,
+  p,
+  tags
+)
+importFrom(htmlwidgets,onRender)
 importFrom(jsonlite,fromJSON)
-importFrom(leaflet,addCircleMarkers)
-importFrom(leaflet,addLegend)
-importFrom(leaflet,addPolylines)
-importFrom(leaflet,addPopups)
-importFrom(leaflet,addTiles)
-importFrom(leaflet,clearControls)
-importFrom(leaflet,clearGroup)
-importFrom(leaflet,clearMarkers)
-importFrom(leaflet,clearPopups)
-importFrom(leaflet,clearShapes)
-importFrom(leaflet,colorFactor)
-importFrom(leaflet,colorNumeric)
-importFrom(leaflet,fitBounds)
-importFrom(leaflet,leaflet)
-importFrom(leaflet,leafletOutput)
-importFrom(leaflet,leafletProxy)
-importFrom(leaflet,providerTileOptions)
-importFrom(leaflet,renderLeaflet)
-importFrom(leaflet.minicharts,addMinicharts)
-importFrom(leaflet.minicharts,clearMinicharts)
+importFrom(leaflet,
+  addCircleMarkers,
+  addLegend,
+  addPolylines,
+  addPopups,
+  clearControls,
+  clearGroup,
+  clearMarkers,
+  clearPopups,
+  clearShapes,
+  colorFactor,
+  colorNumeric,
+  fitBounds,
+  leaflet,
+  leafletOutput,
+  leafletProxy,
+  renderLeaflet
+)
+importFrom(leaflet.minicharts,
+  addMinicharts,
+  clearMinicharts
+)
 importFrom(rlang,.data)
-importFrom(shiny,fluidPage)
-importFrom(shiny,isolate)
-importFrom(shiny,observe)
-importFrom(shiny,reactive)
-importFrom(shiny,shinyApp)
-importFrom(stats,complete.cases)
-importFrom(stats,na.omit)
+importFrom(shiny,
+  fluidPage,
+  isolate,
+  observe,
+  reactive,
+  shinyApp
+)
+importFrom(stats,
+  complete.cases,
+  na.omit
+)
 importFrom(tidyr,pivot_wider)
