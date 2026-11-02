@@ -62,7 +62,8 @@ display_map <- function(df = NULL, basemap = NULL) {
             var zoomLevel = Number(properties.zoomview);
             var opacityFactor = Number.isFinite(zoomLevel) ?
               1 - Math.abs(zoom - zoomLevel - 1) / 5 : 1;
-            return {fill: true, stroke: false, weight: 0, fillColor: style.fillColor,
+            return {fill: true, stroke: false, color: 'transparent', weight: 0,
+              fillColor: style.fillColor,
               fillOpacity: Math.max(0, style.fillOpacity * opacityFactor), opacity: 0};
           }
         }
