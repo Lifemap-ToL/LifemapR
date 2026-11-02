@@ -38,7 +38,7 @@ display_map <- function(df = NULL, basemap = NULL) {
 
       var labelStyle = document.createElement('style');
       labelStyle.textContent = '.lifemap-taxon-label { background: transparent; border: 0; white-space: nowrap; pointer-events: none; }' +
-        '.lifemap-taxon-label .name { color: rgba(255, 255, 255, 1); font-family: Segoe UI, Helvetica, sans-serif; font-weight: 400; line-height: 1.05; text-shadow: -1px -1px 0 #000, 1px -1px 0 #000, -1px 1px 0 #000, 1px 1px 0 #000; }';
+        '.lifemap-taxon-label .name { position: absolute; left: 0; top: 0; transform: translate(-50%, -50%); color: rgba(255, 255, 255, 1); font-family: Segoe UI, Helvetica, sans-serif; font-weight: 400; line-height: 1.05; text-align: center; text-shadow: -1px -1px 0 #000, 1px -1px 0 #000, -1px 1px 0 #000, 1px 1px 0 #000; }';
       document.head.appendChild(labelStyle);
 
       function initializeLifemapVectorMap() {
@@ -157,21 +157,11 @@ display_map <- function(df = NULL, basemap = NULL) {
               var label = '<span class=\"name\" style=\"font-size:' + fontSize + 'px;font-style:' + fontStyle + '\">' +
                 escapeHtml(name) + '</span>';
 
-              L.circleMarker([lat, lon], {
-                radius: 6,
-                fillColor: '#e15759',
-                color: '#000',
-                weight: 1,
-                opacity: 1,
-                fillOpacity: 1,
-                interactive: false
-              }).addTo(labelsLayer);
-
               L.marker([lat, lon], {
                 icon: L.divIcon({
                   className: 'lifemap-taxon-label',
                   html: label,
-                  iconSize: null,
+                  iconSize: [0, 0],
                   iconAnchor: [0, 0]
                 }),
                 interactive: false,
