@@ -38,7 +38,7 @@ display_map <- function(df = NULL, basemap = NULL) {
 
       var labelStyle = document.createElement('style');
       labelStyle.textContent = '.lifemap-taxon-label { background: transparent; border: 0; white-space: nowrap; pointer-events: none; }' +
-        '.lifemap-taxon-label .name { position: absolute; left: 0; top: 0; transform: translate(-50%, -50%); color: rgba(255, 255, 255, 1); font-family: Segoe UI, Helvetica, sans-serif; font-weight: 400; line-height: 1.05; text-align: center; text-shadow: -1px -1px 0 #000, 1px -1px 0 #000, -1px 1px 0 #000, 1px 1px 0 #000; }';
+        '.lifemap-taxon-label .name { position: absolute; left: 0; top: 0; transform: translate(-50%%, -50%%); color: rgba(255, 255, 255, 1); font-family: Segoe UI, Helvetica, sans-serif; font-weight: 400; line-height: 1.05; text-align: center; text-shadow: -1px -1px 0 #000, 1px -1px 0 #000, -1px 1px 0 #000, 1px 1px 0 #000; }';
       document.head.appendChild(labelStyle);
 
       function initializeLifemapVectorMap() {
