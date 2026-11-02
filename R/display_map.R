@@ -41,7 +41,13 @@ display_map <- function(df = NULL, basemap = NULL) {
         '.lifemap-taxon-label .name { color: rgba(255, 255, 255, 1); font-family: Segoe UI, Helvetica, sans-serif; font-weight: 400; line-height: 1.05; text-shadow: -1px -1px 0 #000, 1px -1px 0 #000, -1px 1px 0 #000, 1px 1px 0 #000; }';
       document.head.appendChild(labelStyle);
 
-      var vectorLayer = L.vectorGrid.protobuf(tileUrl, {
+      map.createPane('lifemap-polygons');
+      map.getPane('lifemap-polygons').style.zIndex = 200;
+      map.createPane('lifemap-branches');
+      map.getPane('lifemap-branches').style.zIndex = 300;
+
+      var polygonsLayer = L.vectorGrid.protobuf(tileUrl, {
+        pane: 'lifemap-polygons',
         rendererFactory: L.canvas.tile,
         maxNativeZoom: 42,
         maxZoom: 42,
@@ -58,20 +64,24 @@ display_map <- function(df = NULL, basemap = NULL) {
               1 - Math.abs(zoom - zoomLevel - 1) / 5 : 1;
             return {fill: true, stroke: false, weight: 0, fillColor: style.fillColor,
               fillOpacity: Math.max(0, style.fillOpacity * opacityFactor), opacity: 0};
-          },
-          'branches-layer': {
-            fill: false, color: '#cacaca', opacity: 1, weight: 0.8
-          },
-          'ranks-layer': {
-            // Rank names are rendered separately by OpenLayers in the official
-            // frontend. Leaflet.VectorGrid has no line-text symbolizer, so do
-            // not draw the rank geometry as an unwanted extra line here.
-            fill: false, opacity: 0, weight: 0
           }
         }
       });
-      vectorLayer.addTo(map);
-      map._lifemapVectorLayer = vectorLayer;
+
+      var branchesLayer = L.vectorGrid.protobuf(tileUrl, {
+        pane: 'lifemap-branches',
+        rendererFactory: L.canvas.tile,
+        maxNativeZoom: 42,
+        maxZoom: 42,
+        vectorTileLayerStyles: {
+          'branches-layer': {
+            fill: false, color: '#cacaca', opacity: 1, weight: 0.8
+          }
+        }
+      });
+      polygonsLayer.addTo(map);
+      branchesLayer.addTo(map);
+      map._lifemapVectorLayer = L.layerGroup([polygonsLayer, branchesLayer]);
 
       var labelsLayer = L.layerGroup().addTo(map);
       var labelsRequest = 0;
