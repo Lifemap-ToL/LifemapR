@@ -38,7 +38,7 @@ display_map <- function(df = NULL, basemap = NULL) {
 
       var labelStyle = document.createElement('style');
       labelStyle.textContent = '.lifemap-taxon-label { background: transparent; border: 0; white-space: nowrap; pointer-events: none; }' +
-        '.lifemap-taxon-label .name { color: #fff; font-family: Segoe UI, Helvetica, sans-serif; font-weight: 400; text-shadow: -1px -1px 0 #000, 1px -1px 0 #000, -1px 1px 0 #000, 1px 1px 0 #000; }';
+        '.lifemap-taxon-label .name { color: rgba(255, 255, 255, 1); font-family: Segoe UI, Helvetica, sans-serif; font-weight: 400; line-height: 1.05; text-shadow: -1px -1px 0 #000, 1px -1px 0 #000, -1px 1px 0 #000, 1px 1px 0 #000; }';
       document.head.appendChild(labelStyle);
 
       var vectorLayer = L.vectorGrid.protobuf(tileUrl, {
@@ -53,14 +53,20 @@ display_map <- function(df = NULL, basemap = NULL) {
               3: {fillColor: '#ff8080', fillOpacity: 0.18}
             };
             var style = colors[properties.ref] || colors[3];
+            var zoomLevel = Number(properties.zoomview);
+            var opacityFactor = Number.isFinite(zoomLevel) ?
+              1 - Math.abs(zoom - zoomLevel - 1) / 5 : 1;
             return {fill: true, stroke: false, weight: 0, fillColor: style.fillColor,
-              fillOpacity: style.fillOpacity, opacity: 0};
+              fillOpacity: Math.max(0, style.fillOpacity * opacityFactor), opacity: 0};
           },
           'branches-layer': {
             fill: false, color: '#cacaca', opacity: 1, weight: 0.8
           },
           'ranks-layer': {
-            fill: false, color: '#aaddee', opacity: 0.85, weight: 1
+            // Rank names are rendered separately by OpenLayers in the official
+            // frontend. Leaflet.VectorGrid has no line-text symbolizer, so do
+            // not draw the rank geometry as an unwanted extra line here.
+            fill: false, opacity: 0, weight: 0
           }
         }
       });
@@ -112,7 +118,7 @@ display_map <- function(df = NULL, basemap = NULL) {
               var taxonZoom = Number(first(doc.zoom));
               if (!Number.isFinite(lon) || !Number.isFinite(lat) || !name) return;
 
-              var fontSize = Math.max(10, 16 + (currentZoom - taxonZoom) * 3);
+              var fontSize = 16 + (currentZoom - taxonZoom) * 3;
               var commonName = first(doc.common_name_en);
               var label = '<span class=\"name\" style=\"font-size:' + fontSize + 'px\">' +
                 escapeHtml(name) + (commonName && fontSize > 10 ? '<br><span style=\"font-size:' + Math.max(10, fontSize - 8) + 'px\">' + escapeHtml(commonName) + '</span>' : '') +
