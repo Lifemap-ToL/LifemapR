@@ -38,7 +38,6 @@ display_map <- function(df = NULL, basemap = NULL) {
 
       var labelStyle = document.createElement('style');
       labelStyle.textContent = '.lifemap-taxon-label { background: transparent; border: 0; white-space: nowrap; pointer-events: none; }' +
-        '.lifemap-taxon-label .dot { display: inline-block; margin-right: 4px; color: #e15759; font-size: 10px; vertical-align: 2px; text-shadow: 0 0 2px #000; }' +
         '.lifemap-taxon-label .name { color: #fff; font-family: Segoe UI, Helvetica, sans-serif; font-weight: 400; text-shadow: -1px -1px 0 #000, 1px -1px 0 #000, -1px 1px 0 #000, 1px 1px 0 #000; }';
       document.head.appendChild(labelStyle);
 
@@ -115,9 +114,19 @@ display_map <- function(df = NULL, basemap = NULL) {
 
               var fontSize = Math.max(10, 16 + (currentZoom - taxonZoom) * 3);
               var commonName = first(doc.common_name_en);
-              var label = '<span class=\"dot\">●</span><span class=\"name\" style=\"font-size:' + fontSize + 'px\">' +
+              var label = '<span class=\"name\" style=\"font-size:' + fontSize + 'px\">' +
                 escapeHtml(name) + (commonName && fontSize > 10 ? '<br><span style=\"font-size:' + Math.max(10, fontSize - 8) + 'px\">' + escapeHtml(commonName) + '</span>' : '') +
                 '</span>';
+
+              L.circleMarker([lat, lon], {
+                radius: 4,
+                fillColor: '#e15759',
+                color: '#000',
+                weight: 1,
+                opacity: 1,
+                fillOpacity: 1,
+                interactive: false
+              }).addTo(labelsLayer);
 
               L.marker([lat, lon], {
                 icon: L.divIcon({
