@@ -104,6 +104,23 @@ display_map <- function(df = NULL, basemap = NULL) {
           .replace(/'/g, '&#039;');
       }
 
+      var italicRanks = {
+        genus: true,
+        subgenus: true,
+        species: true,
+        subspecies: true,
+        varietas: true,
+        variety: true,
+        forma: true,
+        form: true,
+        strain: true,
+        isolate: true,
+        serotype: true,
+        biotype: true,
+        'species group': true,
+        'species subgroup': true
+      };
+
       function refreshLabels() {
         var currentRequest = ++labelsRequest;
         var bounds = map.getBounds();
@@ -112,7 +129,7 @@ display_map <- function(df = NULL, basemap = NULL) {
         var params = new URLSearchParams({
           q: '*:*',
           fq: 'zoom:[0 TO ' + queryZoom + ']',
-          fl: 'sci_name,lon,lat,zoom,common_name_en',
+          fl: 'sci_name,lon,lat,zoom,rank_en',
           wt: 'json',
           rows: '1000'
         });
@@ -131,10 +148,12 @@ display_map <- function(df = NULL, basemap = NULL) {
               var lat = Number(first(doc.lat));
               var name = first(doc.sci_name);
               var taxonZoom = Number(first(doc.zoom));
+              var rank = String(first(doc.rank_en) || '').toLowerCase();
               if (!Number.isFinite(lon) || !Number.isFinite(lat) || !name) return;
 
               var fontSize = 20 + (currentZoom - taxonZoom) * 3;
-              var label = '<span class=\"name\" style=\"font-size:' + fontSize + 'px\">' +
+              var fontStyle = italicRanks[rank] ? 'italic' : 'normal';
+              var label = '<span class=\"name\" style=\"font-size:' + fontSize + 'px;font-style:' + fontStyle + '\">' +
                 escapeHtml(name) + '</span>';
 
               L.circleMarker([lat, lon], {
