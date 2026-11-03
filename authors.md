@@ -15,7 +15,7 @@
 ## Citation
 
 Source:
-[`DESCRIPTION`](https://github.com/Lifemap-ToL/LifemapR/blob/main/DESCRIPTION)
+[`DESCRIPTION`](https://github.com/Lifemap-ToL/LifemapR/blob/v1.1.7/DESCRIPTION)
 
 Bompard C, de Vienne D, Barnier J (2026). *LifemapR: Data Visualisation
 on 'Lifemap' Tree*. R package version 1.1.7,
