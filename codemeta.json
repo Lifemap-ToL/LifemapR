@@ -4,17 +4,17 @@
   "identifier": "LifemapR",
   "description": "Allow to visualise data on the NCBI phylogenetic tree as presented in Lifemap <https://lifemap.cnrs.fr/>. It takes as input a dataframe with at least a \"taxid\" column containing NCBI format TaxIds and allows to draw multiple layers with different visualisation tools.",
   "name": "LifemapR: Data Visualisation on 'Lifemap' Tree",
-  "relatedLink": ["https://lifemap-tol.github.io/LifemapR/", "https://CRAN.R-project.org/package=LifemapR"],
+  "relatedLink": "https://lifemap-tol.github.io/LifemapR/",
   "codeRepository": "https://github.com/Lifemap-ToL/LifemapR",
   "issueTracker": "https://github.com/Lifemap-ToL/LifemapR/issues",
   "license": "https://spdx.org/licenses/MIT",
-  "version": "1.1.5",
+  "version": "1.1.6",
   "programmingLanguage": {
     "@type": "ComputerLanguage",
     "name": "R",
     "url": "https://r-project.org"
   },
-  "runtimePlatform": "R version 4.4.3 (2025-02-28)",
+  "runtimePlatform": "R version 4.6.2 (2026-10-29)",
   "provider": {
     "@id": "https://cran.r-project.org",
     "@type": "Organization",
@@ -216,7 +216,5 @@
     },
     "SystemRequirements": null
   },
-  "fileSize": "2896.72KB",
-  "readme": "https://github.com/Lifemap-ToL/LifemapR/blob/main/README.md",
-  "contIntegration": "https://github.com/Lifemap-ToL/LifemapR/actions"
+  "fileSize": "2896.848KB"
 }
