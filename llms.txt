@@ -1,0 +1,156 @@
+# LifemapR ![](reference/figures/lifemapr-logo.png)
+
+An R package to visualise data on a Lifemap base
+(<https://lifemap.cnrs.fr/>)
+
+## Installation
+
+To install the development version of `LifemapR` from GitHub :
+
+``` r
+
+remotes::install_github("damiendevienne/LifemapR")
+```
+
+Once installed, load the package with :
+
+``` r
+
+require("LifemapR")
+```
+
+## Usage
+
+Here is a brief introduction on how to use LifemapR.
+
+1.  With the `build_Lifemap` function transform your already existing
+    data into a format usable by LifemapR functions
+
+``` r
+
+data(eukaryotes_1000)
+
+# Construction of a LifemapR usable dataframe
+LM_obj <- LifemapR::build_Lifemap(eukaryotes_1000)
+```
+
+After the `build_Lifemap` function the result is a LifemapR format
+containing a dataframe :
+
+``` r
+
+full_df <- LM_obj$df
+```
+
+2.  Then you can display a map with wanted informations by calling one
+    ore more `LifemapR` functions. Note that with the `LifemapR`
+    functions, a `shiny` application will be launched
+
+``` r
+
+# Initialise a visualisation for LM_obj
+lifemap(LM_obj) +
+    # adding a subtree with colored branches
+    LifemapR::lm_branches(var_col = "Protein", FUN = mean, col = "PiYG")+
+    # adding a set of points
+    LifemapR::lm_markers(radius = "GC.", var_fillColor = "Genes", FUN = mean)
+```
+
+## Development
+
+To do list :
+
+New protocole to fetch data with improved databases (parquet format)
+
+Improve create_matrix() to use less CPU (merge before joining all lists)
+
+Improve make_newick() to make it recursive
+
+Improve the shiny application version
+
+Redo pass_info function to only infer unknown values and only from the
+value of direct ancestors
+
+Implement popups and labels for markers
+
+Implement popups and labels for polylines
+
+Black background on leaflet
+
+Repair the size legend
+
+Option to thicker the line depending on a variable
+
+Improve create_matrix function to pass check
+
+### How to use during development
+
+Go to the package’s folder
+
+``` r
+
+require(devtools)
+devtools::load_all()
+```
+
+then you can simply use the package’s functions
+
+# Package index
+
+## All functions
+
+- [`LM_eukaryotes`](LM_eukaryotes.md) : Transformation in a LifemapR
+  format of NCBI information for 1000 eukaryotes
+- [`add_lm_branches()`](add_lm_branches.md) : Compute the aesthetics for
+  a subtree visualisation.
+- [`add_lm_markers()`](add_lm_markers.md) : Compute the aesthetics for
+  markers visualisation.
+- [`add_lm_piecharts()`](add_lm_piecharts.md) : Compute the aesthetics
+  for discret values visualisation.
+- [`build_Lifemap()`](build_Lifemap.md) : A function to construct a
+  LifemapR object, usable by the other functions of the package.
+- [`create_matrix()`](create_matrix.md) : Create a dataframe for the
+  ancestry.
+- [`create_value_range()`](create_value_range.md) : Compute a new scale
+  for a value
+- [`display_map()`](display_map.md) : Create a Lifemap base.
+- [`display_option()`](display_option.md) : Compute the different
+  display options.
+- [`draw_Lifemap()`](draw_Lifemap.md) : Represent data on a Lifemap
+  basemap.
+- [`eukaryotes_1000`](eukaryotes_1000.md) : NCBI information for 1000
+  eukaryotes
+- [`eukaryotes_80`](eukaryotes_80.md) : NCBI information for 80
+  eukaryotes
+- [`gen_res`](gen_res.md) : Genomic results
+- [`is.lifemap_obj()`](is.lifemap_obj.md) : Reports whether x is a
+  lifemap_obj object.
+- [`is.lm_branches()`](is.lm_branches.md) : Reports whether x is a
+  lm_branches object.
+- [`is.lm_markers()`](is.lm_markers.md) : Reports whether x is a
+  lm_markers object.
+- [`is.lm_piecharts()`](is.lm_piecharts.md) : Reports whether x is a
+  lm_branches object.
+- [`kraken_res`](kraken_res.md) : Kraken results
+- [`lifemap()`](lifemap.md) : Initialise a new Lifemap visualisation.
+- [`lm_branches()`](lm_branches.md) : Add a "branches" layer to a
+  lifemap_obj object.
+- [`lm_markers()`](lm_markers.md) : add a "markers" layer to a
+  lifemap_obj object.
+- [`lm_piecharts()`](lm_piecharts.md) : Add a "piecharts" layer to a
+  lifemap_obj object.
+- [`make_newick()`](make_newick.md) : Create a newick for the given
+  dataset.
+- [`pass_infos()`](pass_infos.md) : Infer numerical values to nodes.
+- [`pass_infos_discret()`](pass_infos_discret.md) : Infer discret values
+  to nodes for lm_piecharts function.
+- [`` `+`( ``*`<lifemap_obj>`*`)`](plus-.lifemap_obj.md) : Add a
+  graphical element to a tree visualisation.
+- [`print(`*`<lifemap_obj>`*`)`](print.lifemap_obj.md) : Method to print
+  lifemap_obj objects.
+
+# Articles
+
+### Articles
+
+- [Use of LifemapR](runLifemapR.md):

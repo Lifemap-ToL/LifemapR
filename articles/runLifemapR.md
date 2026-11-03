@@ -1,0 +1,284 @@
+# Use of LifemapR
+
+Introducing LifemapR, a package aiming to visualise data on a Lifemap
+basemap. The uniqueness of LifemapR is that it offers interactive
+visualization of data across a vast taxonomy (the NCBI taxonomy).
+LifemapR can easily process large datasets, exceeding 300,000 rows, with
+remarkable efficiency and precision. But what sets LifemapR apart is its
+flexibility and adaptability, offering a wide spectrum of customization
+options. This allows users to personalize their data visualization to
+better suit their unique needs and preferences.
+
+## Installation
+
+1.  Install the development version of `LifemapR` from GitHub
+
+``` r
+
+remotes::install_github("Lifemap-ToL/LifemapR")
+```
+
+2.  Once installed, the package can be loaded with :
+
+``` r
+
+require("LifemapR")
+```
+
+## Usage
+
+### General case
+
+The very first step to use this package is to have a dataframe
+containing at least a `taxid` column containing NCBI format TaxIds. This
+dataframe can also contain other data that you might want to visualise.
+
+    ##      taxid                            sci_name zoom        lat        lon
+    ## 6  1003877                         Benincaseae   20  9.3052589  -7.025261
+    ## 7  1004254         Cyberlindnera subsufficiens   24  6.3197736 -10.573859
+    ## 8  1008252                             Melinae   25 -0.9776037 -12.991050
+    ## 9   100860                         Aphanomyces   17 -7.8904607 -12.002383
+    ## 10  100903 Fusarium oxysporum f. sp. fragariae   32  6.2603410 -11.277101
+
+You can then transform this dataframe into a format suitable for the
+visualisation functions of the package with the `build_Lifemap`
+function.  
+
+``` r
+
+require("LifemapR")
+
+LM <- build_Lifemap(data)
+```
+
+After that, you get a `lifemap` object that takes the form of a list
+containing the following informations :
+
+- `df` : containing the augmented dataframe obtained after the first
+  step.
+
+You can then visualise your data with
+[`lifemap()`](../reference/lifemap.md) associated with one or more of
+the following functions :
+
+- [`lm_markers()`](../reference/lm_markers.md), to represent data as
+  circles.
+- [`lm_branches()`](../reference/lm_branches.md), to represent the
+  data’s subtree.
+- `lm_discret()`, to represent discret data as piecharts.
+
+Each one of these three function adds a layer to the visualisation.
+These layers are combined with the `+` symbol.
+
+``` r
+
+# Example with default representation
+
+# one layer
+lifemap(LM) + lm_markers()
+
+# three different layers 
+lifemap(LM) + lm_markers() + lm_branches()
+```
+
+These function also allow the user to represent data by modifying
+characteristics of representations as we’ll see later in the examples.
+
+The output is a shiny interface where the user can move and zoom freely.
+
+Please note that the following examples have been done in may 2023, if
+you try them you may not have the same values due to database update
+
+### Analyse of Kraken2 results
+
+This dataset is the result of a classification by Kraken (Derrick E.
+Wood, J. Lu, 2019) on a metagenomic sample coming from a controlled set
+of 12 known bacterial species (V. Sevim, J. Lee, 2019).
+
+First of all, we load the data and transform it into the LifemapR
+format.
+
+``` r
+
+data(kraken_res)
+
+LM_kraken <- build_Lifemap(df = kraken_res)
+```
+
+Then we can began to visualise our data.
+
+We can for example represent the number of read that was assigned to
+each TaxID by the color of the markers with the following command.
+
+``` r
+
+lifemap(LM_kraken) + 
+  lm_markers(var_fillColor = "coverage_percent", fillColor = "PiYG")
+```
+
+![Visualisation of kraken data](figures/kraken_base.png)
+
+Visualisation of kraken data
+
+With this representation, the markers are displayed if the if the
+associated node is close enough.
+
+It is possible to change the way markers are displayed with the
+`display` argument.
+
+``` r
+
+# All the nodes that were requested by the user.
+lifemap(LM_kraken) + 
+  lm_markers(var_fillColor = "coverage_percent", fillColor = "PiYG", display = "requested")
+
+# Only the nodes that have no descendants.
+lifemap(LM_kraken) + 
+  lm_markers(var_fillColor = "coverage_percent", fillColor = "PiYG", display = "leaves")
+```
+
+![left : display = "requested", right : display =
+"leaves"](figures/kraken_requested.png)![left : display = "requested",
+right : display = "leaves"](figures/kraken_leaves.png)
+
+left : display = “requested”, right : display = “leaves”
+
+Informations can also be displayed for the user with the `popup` or
+`label` arguments.
+
+``` r
+
+# When clicking on a node, display the desired information.
+lifemap(LM_kraken) + 
+  lm_markers(var_fillColor = "coverage_percent", fillColor = "PiYG", popup = "name")
+```
+
+![Usage of the \`\`\`popup\`\`\` argument](figures/kraken_popup.png)
+
+Usage of the `popup` argument
+
+Finally, it is also possible to represent data with a subtree, either by
+the size of the branches or their color.
+
+``` r
+
+# Information on branche's color.
+lifemap(LM_kraken) + 
+  lm_branches(var_color = "coverage_percent", color = "PiYG")
+
+# Information on branche's size.
+lifemap(LM_kraken) + 
+  lm_branches(size = "coverage_percent")
+```
+
+![left : branche's color, right : branche's
+size](figures/kraken_branches_color.png)![left : branche's color, right
+: branche's size](figures/kraken_branches_size.png)
+
+left : branche’s color, right : branche’s size
+
+### Comparative genomic data on genome sizes and transposable elements
+
+This dataset contains informations about the genome size and the
+Transposable Elements content for molluscs, insects and vertebrates.
+
+First of all, we load the data and transform it into the LifemapR
+format.
+
+``` r
+
+data(gen_res)
+LM_gen <- build_Lifemap(df = gen_res)
+```
+
+Then we can began to visualise our data.
+
+Here we have two characteristics to visualise, we can do so with the
+following command.
+
+However, unlike the precedent data set, we don’t have informations for
+all the nodes. Here we only have data for the leaves so it will be
+necessary to infere values to the nodes where the information is missing
+with the `FUN` argument.
+
+``` r
+
+# Visualisation of the Genome size on the fillColor and the TEcontent on the size of markers.
+lifemap(LM_gen) + 
+  lm_markers(var_fillColor = "Genome_size", fillColor = "PiYG", radius  = "TEcontent_bp", FUN = mean)
+```
+
+![Visualisation of genomics data](figures/gen_base.png)
+
+Visualisation of genomics data
+
+We can also represent markers and subtree at the same time
+
+``` r
+
+# Visualisation of the Genome size on the fillColor and the TEcontent on the size of markers.
+lifemap(LM_gen) + 
+  lm_branches() +
+  lm_markers(var_fillColor = "Genome_size", fillColor = "PiYG", radius  = "TEcontent_bp", FUN = mean) 
+```
+
+![Visualisation of genomics data with markers and
+subtree](figures/gen_markers_branches.png)
+
+Visualisation of genomics data with markers and subtree
+
+### Dataset of eukaryotes from NCBI database
+
+This dataset contains informations about around 1 000 eukaryotes
+randomly fetched from the NCBI database.
+
+First of all, we load the data and transform it into the LifemapR
+format.
+
+``` r
+
+data(eukaryotes_1000)
+LM_eukaryotes <- build_Lifemap(df = eukaryotes_1000)
+```
+
+Then we can began to visualise our data.
+
+``` r
+
+# Visualisation of eukaryotes data.
+lifemap(LM_eukaryotes) + 
+  lm_markers()
+```
+
+![Basic visualisation](figures/eukaryotes_base.png)
+
+Basic visualisation
+
+We can also choose to visualise only a part of our data. To do this, we
+can either sort our data in advance or use the `data` argument to do so.
+
+``` r
+
+# Visualisation of Plants.
+lifemap(LM_eukaryotes) + 
+  lm_markers(data = LM_eukaryotes$df[LM_eukaryotes$df$Group %in% "Plants", ])
+```
+
+![Visualisation of Plants](figures/eukaryotes_data.png)
+
+Visualisation of Plants
+
+Finally we can visualise discret variables with the `lm_piechats()`
+function as following.
+
+``` r
+
+# Visualisation of the maximum assembly level.
+lifemap(LM_eukaryotes) + 
+  lm_piecharts(param = "Group")
+```
+
+![Visualisation of the maximum assembly
+level](figures/eukaryotes_piecharts.png)
+
+Visualisation of the maximum assembly level

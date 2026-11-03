@@ -1,0 +1,4 @@
+# License
+
+    YEAR: 2023
+    COPYRIGHT HOLDER: C Bompard, A Siberchicot, DM de Vienne
