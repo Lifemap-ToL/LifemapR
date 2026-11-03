@@ -12,10 +12,10 @@ An R package to visualise data on a Lifemap base (https://lifemap.cnrs.fr/)
 
 ## Installation
 
-To install the development version of <code>LifemapR</code> from GitHub :
+To install the development version of `LifemapR` from GitHub :
 
 ```r
-remotes::install_github("damiendevienne/LifemapR")
+pak::pak("Lifemap-ToL/LifemapR")
 ```
 
 Once installed, load the package with :
@@ -26,7 +26,7 @@ require("LifemapR")
 
 ## Usage
 
-Here is a brief introduction on how to use LifemapR.
+Here is a brief introduction on how to use `LifemapR`.
 
 1. With the `build_Lifemap` function transform your already existing data into a format usable by LifemapR functions
 
