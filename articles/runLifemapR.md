@@ -15,7 +15,7 @@ better suit their unique needs and preferences.
 
 ``` r
 
-remotes::install_github("Lifemap-ToL/LifemapR")
+pak::pak("Lifemap-ToL/LifemapR")
 ```
 
 2.  Once installed, the package can be loaded with :
