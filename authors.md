@@ -18,13 +18,13 @@ Source:
 [`DESCRIPTION`](https://github.com/Lifemap-ToL/LifemapR/blob/main/DESCRIPTION)
 
 Bompard C, de Vienne D, Barnier J (2026). *LifemapR: Data Visualisation
-on 'Lifemap' Tree*. R package version 1.1.6,
+on 'Lifemap' Tree*. R package version 1.1.7,
 <https://lifemap-tol.github.io/LifemapR/>.
 
     @Manual{,
       title = {LifemapR: Data Visualisation on 'Lifemap' Tree},
       author = {Cassandra Bompard and Damien M. {de Vienne} and Julien Barnier},
       year = {2026},
-      note = {R package version 1.1.6},
+      note = {R package version 1.1.7},
       url = {https://lifemap-tol.github.io/LifemapR/},
     }
